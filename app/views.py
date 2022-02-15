@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from app import app
 
 @app.route('/')
@@ -22,4 +21,3 @@ def testform():
     return render_template('testform.html',
                            title='Test Form',
                            form=form)
->>>>>>> 82609079e5e195370222a1d6aee4adabef1f7d58
