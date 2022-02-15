@@ -1,9 +1,3 @@
-from app import app
-
-@app.route('/')
-def index():
-    return "Hello World!"
-    
 from flask import render_template, flash
 from app import app
 from .forms import TestForm
