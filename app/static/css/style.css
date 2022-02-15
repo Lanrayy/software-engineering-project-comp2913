@@ -1,0 +1,15 @@
+.col-1{
+  display:flex;
+  justify-content: flex-start;
+}
+.col-2{
+  display:flex;
+  justify-content: center;
+}
+.col-3{
+  display:flex;
+  justify-content:flex-end;
+}
+p {
+  color:red;
+}
