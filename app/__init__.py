@@ -1,9 +1,7 @@
 from flask import Flask
-<<<<<<< HEAD
 
 app = Flask(__name__)
 from app import views
-=======
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
