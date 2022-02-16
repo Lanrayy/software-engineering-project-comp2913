@@ -8,6 +8,7 @@ from wtforms import SubmitField
 from wtforms import PasswordField
 from wtforms import BooleanField
 from wtforms import ValidationError
+from wtforms import SelectField
 
 from wtforms.validators import InputRequired, EqualTo, Length, Email
 
@@ -31,3 +32,16 @@ class LoginForm(Form):
     username = StringField('username', validators=[InputRequired()])
     password = PasswordField('password', validators=[InputRequired()])
     remember = BooleanField('Remember Me')
+
+# card details
+class CardDetailsForm(Form):
+    name = StringField('name', validators=[InputRequired()])
+    card_number = IntegerField('card_number', validators=[InputRequired(), Length(16)])
+    expiry = DateField('expiry', validators=[InputRequired()])
+
+# booking details
+class BookingForm(Form):
+    scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')])
+    location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
+        ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')])
+    hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')])
