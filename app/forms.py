@@ -20,12 +20,17 @@ class SignUpForm(Form):
     password1 = PasswordField('password1', validators=[InputRequired()])
     password2 = PasswordField('password2', validators=[EqualTo('password1'), InputRequired()]) #makes sure password1 equals password2
 
-    # validating that the username is unique
-    # def validate_username(self, username):
-    #     user = models.Users.query.filter_by(username=username.data).first()
-    #     # if a username if found raise an error
-    #     if user:
-    #         raise ValidationError('Username taken! Please choose a different username')
+    # validate username
+    def validate_username(self, username) :
+
+        # get first instance of this username in the database
+        # changer "User" to model name
+        user = User.query.filter_by(username = username.data).first()
+
+        # if username found in database, raise error
+        if user:
+            raise ValidationError('Username is already taken')
+
 
 # login form
 class LoginForm(Form):
