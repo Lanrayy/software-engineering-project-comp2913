@@ -9,16 +9,16 @@ from wtforms import PasswordField
 from wtforms import BooleanField
 from wtforms import ValidationError
 
-from wtforms.validators import InputRequired, EqualTo, Length, Required, Email
+from wtforms.validators import InputRequired, EqualTo, Length, Email
 
 # sign up form
 class SignUpForm(Form):
     name = StringField('name', validators=[InputRequired()])
     username = StringField('username', validators=[InputRequired(), Length(min=2, max=20)])
     email = StringField('email', validators=[InputRequired(), Email()])
-    password = PasswordField('password1', validators=[InputRequired()])
-    password2 = PasswordField('password2', validators=[EqualTo('password'), InputRequired()]) #makes sure password1 equals password2
-    
+    password1 = PasswordField('password1', validators=[InputRequired()])
+    password2 = PasswordField('password2', validators=[EqualTo('password1'), InputRequired()]) #makes sure password1 equals password2
+
     # validating that the username is unique
     # def validate_username(self, username):
     #     user = models.Users.query.filter_by(username=username.data).first()
