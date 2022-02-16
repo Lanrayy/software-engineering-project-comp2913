@@ -1,0 +1,5 @@
+venv running Python 3.9
+
+works on:
+- Windows
+- feng Linux
