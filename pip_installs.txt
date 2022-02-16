@@ -1,0 +1,11 @@
+pip install these things:
+flask
+flask-login
+flask-mail
+flask-sqlalchemy
+flask-migrate
+flask-wooshalchemy
+flask-wtf
+flask-babel
+coverage
+email_validator
