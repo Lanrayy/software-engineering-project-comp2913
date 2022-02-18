@@ -6,7 +6,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
     name = db.Column(db.String(70))
     email = db.Column(db.String(100))
-    type = db.Column(db.Integer)
+    status = db.Column(db.Integer)
     password = db.Column(db.String(30))
     card_details = db.relationship('CardDetails', backref='user', uselist=False)
     bookings = db.relationship('Booking', backref='user')
@@ -15,7 +15,7 @@ class User(db.Model):
 class CardDetails(db.Model):
     __tablename__ = 'card_details'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    card_number = db.Column(db.String(20))
+    card_number = db.Column(db.String(16))
     expiry_date = db.Column(db.String(5))
     cvv = db.Column(db.String(3))
 
@@ -38,6 +38,7 @@ class Scooter(db.Model):
 
 
 class Booking(db.Model):
+    __tablename__ = 'booking'
     id = db.Column(db.Integer, primary_key=True, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     scooter_id = db.Column(db.Integer, db.ForeignKey('scooter.id'))
@@ -50,6 +51,7 @@ class Booking(db.Model):
 
 
 class Admin(db.Model):
+    __tablename__ = 'admin'
     id = db.Column(db.Integer, primary_key=True, unique=True)
     name = db.Column(db.String(70))
     email = db.Column(db.String(100))
