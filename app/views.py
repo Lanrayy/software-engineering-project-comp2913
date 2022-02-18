@@ -2,11 +2,12 @@ from flask import render_template, flash
 from app import app
 from .forms import LoginForm, SignUpForm
 from flask import request, redirect, url_for, abort, make_response
-from .models import User
+#from .models import User
 from app import app, db
-from .forms import RegistrationForm, LoginForm
+#from .forms import RegistrationForm, LoginForm
 from flask_login import login_user, current_user, logout_user, login_required
 import os
+from flask_bcrypt import Bcrypt
 
 @app.route('/')
 def index():
@@ -27,7 +28,13 @@ def register():
         flash('Succesfully received form data. %s %s %s %s %s'%(form.name.data, form.username.data, form.email.data, form.password1.data, form.password2.data))
 
         # set user = current user
-        user = User(username = form.username.data, password1 = form.password1.data, password2 = form.password2.data)
+
+        #encrypt password
+        hashed_password= bcrypt.generate_password_hash(form.password1.data)
+
+
+        user = User(password = hashed_password, email = form.email.data , name  = form.name.data)
+
         db.session.add(user)    # add user to db
         db.session.commit()     # commit user to db
         flash('Account Created! Please Log In', 'success')
@@ -50,17 +57,19 @@ def user_login():
     # if form is submitted
     if form.validate_on_submit():
 
-        flash('Succesfully received form data. %s %s %s'%(form.username.data, form.password.data, form.remember.data))
+        ##flash('Succesfully received form data. %s %s %s'%(form.username.data, form.password.data, form.remember.data))
 
         # get first instance of user in db
         user = User.query.filter_by(username = form.username.data).first()
 
-        # if user exists
+        # check username and password
         if user:
-            login_user(user)
-            flash('Login Successful!', 'success')
-            return redirect('user_login.html')
-
+            if bcrypt.check_password_hash(user.password, form.password):
+                login_user(user)
+                flash('Login Successful!', 'success')
+                return redirect('user_login.html')
+            else:
+                flash('Wrong Password!')
         else:
             flash('Login unsuccessful. Please check username and password', 'danger')
 
