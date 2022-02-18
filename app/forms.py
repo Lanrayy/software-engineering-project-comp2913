@@ -1,5 +1,4 @@
-from flask_wtf import Form
-
+from flask_wtf import FlaskForm
 from wtforms import IntegerField
 from wtforms import StringField
 from wtforms import TextAreaField
@@ -13,7 +12,7 @@ from wtforms import SelectField
 from wtforms.validators import InputRequired, EqualTo, Length, Email
 
 # sign up form
-class SignUpForm(Form):
+class SignUpForm(FlaskForm):
     name = StringField('name', validators=[InputRequired()])
     username = StringField('username', validators=[InputRequired(), Length(min=2, max=20)])
     email = StringField('email', validators=[InputRequired(), Email()])
@@ -33,19 +32,19 @@ class SignUpForm(Form):
 
 
 # login form
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     username = StringField('username', validators=[InputRequired()])
     password = PasswordField('password', validators=[InputRequired()])
     remember = BooleanField('Remember Me')
 
 # card details
-class CardDetailsForm(Form):
+class CardDetailsForm(FlaskForm):
     name = StringField('name', validators=[InputRequired()])
     card_number = IntegerField('card_number', validators=[InputRequired(), Length(16)])
     expiry = DateField('expiry', validators=[InputRequired()])
 
 # booking details
-class BookingForm(Form):
+class BookingForm(FlaskForm):
     scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')])
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
         ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')])
