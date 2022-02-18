@@ -20,7 +20,8 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item"><a class="nav-link" href="/testform">Test Form</a></li>
+          <li class="nav-item"><a class="nav-link" href="/user_login">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
         </ul>
       </div>
     </nav>
@@ -29,11 +30,9 @@
       <div class="row">
         <!-- left justified content -->
         <div class="col-sm col-1">
-          <p>left</p>
         </div>
         <!-- center justified content -->
         <div class="col-sm col-2">
-          <p>mid</p>
           {% with messages = get_flashed_messages() %}
             {% if messages %}
               {% for message in messages %}
@@ -47,7 +46,6 @@
         </div>
         <!-- right justified content -->
         <div class="col-sm col-3">
-          <p>right</p>
         </div>
       </div>
     </div>
