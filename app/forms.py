@@ -1,5 +1,4 @@
-from flask_wtf import Form
-
+from flask_wtf import FlaskForm
 from wtforms import IntegerField
 from wtforms import StringField
 from wtforms import TextAreaField
@@ -13,34 +12,39 @@ from wtforms import SelectField
 from wtforms.validators import InputRequired, EqualTo, Length, Email
 
 # sign up form
-class SignUpForm(Form):
+class SignUpForm(FlaskForm):
     name = StringField('name', validators=[InputRequired()])
-    username = StringField('username', validators=[InputRequired(), Length(min=2, max=20)])
+    #username = StringField('username', validators=[InputRequired(), Length(min=2, max=20)])
     email = StringField('email', validators=[InputRequired(), Email()])
     password1 = PasswordField('password1', validators=[InputRequired()])
     password2 = PasswordField('password2', validators=[EqualTo('password1'), InputRequired()]) #makes sure password1 equals password2
 
-    # validating that the username is unique
-    # def validate_username(self, username):
-    #     user = models.Users.query.filter_by(username=username.data).first()
-    #     # if a username if found raise an error
-    #     if user:
-    #         raise ValidationError('Username taken! Please choose a different username')
+    # validate username
+    def validate_username(self, username) :
+
+        # get first instance of this username in the database
+        # changer "User" to model name
+        user = User.query.filter_by(username = username.data).first()
+
+        # if username found in database, raise error
+        if user:
+            raise ValidationError('Username is already taken')
+
 
 # login form
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     username = StringField('username', validators=[InputRequired()])
     password = PasswordField('password', validators=[InputRequired()])
     remember = BooleanField('Remember Me')
 
 # card details
-class CardDetailsForm(Form):
+class CardDetailsForm(FlaskForm):
     name = StringField('name', validators=[InputRequired()])
     card_number = IntegerField('card_number', validators=[InputRequired(), Length(16)])
     expiry = DateField('expiry', validators=[InputRequired()])
 
 # booking details
-class BookingForm(Form):
+class BookingForm(FlaskForm):
     scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')])
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
         ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')])
