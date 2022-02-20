@@ -7,8 +7,8 @@ import os
 
 @app.route('/')
 def index():
-        return render_template('home.html',
-                               title='Home')
+    return render_template('home.html',
+                            title='Home')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -76,10 +76,102 @@ def user_login():
 
 
 # only logout if user is logged in
-@app.route ('/logout')
+@app.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash('Logout Successful!', 'info')
     # redirect to home page
     return redirect(url_for('index'))
+
+
+#Guest exclusive pages
+@app.route('/info')
+def info():
+    return render_template('info.html',
+                            title='How it Works')
+
+
+#User exclusive pages
+@app.route('/pricing')
+def pricing():
+    return render_template('pricing.html',
+                            title='Our Prices')
+
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html',
+                            title='Your Profile',
+                            name=current_user.name,
+                            email=current_user.email,
+                            status=current_user.status)
+
+
+@app.route('/send_feedback')
+def send_feedback():
+    return render_template('send_feedback.html',
+                            title='Send Us Your Feedback')
+
+
+#Admin exclusive pages
+@app.route('/review_feedback')
+def review_feedback():
+    return render_template('review_feedback.html',
+                            title='Review Customer Feedback')
+
+
+@app.route('/configure_scooters')
+def configure_scooters():
+    return render_template('configure_scooters.html',
+                            title='Configure Scooters')
+
+
+@app.route('/sales_metrics')
+def sales_metrics():
+    return render_template('sales_metrics.html',
+                            title='View Sales Metrics')
+
+
+#Guest + user shared pages
+@app.route('/locations')
+def locations():
+    return render_template('locations.html',
+                            title='Pickup Locations')
+
+
+@app.route('/locations_LRIH')
+def locations_LRIH():
+    return render_template('locations_LRIH.html',
+                            title='Location: LRI Hostpital')
+
+
+@app.route('/locations_LTS')
+def locations_LTS():
+    return render_template('locations_LTS.html',
+                            title='Location: Leeds Train Station')
+
+
+@app.route('/locations_MC')
+def locations_MC():
+    return render_template('locations_MC.html',
+                            title='Location: Merrion Centre')
+
+
+@app.route('/locations_TC')
+def locations_TC():
+    return render_template('locations_TC.html',
+                            title='Location: Trinity Centre')
+
+
+@app.route('/locations_UoLESC')
+def locations_UoLESC():
+    return render_template('locations_UoLESC.html',
+                            title='Location: UoL Edge Sports Centre')
+
+
+#Admin + User shared pages
+@app.route('/booking')
+def booking():
+    return render_template('booking.html',
+                            title='Make a Booking')
