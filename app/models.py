@@ -1,4 +1,6 @@
 from app import db
+from app import app, login_manager
+from flask_login import UserMixin
 
 #User Database
 class user(db.Model):
@@ -79,6 +81,3 @@ class admin(db.Model):
 
     def __repr__(self):
             return f'Admin {self.id} < Name={self.name}| Email={self.email}| Password={self.password}>' #Password is shown for testing, remove for security later
-
-
-
