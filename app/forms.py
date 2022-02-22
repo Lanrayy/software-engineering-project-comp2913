@@ -45,21 +45,21 @@ class CardDetailsForm(FlaskForm):
 
 # booking details
 class BookingForm(FlaskForm):
-    scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')])
+    scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
-        ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')])
-    hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')])
+        ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
+    hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
 
 # admin booking form
 class AdminBookingForm(FlaskForm):
-    scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')])
-    hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')])
+    scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
+    hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
     email = StringField('email', validators=[InputRequired(), Email()])
     card_number = IntegerField('card_number', validators=[InputRequired(), Length(16)])
     name = StringField('name', validators=[InputRequired()])
     expiry = DateField('expiry', validators=[InputRequired()])
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
-        ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')])
+        ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
     
 
 
