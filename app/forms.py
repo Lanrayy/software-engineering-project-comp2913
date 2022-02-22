@@ -49,3 +49,7 @@ class BookingForm(FlaskForm):
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
         ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')])
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')])
+
+# feedback form
+class FeedbackForm(FlaskForm):
+    feedback = TextAreaField('feedback')
