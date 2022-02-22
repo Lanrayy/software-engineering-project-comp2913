@@ -30,20 +30,19 @@ class SignUpForm(FlaskForm):
         if user:
             raise ValidationError('Username is already taken')
 
-
 # login form
 class LoginForm(FlaskForm):
     email = StringField('email', validators=[InputRequired()])
     password = PasswordField('password', validators=[InputRequired()])
     remember = BooleanField('Remember Me')
 
-# card details
+# card details form
 class CardDetailsForm(FlaskForm):
     name = StringField('name', validators=[InputRequired()])
     card_number = IntegerField('card_number', validators=[InputRequired(), Length(16)])
     expiry = DateField('expiry', validators=[InputRequired()])
 
-# booking details
+# user booking form
 class BookingForm(FlaskForm):
     scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
@@ -53,15 +52,17 @@ class BookingForm(FlaskForm):
 # admin booking form
 class AdminBookingForm(FlaskForm):
     scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
+    location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
+        ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
     email = StringField('email', validators=[InputRequired(), Email()])
     card_number = IntegerField('card_number', validators=[InputRequired(), Length(16)])
     name = StringField('name', validators=[InputRequired()])
     expiry = DateField('expiry', validators=[InputRequired()])
-    location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
-        ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
     
-
+# configure scooter form
+class ConfigureScooterForm(FlaskForm):
+    
 
 
 # feedback form
