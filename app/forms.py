@@ -50,6 +50,22 @@ class BookingForm(FlaskForm):
         ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')])
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')])
 
+# admin booking form
+class AdminBookingForm(FlaskForm):
+    scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')])
+    hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')])
+    email = StringField('email', validators=[InputRequired(), Email()])
+    card_number = IntegerField('card_number', validators=[InputRequired(), Length(16)])
+    name = StringField('name', validators=[InputRequired()])
+    expiry = DateField('expiry', validators=[InputRequired()])
+    location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
+        ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')])
+    
+
+
+
 # feedback form
 class FeedbackForm(FlaskForm):
     feedback = TextAreaField('feedback')
+
+
