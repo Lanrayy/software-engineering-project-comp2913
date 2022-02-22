@@ -21,4 +21,18 @@
       </p>
       <p><input type="submit" value="Register"></p>
   </form>
+
+
+<!--display defined Form errors when input is wrong reasons other than being blank. A blank input is never accepted-->
+  {% for error in form.email.errors%}
+  <script>  alert("{{  error  }}") </script>
+  {% endfor %}
+
+  {% for error in form.password2.errors%}
+  <script>  alert("{{  error  }}") </script>
+  {% endfor %}
+
+  {% for error in form.name.errors%}
+  <script>  alert("{{  error  }}") </script>
+  {% endfor %}
 {% endblock %}

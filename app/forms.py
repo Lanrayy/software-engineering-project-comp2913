@@ -8,16 +8,14 @@ from wtforms import PasswordField
 from wtforms import BooleanField
 from wtforms import ValidationError
 from wtforms import SelectField
-
-from wtforms.validators import InputRequired, EqualTo, Length, Email
+from wtforms.validators import InputRequired, EqualTo, Length, Email, Regexp
 
 # sign up form
 class SignUpForm(FlaskForm):
-    name = StringField('name', validators=[InputRequired()])
-    #username = StringField('username', validators=[InputRequired(), Length(min=2, max=20)])
+    name = StringField('name', validators=[InputRequired(), Regexp("^([^0-9]*)$", message = "Name can't contain digits")])
     email = StringField('email', validators=[InputRequired(), Email()])
     password1 = PasswordField('password1', validators=[InputRequired()])
-    password2 = PasswordField('password2', validators=[EqualTo('password1'), InputRequired()]) #makes sure password1 equals password2
+    password2 = PasswordField('password2', validators=[EqualTo('password1', message = 'Make sure passwords are the same!'), InputRequired()]) #makes sure password1 equals password2
 
     # validate username
     def validate_username(self, username) :

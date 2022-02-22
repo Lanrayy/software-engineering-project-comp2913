@@ -23,8 +23,6 @@ def register():
 
         flash('Succesfully received form data. %s %s %s %s'%(form.name.data, form.email.data, form.password1.data, form.password2.data))
 
-        # set user = current user
-
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
 
@@ -37,7 +35,7 @@ def register():
 
         return redirect(url_for('user_login'))   # redirect to login page
 
-    else:
+    else:        
         return render_template('register.html',
                         title='Sign Up',
                         form=form)
