@@ -8,6 +8,7 @@ from wtforms import PasswordField
 from wtforms import BooleanField
 from wtforms import ValidationError
 from wtforms import SelectField
+from app import models
 
 from wtforms.validators import InputRequired, EqualTo, Length, Email
 
@@ -20,15 +21,15 @@ class SignUpForm(FlaskForm):
     password2 = PasswordField('password2', validators=[EqualTo('password1'), InputRequired()]) #makes sure password1 equals password2
 
     # validate username
-    def validate_username(self, username) :
+    def validate_email(self, email) :
 
         # get first instance of this username in the database
         # changer "User" to model name
-        user = User.query.filter_by(username = username.data).first()
+        user = models.user.query.filter_by(email = email.data).first()
 
         # if username found in database, raise error
         if user:
-            raise ValidationError('Username is already taken')
+            raise ValidationError('email is already taken')
 
 # login form
 class LoginForm(FlaskForm):
