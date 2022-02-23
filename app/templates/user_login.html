@@ -16,17 +16,25 @@
       <p>
         Email <br>
         {{ form.email }}
+        {% if form.email.errors %}
+        {% for error in form.email.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
       </p>
       <p>
         Password <br>
         {{ form.password }}
+        {% if form.password.errors %}
+        {% for error in form.password.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
       </p>
       <p>
         Remember details
         {{ form.remember }}
       </p>
-      <button type="button submit" class="btn btn-success">Log In</button>
-      <p>New User? <a href="/register">Sign up here</a></p>
-      <a href="/admin_login">Admin Login</a>
+      <p><input type="submit" value="Login"></p>
   </form>
 {% endblock %}

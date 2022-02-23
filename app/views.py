@@ -27,21 +27,17 @@ def register():
     form = SignUpForm()
 
     # if form is submitted
+
     if form.validate_on_submit():
-
-        flash('Succesfully received form data. %s %s %s %s'%(form.name.data, form.email.data, form.password1.data, form.password2.data))
-
-        # set user = current user
-
+        
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
-
 
         u = models.user(password = hashed_password, email = form.email.data , status="normal" , name = form.name.data)
 
         db.session.add(u)    # add user to db
         db.session.commit()     # commit user to db
-        flash('Account Created! Please Log In', 'success')
+        flash(f'Account Created! Please Log In', 'success')
 
         return redirect(url_for('user_login'))   # redirect to login page
 
@@ -67,15 +63,12 @@ def user_login():
         u = models.user.query.filter_by(email = form.email.data).first()
 
         # check username and password
-        if u:
-            if bcrypt.check_password_hash(u.password, form.password.data):
-                login_user(u)
-                flash('Login Successful!', 'success')
-                return redirect(url_for('user_dashboard'))
-            else:
-                flash('Wrong Password!')
+        if u and bcrypt.check_password_hash(u.password, form.password.data):
+            login_user(u)
+            flash('Login Successful!', 'success')
+            return redirect(url_for('user_dashboard'))
         else:
-            flash('Login unsuccessful. Please check email and password', 'danger')
+            flash(f'Login unsuccessful. Please check email and password', 'error')
 
     return render_template('user_login.html',
                            title='User Login',
