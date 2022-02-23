@@ -18,8 +18,11 @@ def register():
 
     form = SignUpForm()
 
+
     # if form is submitted
     if form.validate_on_submit():
+
+
 
         flash('Succesfully received form data. %s %s %s %s'%(form.name.data, form.email.data, form.password1.data, form.password2.data))
 
