@@ -13,42 +13,50 @@
 {% endblock %}
 
 {% block content %}
-  <h1>
-    Hi,
-    {{ name }}!
-  </h1>
+  <h1>Booking Made, Happy to Help!</h1>
 
-  <h3>
-    User Details
-  </h3>
+  <h2>Booking Details</h2>
+  <div class="">
+    <p>Date of Booking</p>
+    <p>
+      {{ booking.date }}
+    </p>
+  </div>
 
-  <p>
-    Email:
-    {{ email }}
-  </p>
+  <div class="">
+    <p>Booking Duration</p>
+    <p>
+      {{ booking.duration }}
+    </p>
+  </div>
 
-  <p>
-    User Status:
-    {{ status }}
-  </p>
+  <div class="">
+    <p>Scooter ID</p>
+    <p>
+      SN
+      {{ booking.scooterid }}
+    </p>
+  </div>
 
-  <br>
+  <div class="">
+    <p>Pick-Up Location</p>
+    <p>
+      {{ booking.location }}
+    </p>
+  </div>
 
-  <h3>Card Details</h3>
-  <p>
-    Name on Card:
-    {{ card_name }}
-  </p>
+  <div class="">
+    <p>Status</p>
+    <p>
+      {{ booking.status }}
+    </p>
+  </div>
 
-
-  <p>
-    Card Number:
-    {{ card_number }}
-  </p>
-
-
-  <br>
-
-  <h3>Booking History</h3>
-  <!-- Bookings go here -->
+  <div class="">
+    <p>Reference No.</p>
+    <p>
+      BN
+      {{ booking.id }}
+    </p>
+  </div>
 {% endblock %}

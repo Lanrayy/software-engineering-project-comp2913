@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block logo %}
+  <a class="navbar-brand" href="/">.sctr</a>
+{% endblock %}
+
+{% block navbar %}
+  <li class="nav-item"><a class="nav-link" href="/info">How it Works</a></li>
+  <li class="nav-item"><a class="nav-link" href="/admin_login">Admin Login</a></li>
+  <li class="nav-item"><a class="nav-link" href="/user_login">User Login</a></li>
+  <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+{% endblock %}
+
+{% block content %}
+  <h1>.sctr</h1>
+  <p>company slogan</p>
+  <div>
+    <a href="/register"><button type="button" class="btn btn-primary">Sign Up</button></a>
+    <a href="/user_login"><button type="button" class="btn btn-primary">Log In</button></a>
+  </div>
+
+  <br>
+
+  <!-- Map -->
+
+  <br>
+
+  <h2>How it works</h2>
+  <p>blurb on booking process</p>
+  <a href="/info"><button type="button" class="btn btn-primary">Learn More</button></a>
+{% endblock %}

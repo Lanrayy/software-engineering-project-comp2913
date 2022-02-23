@@ -12,28 +12,50 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Feedback Reports</h1>
-  <h2>Report Details</h2>
+  <h1>Booking Made, Happy to Help!</h1>
 
-  <!-- Feedback goes here -->
-  <div class="row">
-    <div class="col align-items-center">
-      <p>Date Received</p>
+  <h2>Booking Details</h2>
+  <div class="">
+    <p>Date of Booking</p>
+    <p>
+      {{ booking.date }}
+    </p>
+  </div>
 
-    </div>
+  <div class="">
+    <p>Booking Duration</p>
+    <p>
+      {{ booking.duration }}
+    </p>
+  </div>
 
-    <div class="col align-items-center">
-      <p>Content</p>
+  <div class="">
+    <p>Scooter ID</p>
+    <p>
+      SN
+      {{ booking.scooterid }}
+    </p>
+  </div>
 
-    </div>
+  <div class="">
+    <p>Pick-Up Location</p>
+    <p>
+      {{ booking.location }}
+    </p>
+  </div>
 
-    <div class="col align-items-center">
-      <p>Current Priority</p>
+  <div class="">
+    <p>Status</p>
+    <p>
+      {{ booking.status }}
+    </p>
+  </div>
 
-    </div>
-
-    <div class="col align-items-center">
-      
-    </div>
+  <div class="">
+    <p>Reference No.</p>
+    <p>
+      BN
+      {{ booking.id }}
+    </p>
   </div>
 {% endblock %}
