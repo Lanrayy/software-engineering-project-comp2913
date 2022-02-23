@@ -6,18 +6,39 @@
       <p>
         Name <br>
         {{ form.name }}
+
+        {% if form.name.errors %}
+              {% for error in form.name.errors %}
+                  <span>{{ error }}</span>
+              {% endfor %}
+          {% endif %}
       </p>
       <p>
         Email <br>
         {{ form.email }}
+        {% if form.email.errors %}
+          {% for error in form.email.errors %}
+            <span>{{ error }}</span>
+          {% endfor %}
+        {% endif %}
       </p>
       <p>
         Password <br>
         {{ form.password1 }}
+        {% if form.password1.errors %}
+          {% for error in form.password1.errors %}
+            <span>{{ error }}</span>
+          {% endfor %}
+        {% endif %}
       </p>
       <p>
         Re-enter Password <br>
         {{ form.password2 }}
+        {% if form.password2.errors %}
+          {% for error in form.password2.errors %}
+            <span> Passwords have to be the same </span>
+          {% endfor %}
+        {% endif %}
       </p>
       <p><input type="submit" value="Register"></p>
   </form>
