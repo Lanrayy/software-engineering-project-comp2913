@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block logo %}
-  <a class="navbar-brand" href="/user_dashboard">.sctr</a>
+<a class="navbar-brand" href="/user_dashboard">.sctr</a>
 {% endblock %}
 
 {% block navbar %}
@@ -14,41 +14,23 @@
 
 {% block content %}
   <h1>
-    Hi,
-    {{ name }}!
+    Welcome,
+    {{ name }}
   </h1>
 
-  <h3>
-    User Details
-  </h3>
+  <div class="row">
 
-  <p>
-    Email:
-    {{ email }}
-  </p>
+    <div class="col">
+      <a href="/booking1_user"><button type="button" class="btn btn-primary">Book a Scooter</button></a>
+    </div>
 
-  <p>
-    User Status:
-    {{ status }}
-  </p>
+    <div class="col align-items-end">
+      <a href="/profile"><button type="button" class="btn btn-primary">View Profile</button></a>
+    </div>
+    
+  </div>
 
   <br>
 
-  <h3>Card Details</h3>
-  <p>
-    Name on Card:
-    {{ card_name }}
-  </p>
-
-
-  <p>
-    Card Number:
-    {{ card_number }}
-  </p>
-
-
-  <br>
-
-  <h3>Booking History</h3>
-  <!-- Bookings go here -->
+  <!-- Map -->
 {% endblock %}

@@ -12,13 +12,24 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Sales Metrics</h1>
+  <h1>
+    Welcome,
+    {{ name }}
+  </h1>
 
-  <h2>Weekly Income</h2>
+  <div class="row">
 
-  <!-- Weekly stats go here -->
+    <div class="col">
+      <p>All Current Bookings</p>
+    </div>
 
-  <h2>Daily Income</h2>
+    <div class="col align-items-end">
+      <a href="/booking1_user"><button type="button" class="btn btn-primary">Book a Scooter</button></a>
+    </div>
 
-  <!-- Daily stats go here -->
+  </div>
+
+  <br>
+
+  <!-- Bookings -->
 {% endblock %}

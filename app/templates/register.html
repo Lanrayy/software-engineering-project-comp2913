@@ -1,6 +1,16 @@
 {% extends "base.html" %}
+{% block logo %}
+<a class="navbar-brand" href="/">.sctr</a>
+{% endblock %}
+
+{% block navbar %}
+  <li class="nav-item"><a class="nav-link" href="/admin_login">Admin Login</a></li>
+  <li class="nav-item"><a class="nav-link" href="/user_login">User Login</a></li>
+  <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+{% endblock %}
+
 {% block content %}
-  <h1>Register</h1>
+  <h1>Sign Up</h1>
   <form action="" method="post" name="registerform">
       {{ form.hidden_tag() }}
       <p>
@@ -19,6 +29,6 @@
         Re-enter Password <br>
         {{ form.password2 }}
       </p>
-      <p><input type="submit" value="Register"></p>
+      <button type="button submit" class="btn btn-success">Submit</button>
   </form>
 {% endblock %}

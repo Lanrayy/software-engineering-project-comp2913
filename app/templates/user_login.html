@@ -1,20 +1,32 @@
 {% extends "base.html" %}
-  {% block content %}
-    <h1>Login</h1>
-    <form action="" method="post" name="loginform">
-        {{ form.hidden_tag() }}
-        <p>
-          Email <br>
-          {{ form.email }}
-        </p>
-        <p>
-          Password <br>
-          {{ form.password }}
-        </p>
-        <p>
-          Remember details
-          {{ form.remember }}
-        </p>
-        <p><input type="submit" value="Login"></p>
-    </form>
-  {% endblock %}
+{% block logo %}
+<a class="navbar-brand" href="/">.sctr</a>
+{% endblock %}
+
+{% block navbar %}
+  <li class="nav-item"><a class="nav-link" href="/admin_login">Admin Login</a></li>
+  <li class="nav-item"><a class="nav-link" href="/user_login">User Login</a></li>
+  <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+{% endblock %}
+
+{% block content %}
+  <h1>Login</h1>
+  <form action="" method="post" name="loginform">
+      {{ form.hidden_tag() }}
+      <p>
+        Email <br>
+        {{ form.email }}
+      </p>
+      <p>
+        Password <br>
+        {{ form.password }}
+      </p>
+      <p>
+        Remember details
+        {{ form.remember }}
+      </p>
+      <button type="button submit" class="btn btn-success">Log In</button>
+      <p>New User? <a href="/register">Sign up here</a></p>
+      <a href="/admin_login">Admin Login</a>
+  </form>
+{% endblock %}
