@@ -1,4 +1,11 @@
 from app import db
+from app import app, login_manager
+from flask_login import UserMixin
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id)) # get user by their ID
 
 
 class User(db.Model):
@@ -14,6 +21,7 @@ class User(db.Model):
 
 class CardDetails(db.Model):
     __tablename__ = 'card_details'
+    id = db.Column(db.Integer, primary_key=True, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     card_number = db.Column(db.String(16))
     expiry_date = db.Column(db.String(5))
@@ -42,7 +50,7 @@ class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     scooter_id = db.Column(db.Integer, db.ForeignKey('scooter.id'))
-    collection_id = db.column(db.Integer, db.ForeignKey('collection_point.id'))
+    collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'))
     hire_period = db.Column(db.String(6))
     status = db.Column(db.Integer)
     cost = db.Column(db.Float)
