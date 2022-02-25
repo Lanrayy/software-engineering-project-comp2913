@@ -1,3 +1,4 @@
+from email import message
 from flask_wtf import FlaskForm
 from wtforms import IntegerField
 from wtforms import StringField
@@ -10,11 +11,11 @@ from wtforms import ValidationError
 from wtforms import SelectField
 from app import models
 
-from wtforms.validators import InputRequired, EqualTo, Length, Email
+from wtforms.validators import InputRequired, EqualTo, Length, Email, Regexp
 
 # sign up form
 class SignUpForm(FlaskForm):
-    name = StringField('name', validators=[InputRequired()])
+    name = StringField('name', validators=[InputRequired(), Regexp("^([^0-9]*)$", message = "Name cannot contain digits")])
     #username = StringField('username', validators=[InputRequired(), Length(min=2, max=20)])
     email = StringField('email', validators=[InputRequired(), Email()])
     password1 = PasswordField('password1', validators=[InputRequired()])
