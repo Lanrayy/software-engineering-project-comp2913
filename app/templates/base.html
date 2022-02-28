@@ -41,9 +41,12 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <!-- Global nav -->
+            <li class="nav-item"><a class="nav-link" href="/info">How it Works</a></li>
+            <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
+
             <!-- Unregistered nav -->
             {% if not current_user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="/info">How it Works</a></li>
             <li class="nav-item"><a class="nav-link" href="/admin_login">Admin Login</a></li>
             <li class="nav-item"><a class="nav-link" href="/user_login">User Login</a></li>
             <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
@@ -53,10 +56,7 @@
               <!-- Customer nav -->
               {% if current_user.isUser() %}
               <li class="nav-item"><a class="nav-link" href="/booking1_user">Make a Booking</a></li>
-              <li class="nav-item"><a class="nav-link" href="/locations">Locations</a></li>
-              <li class="nav-item"><a class="nav-link" href="/pricing">Pricing</a></li>
               <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
-              <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
               <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
               {% endif %}
 
@@ -64,7 +64,7 @@
               {% if current_user.isAdmin() %}
               <li class="nav-item"><a class="nav-link" href="/booking1_admin">Make a Booking</a></li>
               <li class="nav-item"><a class="nav-link" href="/review_feedback">Review Feedback</a></li>
-              <li class="nav-item"><a class="nav-link" href="/configure_scooters">Configure Scooters</a></li>
+              <li class="nav-item"><a class="nav-link" href="/configure_scooter">View Scooters</a></li>
               <li class="nav-item"><a class="nav-link" href="/sales_metrics">Sales Metrics</a></li>
               <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
               {% endif %}
@@ -76,15 +76,15 @@
     </nav>
 
     <!-- main page container -->
-    <div class="container-fluid">
+    <div class="container-fluid min-vh-100">
       <div class="row">
 
         <!-- left justified content -->
-        <div class="col c2">
+        <div class="col c1">
         </div>
 
         <!-- center justified content -->
-        <div class="col c1">
+        <div class="col c2">
           {% with messages = get_flashed_messages() %}
             {% if messages %}
               {% for message in messages %}
@@ -105,12 +105,71 @@
       </div>
     </div>
 
-  <!-- JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <!-- Footer -->
+    <footer class="text-center text-lg-start bg-light text-muted">
+      <!-- Section: Social media -->
+      <section
+        class="d-flex justify-content-center justify-content-lg-between border-bottom"
+      >
+      </section>
+      <!-- Section: Social media -->
+
+      <!-- Section: Links  -->
+      <section class="">
+        <div class="container text-center text-md-start mt-5">
+          <!-- Grid row -->
+          <div class="row mt-3">
+            <!-- Grid column -->
+            <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+              <!-- Unregistered Logo -->
+              {% if not current_user.is_authenticated %}
+                <a class="navbar-brand" href="/">.sctr</a>
+              {% endif %}
+
+              {% if current_user.is_authenticated %}
+                <!-- Customer logo -->
+                {% if current_user.isUser() %}
+                  <a class="navbar-brand" href="/user_dashboard">.sctr</a>
+                {% endif %}
+
+                <!-- Admin logo -->
+                {% if current_user.isAdmin() %}
+                  <a class="navbar-brand" href="/admin_dashboard">.sctr</a>
+                {% endif %}
+              {% endif %}
+            </div>
+            <!-- Grid column -->
+
+            <!-- Grid column -->
+            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+            </div>
+            <!-- Grid column -->
+
+            <!-- Grid column -->
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+            </div>
+            <!-- Grid column -->
+
+            <!-- Grid column -->
+            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+              <p>
+                <a class="text-reset" href="/info">How it Works</a>
+              </p>
+            </div>
+            <!-- Grid column -->
+          </div>
+          <!-- Grid row -->
+        </div>
+      </section>
+      <!-- Section: Links  -->
+    </footer>
+    <!-- Footer -->
+
+    <!-- JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
   </body>
-
 </html>

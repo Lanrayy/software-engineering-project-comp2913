@@ -94,8 +94,6 @@ def logout():
 #User exclusive pages
 @app.route('/user_dashboard')
 def user_dashboard():
-    flash('The user is a User? %s' % (current_user.isUser()))
-    flash('The user is an Admin? %s' % (current_user.isAdmin()))
     return render_template('user_dashboard.html',
                             name=current_user.name,
                             title='User Dashboard')
@@ -178,11 +176,21 @@ def review_feedback():
     return render_template('review_feedback.html',
                             title='Review Customer Feedback')
 
+@app.route('/view_scooters')
+def view_scooters():
+    return render_template('view_scooters.html',
+                            title='View Scooters')
 
-@app.route('/configure_scooters')
-def configure_scooters():
-    return render_template('configure_scooters.html',
-                            title='Configure Scooters')
+
+@app.route('/add_scooter')
+def add_scooter():
+    return render_template('add_scooter.html',
+                            title='Add New Scooter')
+
+@app.route('/configure_scooter')
+def configure_scooter():
+    return render_template('configure_scooter.html',
+                            title='Configure A Scooter')
 
 
 @app.route('/sales_metrics')
