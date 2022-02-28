@@ -1,0 +1,76 @@
+Database Format is appropriate through the terminal
+
+Note:
+In order to refresh the database delete migrations, pycache, app.db from the main folder not app:
+	delete -> migrations,pycache,app.db
+
+In order to create the databases run th following command into the terminal, you should do this at least once:
+	upgrade -> flask db init, flask db migrate, flask db upgrade.
+
+
+
+Testing examples through the terminal :
+>>> from app import db, models
+
+********************************************************************************************************************************
+user ->     user1 = models.user(name='user1', email='email1', status='student1',password='pass1')
+            user2 = models.user(name='user2', email='email2', status='student2',password='pass2')
+            user3 = models.user(name='user3', email='email3', status='student3',password='pass3')
+
+>>> db.session.add(user1)
+>>> db.session.add(user2)
+>>> db.session.add(user3)
+>>> db.session.commit()
+
+>>> models.user.query.all()
+
+********************************************************************************************************************************
+card_details -> card1 = models.card_details(cardnumber='1111222233334444', expire_date='0101', cvv='01', user_id=user1.id)
+                card2 = models.card_details(cardnumber='1111222233334444', expire_date='0202', cvv='02', user_id=user2.id)
+
+>>> db.session.add(card1)
+>>> db.session.add(card2)
+>>> db.session.commit()
+
+>>> models.card_details.query.all()
+
+********************************************************************************************************************************
+collection_point ->  point1 = models.collection_point(location='Library', num_scooters='12')
+
+>>> db.session.add(point1)
+>>> db.session.commit()
+>>> models.collection_point.query.all()
+
+********************************************************************************************************************************
+scooter ->  scooter1 = models.scooter(availability=1, collection_id=point1.id)
+
+>>> db.session.add(scooter1)
+>>> db.session.commit()
+>>> models.scooter.query.all()
+
+********************************************************************************************************************************
+booking ->  booking1 = models.booking(hire_period='20',
+                                    status= 1,
+                                    cost = 2.50,
+                                    date_time = '21/02/2022',
+                                    email = 'email1',
+                                    user_id = user1.id,
+                                    scooter_id = scooter1.id,
+                                    collection_id = point1.id)
+
+>>> db.session.add(booking1)
+>>> db.session.commit()
+>>> models.booking.query.all()
+
+********************************************************************************************************************************
+admin ->  admin1 = models.admin(name='admin1', email='admin_email1',password='pass1')
+
+>>> db.session.add(admin1)
+>>> db.session.commit()
+>>> models.admin.query.all()
+
+
+NOTE: Variable names are not stored so re-declare variable name when refreshing the database
+
+                
+

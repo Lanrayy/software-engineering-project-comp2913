@@ -9,4 +9,3 @@ flask-wtf
 flask-babel
 coverage
 email_validator
-flask_bcrypt

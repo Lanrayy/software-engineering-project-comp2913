@@ -53,8 +53,6 @@ def user_login():
         return redirect (url_for('index'))
 
     form = LoginForm()
-
-    # if form is submitted
     if form.validate_on_submit():
 
         ##flash('Succesfully received form data. %s %s %s'%(form.username.data, form.password.data, form.remember.data))

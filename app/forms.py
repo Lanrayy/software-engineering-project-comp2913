@@ -80,4 +80,3 @@ class ConfigureScooterForm(FlaskForm):
 class FeedbackForm(FlaskForm):
     feedback = TextAreaField('feedback')
 
-
