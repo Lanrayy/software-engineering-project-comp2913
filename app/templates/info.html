@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block logo %}
+  <a class="navbar-brand" href="/">.sctr</a>
+{% endblock %}
+
+{% block navbar %}
+  <li class="nav-item"><a class="nav-link" href="/info">How it Works</a></li>
+  <li class="nav-item"><a class="nav-link" href="/admin_login">Admin Login</a></li>
+  <li class="nav-item"><a class="nav-link" href="/user_login">User Login</a></li>
+  <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+{% endblock %}
+
+{% block content %}
+  <h1>How it Works</h1>
+
+  <p>lorem ipsum</p>
+
+  <!-- Images of scooters -->
+
+  <h1>Pricing</h1>
+  <div class="row">
+
+    <div class="col align-items-center">
+      <h3>1 Hour</h3>
+      <p>£10</p>
+    </div>
+
+    <div class="col align-items-center">
+      <h3>4 Hours</h3>
+      <p>£39</p>
+    </div>
+
+    <div class="col align-items-center">
+      <h3>1 Day</h3>
+      <p>£109</p>
+    </div>
+
+    <div class="col align-items-center">
+      <h3>1 Week</h3>
+      <p>£399</p>
+    </div>
+
+  </div>
+
+  <br>
+
+  <h1>Locations</h1>
+
+  <h3>Trinity Centre</h3>
+  <p>27 Albion St, Leeds LS1 5AT</p>
+
+  <h3>LRI Hospital</h3>
+  <p></p>
+
+  <h3>Leeds Train Station</h3>
+  <p>New Station St, Leeds LS1 4DY</p>
+
+  <h3>Merrion Centre</h3>
+  <p>Merrion Way, Leeds LS2 8NG</p>
+
+  <h3>UoL Edge Sports Centre</h3>
+  <p>University of Leeds, Willow Terrace Road, Leeds LS2 9JT</p>
+{% endblock %}

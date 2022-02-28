@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block logo %}
+  <a class="navbar-brand" href="/admin_dashboard">.sctr</a>
+{% endblock %}
+
+{% block navbar %}
+  <li class="nav-item"><a class="nav-link" href="/booking1_admin">Make a Booking</a></li>
+  <li class="nav-item"><a class="nav-link" href="/review_feedback">Review Feedback</a></li>
+  <li class="nav-item"><a class="nav-link" href="/configure_scooters">Configure Scooters</a></li>
+  <li class="nav-item"><a class="nav-link" href="/sales_metrics">Sales Metrics</a></li>
+  <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+{% endblock %}
+
+{% block content %}
+  <h1>Booking Made, Happy to Help!</h1>
+
+  <h2>Booking Details</h2>
+  <div class="">
+    <p>Date of Booking</p>
+    <p>
+      {{ booking.date }}
+    </p>
+  </div>
+
+  <div class="">
+    <p>Booking Duration</p>
+    <p>
+      {{ booking.duration }}
+    </p>
+  </div>
+
+  <div class="">
+    <p>Scooter ID</p>
+    <p>
+      SN
+      {{ booking.scooterid }}
+    </p>
+  </div>
+
+  <div class="">
+    <p>Pick-Up Location</p>
+    <p>
+      {{ booking.location }}
+    </p>
+  </div>
+
+  <div class="">
+    <p>Status</p>
+    <p>
+      {{ booking.status }}
+    </p>
+  </div>
+
+  <div class="">
+    <p>Reference No.</p>
+    <p>
+      BN
+      {{ booking.id }}
+    </p>
+  </div>
+{% endblock %}

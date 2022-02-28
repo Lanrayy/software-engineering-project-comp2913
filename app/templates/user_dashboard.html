@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block logo %}
+<a class="navbar-brand" href="/user_dashboard">.sctr</a>
+{% endblock %}
+
+{% block navbar %}
+  <li class="nav-item"><a class="nav-link" href="/booking1_user">Make a Booking</a></li>
+  <li class="nav-item"><a class="nav-link" href="/locations">Locations</a></li>
+  <li class="nav-item"><a class="nav-link" href="/pricing">Pricing</a></li>
+  <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+  <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
+  <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+{% endblock %}
+
+{% block content %}
+  <h1>
+    Welcome,
+    {{ name }}
+  </h1>
+
+  <div class="row">
+
+    <div class="col">
+      <a href="/booking1_user"><button type="button" class="btn btn-primary">Book a Scooter</button></a>
+    </div>
+
+    <div class="col align-items-end">
+      <a href="/profile"><button type="button" class="btn btn-primary">View Profile</button></a>
+    </div>
+
+  </div>
+
+  <br>
+
+  <!-- Map -->
+{% endblock %}

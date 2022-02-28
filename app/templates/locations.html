@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block logo %}
+  <a class="navbar-brand" href="/user_dashboard">.sctr</a>
+{% endblock %}
+
+{% block navbar %}
+  <li class="nav-item"><a class="nav-link" href="/booking1_user">Make a Booking</a></li>
+  <li class="nav-item"><a class="nav-link" href="/locations">Locations</a></li>
+  <li class="nav-item"><a class="nav-link" href="/pricing">Pricing</a></li>
+  <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+  <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
+  <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+{% endblock %}
+
+{% block content %}
+<h1>Locations</h1>
+
+<h3>Trinity Centre</h3>
+<p>27 Albion St, Leeds LS1 5AT</p>
+
+<h3>LRI Hospital</h3>
+<p></p>
+
+<h3>Leeds Train Station</h3>
+<p>New Station St, Leeds LS1 4DY</p>
+
+<h3>Merrion Centre</h3>
+<p>Merrion Way, Leeds LS2 8NG</p>
+
+<h3>UoL Edge Sports Centre</h3>
+<p>University of Leeds, Willow Terrace Road, Leeds LS2 9JT</p>
+
+<br>
+
+<h1>Map</h1>
+<!-- Map image goes here -->
+{% endblock %}

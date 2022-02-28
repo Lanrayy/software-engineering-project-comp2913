@@ -16,7 +16,7 @@ import datetime
 #>>> from app import db, models
 
 #User Database
-class user(db.Model):
+class user(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
@@ -31,7 +31,7 @@ class user(db.Model):
             return f'User {self.id} < Name={self.name}| Email={self.email}| Type={self.user_type}| Password={self.password}>' #Password is shown for testing, remove for security later
 
 #Card_Details Database
-class card_details(db.Model):       
+class card_details(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cardnumber = db.Column(db.String(16), nullable=False)
     expire_date = db.Column(db.String(5), nullable=False) #example : 08/24
