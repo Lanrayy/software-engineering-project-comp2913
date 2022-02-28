@@ -3,6 +3,18 @@ from app import app, login_manager
 from flask_login import UserMixin
 import datetime
 
+#Note:
+#Make sure PRAGMA foreign_keys=ON;
+
+#In order to refresh the database delete migrations, pycache, app.db from the main folder (not app):
+#	delete -> migrations,pycache,app.db
+
+#In order to create the databases run the following command into the terminal, you should do this at least once:
+#	upgrade -> flask db init, flask db migrate, flask db upgrade
+
+#Testing examples through the terminal after calling python :
+#>>> from app import db, models
+
 #User Database
 class user(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -22,8 +34,8 @@ class user(db.Model):
 class card_details(db.Model):       
     id = db.Column(db.Integer, primary_key=True)
     cardnumber = db.Column(db.String(16), nullable=False)
-    expire_date = db.Column(db.String(4), nullable=False) #example : 08/24
-    cvv = db.Column(db.String(10), nullable=False)
+    expire_date = db.Column(db.String(5), nullable=False) #example : 08/24
+    cvv = db.Column(db.String(3), nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
 
@@ -60,7 +72,7 @@ class scooter(db.Model):
 class booking(db.Model):   
     id = db.Column(db.Integer, primary_key=True)
     hire_period = db.Column(db.Integer(), nullable=False) #remove?
-    status = db.Column(db.Integer, nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
+    status = db.Column(db.String(50), nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
     cost = db.Column(db.Float, nullable=False)
     initial_date_time = db.Column(db.DateTime(), nullable=False) 
     final_date_time = db.Column(db.DateTime(), nullable=False)
