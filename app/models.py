@@ -8,7 +8,7 @@ class user(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
-    status = db.Column(db.String(50), nullable=False) #Cannot be 'type' cause its a key variable. Let users pick 1,2,3 rather than type it in. Make integer?
+    user_type = db.Column(db.String(50), nullable=False) #Cannot be 'type' cause its a key variable. Let users pick 1,2,3 rather than type it in. Make integer?
     password = db.Column(db.String(50), nullable=False)
 
     card = db.relationship('card_details', uselist=False, backref='user') #one-to-one relation, "If you would want to have a one-to-one relationship you can pass uselist=False to relationship()."
@@ -16,7 +16,7 @@ class user(db.Model):
 
 
     def __repr__(self):
-            return f'User {self.id} < Name={self.name}| Email={self.email}| Status={self.status}| Password={self.password}>' #Password is shown for testing, remove for security later
+            return f'User {self.id} < Name={self.name}| Email={self.email}| Type={self.user_type}| Password={self.password}>' #Password is shown for testing, remove for security later
 
 #Card_Details Database
 class card_details(db.Model):       
