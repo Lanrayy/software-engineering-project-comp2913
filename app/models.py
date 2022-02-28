@@ -43,14 +43,14 @@ class card_details(db.Model):
     expire_date = db.Column(db.String(5), nullable=False) #example : 08/24
     cvv = db.Column(db.String(3), nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
             return f'Card {self.id} < CardNumber={self.cardnumber}| ExpireDate={self.expire_date}| User_id={self.user_id}>'
 
 
 #Collection_Point Database
-class collection_point(db.Model):  
+class collection_point(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     location = db.Column(db.String(50), nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
     num_scooters = db.Column(db.Integer, nullable=False)
@@ -63,7 +63,7 @@ class collection_point(db.Model):
 
 
 #Scooter Database
-class scooter(db.Model): 
+class scooter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     availability = db.Column(db.Integer, nullable=False)
 
@@ -75,12 +75,12 @@ class scooter(db.Model):
             return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'
 
 #Booking Database
-class booking(db.Model):   
+class booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     hire_period = db.Column(db.Integer(), nullable=False) #remove?
     status = db.Column(db.String(50), nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
     cost = db.Column(db.Float, nullable=False)
-    initial_date_time = db.Column(db.DateTime(), nullable=False) 
+    initial_date_time = db.Column(db.DateTime(), nullable=False)
     final_date_time = db.Column(db.DateTime(), nullable=False)
     email = db.Column(db.String(50), nullable=False) #manually link this to the user through the code
 
@@ -93,7 +93,7 @@ class booking(db.Model):
 
 
 #Admin Database
-class admin(db.Model):  
+class admin(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     admin_type = db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(50), nullable=False)
@@ -103,8 +103,14 @@ class admin(db.Model):
     def __repr__(self):
             return f'Admin {self.id} < Name={self.name}| Admin Type = {self.admin_type}| Email={self.email}| Password={self.password}>' #Password is shown for testing, remove for security later
 
+    def isUser(self):
+        return False
+
+    def isAdmin(self):
+        return True
+
 #Feedback Database
-class feedback(db.Model):  
+class feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(50), nullable=False)
 

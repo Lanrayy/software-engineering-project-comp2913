@@ -33,11 +33,11 @@ def register():
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
 
-        u = models.user(password = hashed_password, email = form.email.data , status="normal" , name = form.name.data)
+        u = models.user(password = hashed_password, email = form.email.data, user_type = "1", name = form.name.data)
 
         db.session.add(u)    # add user to db
         db.session.commit()     # commit user to db
-        flash(f'Account Created! Please Log In', 'success')
+        flash(f'Account Created!', 'success')
 
         return redirect(url_for('user_login'))   # redirect to login page
 
@@ -109,7 +109,7 @@ def profile():
                             title='Your Profile',
                             name=current_user.name,
                             email=current_user.email,
-                            status=current_user.status)
+                            user_type=current_user.user_type)
 
 
 @app.route('/send_feedback')
