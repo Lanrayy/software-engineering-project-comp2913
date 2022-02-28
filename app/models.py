@@ -17,7 +17,13 @@ class user(UserMixin, db.Model):
     card = db.relationship('card_details', backref='user', lazy=True)
 
     def __repr__(self):
-            return f'User <{self.id}|{self.name}|{self.email}|{self.status}>'
+        return f'User <{self.id}|{self.name}|{self.email}|{self.status}>'
+
+    def isUser(self):
+        return True
+
+    def isAdmin(self):
+        return False
 
 #Card_Details Database
 class card_details(db.Model):

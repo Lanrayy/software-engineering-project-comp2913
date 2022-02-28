@@ -29,7 +29,7 @@ def register():
     # if form is submitted
 
     if form.validate_on_submit():
-        
+
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
 
@@ -94,6 +94,8 @@ def logout():
 #User exclusive pages
 @app.route('/user_dashboard')
 def user_dashboard():
+    flash('The user is a User? %s' % (current_user.isUser()))
+    flash('The user is an Admin? %s' % (current_user.isAdmin()))
     return render_template('user_dashboard.html',
                             name=current_user.name,
                             title='User Dashboard')
