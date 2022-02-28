@@ -29,7 +29,7 @@ def register():
     # if form is submitted
 
     if form.validate_on_submit():
-        
+
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
 
@@ -174,11 +174,21 @@ def review_feedback():
     return render_template('review_feedback.html',
                             title='Review Customer Feedback')
 
+@app.route('/view_scooters')
+def view_scooters():
+    return render_template('view_scooters.html',
+                            title='View Scooters')
 
-@app.route('/configure_scooters')
-def configure_scooters():
-    return render_template('configure_scooters.html',
-                            title='Configure Scooters')
+
+@app.route('/add_scooter')
+def add_scooter():
+    return render_template('add_scooter.html',
+                            title='Add New Scooter')
+
+@app.route('/configure_scooter')
+def configure_scooter():
+    return render_template('configure_scooter.html',
+                            title='Configure A Scooter')
 
 
 @app.route('/sales_metrics')

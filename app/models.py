@@ -28,7 +28,13 @@ class user(UserMixin, db.Model):
 
 
     def __repr__(self):
-            return f'User {self.id} < Name={self.name}| Email={self.email}| Type={self.user_type}| Password={self.password}>' #Password is shown for testing, remove for security later
+        return f'User {self.id} < Name={self.name}| Email={self.email}| Type={self.user_type}| Password={self.password}>' #Password is shown for testing, remove for security later
+
+    def isUser(self):
+        return True
+
+    def isAdmin(self):
+        return False
 
 #Card_Details Database
 class card_details(db.Model):
