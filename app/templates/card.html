@@ -8,8 +8,13 @@
         <div>
           <p> <strong>User ID:</strong> {{p.user_id}} | <strong>Card Number:</strong> {{ p.cardnumber }} | <strong>Expiry Date:</strong>{{ p.expire_date }} | <strong>CVV:</strong>{{ p.cvv }}</p>
         </div>
+        <div>
+            <p>Card Details: {{p.cardnumber}}</p>
+            <p> Expiry: {{ p.expire_date }} </p>
+        </div>
       {% endfor %}
-    </div>
+      
+  </div>
   {% else %}
   <form action="" method="post" name="unsavedbookingform">
       {{ form.hidden_tag() }}
