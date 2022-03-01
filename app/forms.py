@@ -71,6 +71,7 @@ class AdminBookingForm(FlaskForm):
     expiry = DateField('expiry', validators=[InputRequired()])
     cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
+
 # card form
 class CardForm(FlaskForm):
     card_number = StringField('card_number', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "Card Number must be a number"), Length(min=16, max=16, message="Card number must be 16 characters")])
