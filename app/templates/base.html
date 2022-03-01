@@ -45,6 +45,7 @@
             <li class="nav-item"><a class="nav-link" href="/info">How it Works</a></li>
             <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
 
+
             <!-- Unregistered nav -->
             {% if not current_user.is_authenticated %}
             <li class="nav-item"><a class="nav-link" href="/admin_login">Admin Login</a></li>
@@ -55,9 +56,11 @@
             {% if current_user.is_authenticated %}
               <!-- Customer nav -->
               {% if current_user.isUser() %}
+              <li class="nav-item"><a class="nav-link" href="/card">Card</a></li>
               <li class="nav-item"><a class="nav-link" href="/booking1_user">Make a Booking</a></li>
               <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
               <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+              
               {% endif %}
 
               <!-- Admin nav -->

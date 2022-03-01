@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Card</h1>
+  <form action="" method="post" name="cardform">
+      {{ form.hidden_tag() }}
+      <p>
+        Full Name <br>
+        {{ form.name }}
+        {% if form.name.errors %}
+        {% for error in form.name.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+      </p>
+      <p>
+        Card Number <br>
+        {{ form.card_number }}
+        {% if form.card_number.errors %}
+        {% for error in form.card_number.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+      </p>
+      <p>
+        Expiry Date <br>
+        {{ form.expiry }}
+        {% if form.expiry.errors %}
+        {% for error in form.expiry.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+      </p>
+      <p>
+        cvv <br>
+        {{ form.cvv }}
+        {% if form.cvv.errors %}
+        {% for error in form.cvv.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+      </p>
+      <p>
+        Save Card Details
+        {{ form.save_card_details }}
+      </p>
+      <p><input type="submit" value="Save"></p>
+  </form>
+{% endblock %}

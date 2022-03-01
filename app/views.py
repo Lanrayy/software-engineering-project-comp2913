@@ -1,6 +1,6 @@
 from flask import render_template, flash
 from app import app, db, bcrypt, models
-from .forms import LoginForm, SignUpForm
+from .forms import LoginForm, SignUpForm, UnsavedBookingForm
 from flask import request, redirect, url_for, abort, make_response
 from flask_login import login_user, current_user, logout_user, login_required
 import os
@@ -70,6 +70,29 @@ def user_login():
 
     return render_template('user_login.html',
                            title='User Login',
+                           form=form)
+
+# card route - to be integrated with the bookings page
+@app.route('/card', methods=['GET', 'POST'])
+def card():
+    form = UnsavedBookingForm()
+    if form.validate_on_submit():
+
+        flash('Succesfully received form data. %s %s %s'%(form.username.data, form.password.data, form.remember.data))
+
+        # get first instance of user in db
+        # u = models.user.query.filter_by(email = form.email.data).first()
+
+        # # check username and password
+        # if u and bcrypt.check_password_hash(u.password, form.password.data):
+        #     login_user(u)
+        #     flash('Login Successful!', 'success')
+        #     return redirect(url_for('user_dashboard'))
+        # else:
+        #     flash(f'Login unsuccessful. Please check email and password', 'error')
+
+    return render_template('card.html',
+                           title='Card',
                            form=form)
 
 
