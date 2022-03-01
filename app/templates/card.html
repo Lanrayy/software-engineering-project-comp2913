@@ -49,11 +49,11 @@
   <div>
     {% for p in data %}
       <div>
-        <p> <strong>User ID:</strong> {{p.user_id}} | <strong>Card Number:</strong> {{ p.cardnumber }} | <strong>Expiry Date:</strong>{{ p.expire_date }}</p>
+        <p> <strong>User ID:</strong> {{p.user_id}} | <strong>Card Number:</strong> {{ p.cardnumber }} | <strong>Expiry Date:</strong>{{ p.expire_date }} | <strong>CVV:</strong>{{ p.cvv }}</p>
       </div>
     {% endfor %}
   </div>
-  
+
 {% endblock %}
 
 <!-- CHANGES TO MAKE TO MAKE CARD WORK -->

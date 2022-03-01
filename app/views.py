@@ -76,21 +76,21 @@ def user_login():
 @app.route('/card', methods=['GET', 'POST'])
 def card():
     form = CardForm()
-
+    data = models.card_details.query.filter_by(user_id=current_user.id).all()
     if request.method == 'POST':
-        
         if form.validate_on_submit():
             flash('Succesfully received form data. %s %s %s'%(form.card_number.data, form.name.data, form.expiry.data))
 
             # save information into database
-            p = models.card_details(cardnumnber = form.card_number.data,
+            p = models.card_details(cardnumber = form.card_number.data,
                                     expire_date = form.expiry.data,
                                     cvv = form.cvv.data,
                                     user_id = current_user.id)
             db.session.add(p)
             db.session.commit()
+            return redirect(url_for('card'))
             flash("Card Successful added into database")
-    data = models.card_details.query.filter_by(user_id=current_user.id).all()
+    
     return render_template('card.html', 
                            title='Card',
                            form=form,
