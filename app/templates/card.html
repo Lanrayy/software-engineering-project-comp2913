@@ -22,7 +22,7 @@
       {% endif %}
       </p>
       <p>
-        Expiry Date <br>
+        Expiry Date (mm-yyyy) <br>
         {{ form.expiry }}
         {% if form.expiry.errors %}
         {% for error in form.expiry.errors %}
@@ -46,3 +46,9 @@
       <p><input type="submit" value="Save"></p>
   </form>
 {% endblock %}
+
+<!-- CHANGES TO MAKE TO MAKE CARD WORK -->
+<!-- 
+    - CHANGE THE CVV INTEGER FIELD INTO A STRING
+    - CHANGE THE CVV INTEGER FIELD INTO A STRING
+ -->
