@@ -75,8 +75,20 @@ def user_login():
 # card route - to be integrated with the bookings page
 @app.route('/card', methods=['GET', 'POST'])
 def card():
-    form = CardForm()
+    
     data = models.card_details.query.filter_by(user_id=current_user.id).all()
+    
+    if data: # the user already has card details saved
+        card_found = True
+    else:
+        card_found = False
+
+    if(data):
+        form = UnsavedBookingForm()
+    else:
+        form = CardForm()
+        
+
     if request.method == 'POST':
         if form.validate_on_submit():
             flash('Succesfully received form data. %s %s %s'%(form.card_number.data, form.name.data, form.expiry.data))
@@ -94,7 +106,8 @@ def card():
     return render_template('card.html', 
                            title='Card',
                            form=form,
-                           data=data)
+                           data=data,
+                           card_found = card_found)
 
 
 @app.route('/admin_login', methods=['GET', 'POST'])

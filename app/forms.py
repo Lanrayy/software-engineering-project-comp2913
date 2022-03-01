@@ -59,6 +59,15 @@ class UnsavedBookingForm(FlaskForm):
     save_card_details = BooleanField('save_card_details')
 
 
+# card form
+class CardForm(FlaskForm):
+    card_number = StringField('card_number', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "Card Number must be a number"), Length(min=16, max=16, message="Card number must be 16 characters")])
+    name = StringField('name', validators=[InputRequired()])
+    expiry = DateField('expiry', format= '%m-%Y', validators=[InputRequired()])
+    cvv = StringField('cvv', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "cvv must be a number"), Length(min=3, max=3, message="cvv must be 3 characters")])
+    save_card_details = BooleanField('save_card_details')
+
+
 # admin booking form
 class AdminBookingForm(FlaskForm):
     scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
@@ -72,15 +81,6 @@ class AdminBookingForm(FlaskForm):
     cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
 
-# card form
-class CardForm(FlaskForm):
-    card_number = StringField('card_number', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "Card Number must be a number"), Length(min=16, max=16, message="Card number must be 16 characters")])
-    name = StringField('name', validators=[InputRequired()])
-    expiry = DateField('expiry', format= '%m-%Y', validators=[InputRequired()])
-    cvv = StringField('cvv', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "cvv must be a number"), Length(min=3, max=3, message="cvv must be 3 characters")])
-    save_card_details = BooleanField('save_card_details')
-
-    
 # configure scooter form
 class ConfigureScooterForm(FlaskForm):
     scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
