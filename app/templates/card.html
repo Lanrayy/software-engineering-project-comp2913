@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>Card</h1>
-  <form action="" method="post" name="cardform">
+  <form action="" method="post" name="unsavedbookingform">
       {{ form.hidden_tag() }}
       <p>
         Full Name <br>
@@ -52,4 +52,18 @@
     - CHANGE THE CVV INTEGER FIELD INTO A STRING
     - CHANGE THE CVV INTEGER FIELD INTO A STRING
     - Added Validators for Cvv and card number unsaved booking form
+
+
+                # flash('Succesfully received form data. %s %s %s'%(form.card_number.data, form.name.data, form.expiry.data))
+
+            # get first instance of user in db
+            # u = models.user.query.filter_by(email = form.email.data).first()
+
+            # # check username and password
+            # if u and bcrypt.check_password_hash(u.password, form.password.data):
+            #     login_user(u)
+            #     flash('Login Successful!', 'success')
+            #     return redirect(url_for('user_dashboard'))
+            # else:
+            #     flash(f'Login unsuccessful. Please check email and password', 'error')
  -->
