@@ -1,6 +1,8 @@
 from app import db
 from app import app, login_manager
 from flask_login import UserMixin
+from sqlalchemy.engine import Engine
+from sqlalchemy import event
 import datetime
 
 #Note:
@@ -14,6 +16,13 @@ import datetime
 
 #Testing examples through the terminal after calling python :
 #>>> from app import db, models
+
+
+@event.listens_for(Engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
 
 #User Database
 class user(UserMixin, db.Model):
@@ -77,7 +86,7 @@ class scooter(db.Model):
 #Booking Database
 class booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    hire_period = db.Column(db.Integer(), nullable=False) #remove?
+    hire_period = db.Column(db.Integer, nullable=False) #remove?
     status = db.Column(db.String(50), nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
     cost = db.Column(db.Float, nullable=False)
     initial_date_time = db.Column(db.DateTime(), nullable=False)
