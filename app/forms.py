@@ -59,16 +59,16 @@ class UnsavedBookingForm(FlaskForm):
 
 # admin booking form
 class AdminBookingForm(FlaskForm):
-    scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
+    # scooter_id = SelectField('scooter_id', choices=available_scooters, validators=[InputRequired()])
     # location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
     #     ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
     email = StringField('email', validators=[InputRequired(), Email()])
-    card_number = IntegerField('card_number', validators=[InputRequired(), Length(16)])
+    card_number = IntegerField('card_number', validators=[InputRequired()])
     name = StringField('name', validators=[InputRequired()])
     expiry = DateField('expiry', validators=[InputRequired()])
-    cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
-    
+    cvv = IntegerField('cvv', validators=[InputRequired()])
+
 # configure scooter form
 class ConfigureScooterForm(FlaskForm):
     scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
@@ -79,4 +79,3 @@ class ConfigureScooterForm(FlaskForm):
 # feedback form
 class FeedbackForm(FlaskForm):
     feedback = TextAreaField('feedback')
-
