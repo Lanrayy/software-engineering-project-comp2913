@@ -2,49 +2,44 @@
 {% block content %}
   <h1>Make a Booking</h1>
 
-  <h2>
+  <h3>
     Location:
-    {{ location }}
-  </h2>
+  </h3>
+  <h5>
+    {{ session.get('collection_location', None) }}
+  </h5>
+
   <!-- Picture of pickup location -->
 
-  <h2>Booking Details</h2>
-  <p>
-    {{ address }}
-  </p>
-  <p>
-    {{ post_code }}
-  </p>
+  <br>
 
-  <h2>Scooters</h2>
-  <!-- Available scooters as buttons -->
+  <h3>Booking Details</h3>
 
-  <h2>Choose a Period of Hire</h2>
   <p>
-    {{ form.period }}
+    Scooter ID:
+    {{ session.get('scooter_id', None) }}
   </p>
 
-  <h2>
+  <form action="" method="post" name="adminbookingform">
+    {{ form.csrf_token }}
+    <h4>Choose a Period of Hire</h4>
+    <p>
+      {{ form.hire_period }}
+      {% if form.hire_period.errors %}
+        {% for error in form.hire_period.error %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+    </p>
+
+  <h4>
+    <br>
     Email Address:
-    {{ email }}
-  </h2>
-
-  <h2>Card Details</h2>
-
-  <p>Name on Card</p>
-  {{ form.card_name }}
-
-  <p>Card Number</p>
-  {{ form.card_number }}
-
+  </h4>
   <p>
-    Valid till
-    {{ form.card_expire }}
-    CVV {{ form.card_cvv }}
+    {{ current_user.email }}
   </p>
 
-  <p>
-    Remember details
-    {{ form.remember }}
-  </p>
+  <button type="button submit" class="btn btn-success">Confirm Booking</button>
+</form>
 {% endblock %}
