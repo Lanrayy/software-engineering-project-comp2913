@@ -86,7 +86,7 @@ class scooter(db.Model):
 #Booking Database
 class booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    hire_period = db.Column(db.Integer(), nullable=False) #remove?
+    hire_period = db.Column(db.Integer, nullable=False) #remove?
     status = db.Column(db.String(50), nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
     cost = db.Column(db.Float, nullable=False)
     initial_date_time = db.Column(db.DateTime(), nullable=False)
