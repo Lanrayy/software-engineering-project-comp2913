@@ -1,5 +1,5 @@
 from flask import render_template, flash
-from app import app, db, bcrypt, models
+from app import app, db, bcrypt, models, login_manager
 from .forms import LoginForm, SignUpForm
 from flask import request, redirect, url_for, abort, make_response
 from flask_login import login_user, current_user, logout_user, login_required
@@ -33,7 +33,7 @@ def register():
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
 
-        u = models.user(password = hashed_password, email = form.email.data, user_type = "1", name = form.name.data)
+        u = models.user(password = hashed_password, email = form.email.data, user_type = "customer", name = form.name.data)
 
         db.session.add(u)    # add user to db
         db.session.commit()     # commit user to db
@@ -64,7 +64,10 @@ def user_login():
         if u and bcrypt.check_password_hash(u.password, form.password.data):
             login_user(u)
             flash('Login Successful!', 'success')
-            return redirect(url_for('user_dashboard'))
+            if(u.user_type == "employee" or u.user_type == "manager"):
+                return redirect(url_for('admin_dashboard'))
+            else:
+                return redirect(url_for('user_dashboard'))
         else:
             flash(f'Login unsuccessful. Please check email and password', 'error')
 
@@ -75,8 +78,33 @@ def user_login():
 
 @app.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
+    if current_user.is_authenticated:   # if current user is logged in
+        return redirect (url_for('index'))
+
+    form = LoginForm()
+    if form.validate_on_submit():
+        flash('Succesfully received form data. %s %s'%(form.email.data, form.password.data))
+
+        # get first instance of user in db
+        a = models.user.query.filter_by(email = form.email.data).first()
+
+        # check username and password
+        if a.password == form.password.data:
+            login_user(a)
+            flash('Admin login Successful!', 'success')
+            if u and bcrypt.check_password_hash(u.password, form.password.data):
+                login_user(u)
+                flash('Login Successful!', 'success')
+                if(u.user_type == "employee" or u.user_type == "manager"):
+                    return redirect(url_for('admin_dashboard'))
+                else:
+                    return redirect(url_for('user_dashboard'))
+        else:
+            flash(f'Admin login unsuccessful. Please check email and password', 'error')
+
     return render_template('admin_login.html',
-                           title='Admin Login')
+                           title='Admin Login',
+                           form=form)
 
 
 # only logout if user is logged in
