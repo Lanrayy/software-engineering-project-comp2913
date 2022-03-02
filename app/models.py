@@ -20,6 +20,7 @@ class user(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
+    #account_type = db.Column(db.String(50), nullable=False)
     user_type = db.Column(db.String(50), nullable=False) #Cannot be 'type' cause its a key variable. Let users pick 1,2,3 rather than type it in. Make integer?
     password = db.Column(db.String(50), nullable=False)
 
@@ -59,7 +60,7 @@ class collection_point(db.Model):
 #Scooter Database
 class scooter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    availability = db.Column(db.Integer, nullable=False)
+    availability = db.Column(db.Integer, nullable=False) #1 is available, 2 is unavailable
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
 
@@ -72,7 +73,7 @@ class scooter(db.Model):
 class booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     hire_period = db.Column(db.Integer(), nullable=False) #remove?
-    status = db.Column(db.String(50), nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
+    status = db.Column(db.String(50), nullable=False) #value can be active, past
     cost = db.Column(db.Float, nullable=False)
     initial_date_time = db.Column(db.DateTime(), nullable=False)
     final_date_time = db.Column(db.DateTime(), nullable=False)
@@ -96,12 +97,6 @@ class admin(UserMixin, db.Model):
 
     def __repr__(self):
             return f'Admin {self.id} < Name={self.name}| Admin Type = {self.admin_type}| Email={self.email}| Password={self.password}>' #Password is shown for testing, remove for security later
-
-    def isUser(self):
-        return False
-
-    def isAdmin(self):
-        return True
 
 #Feedback Database
 class feedback(db.Model):

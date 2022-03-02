@@ -2,44 +2,86 @@
 {% block content %}
   <h1>Make a Booking</h1>
 
-  <h2>
+  <h3>
     Location:
-    {{ location }}
-  </h2>
+  </h3>
+  <h5>
+    {{ booking_collection_point }}
+  </h5>
+
   <!-- Picture of pickup location -->
 
-  <h2>Booking Details</h2>
-  <p>
-    {{ address }}
-  </p>
-  <p>
-    {{ post_code }}
-  </p>
+  <br>
 
-  <h2>Scooters</h2>
-  <!-- Available scooters as buttons -->
+  <h3>Booking Details</h3>
 
-  <h2>Choose a Period of Hire</h2>
   <p>
-    {{ form.period }}
+    Scooter ID:
+    {{ scooter_id }}
   </p>
 
-  <h2>
-    Email Address:
+  <form action="" method="post" name="adminbookingform">
+    <h4>Choose a Period of Hire</h4>
+    <p>
+      {{ form.hire_period }}
+      {% if form.hire_period.errors %}
+        {% for error in form.hire_period.error %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+    </p>
+
+    <h4>
+      <br>
+      Email Address:
+    </h4>
     {{ form.email }}
-  </h2>
+    {% if form.email.errors %}
+      {% for error in form.email.error %}
+        <span>{{ error }}</span>
+      {% endfor %}
+    {% endif %}
 
-  <h2>Card Details</h2>
+    <h4>
+      <br>
+      Card Details
+    </h4>
 
-  <p>Name on Card</p>
-  {{ form.card_name }}
+    <h5>Name on Card</h5>
+    {{ form.name }}
+    {% if form.name.errors %}
+      {% for error in form.name.error %}
+        <span>{{ error }}</span>
+      {% endfor %}
+    {% endif %}
 
-  <p>Card Number</p>
-  {{ form.card_number }}
+    <h5>Card Number</h5>
+    {{ form.card_number }}
+    {% if form.name.errors %}
+      {% for error in form.name.error %}
+        <span>{{ error }}</span>
+      {% endfor %}
+    {% endif %}
 
-  <p>
-    Valid till
-    {{ form.card_expire }}
-    CVV {{ form.card_cvv }}
-  </p>
+    <p>
+      <br>
+      Valid till
+      {{ form.expiry }}
+      {% if form.expiry.errors %}
+        {% for error in form.expiry.error %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+
+      CVV
+      {{ form.cvv }}
+      {% if form.cvv.errors %}
+        {% for error in form.cvv.error %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+    </p>
+
+    <button type="button submit" class="btn btn-success">Confirm Booking</button>
+  </form>
 {% endblock %}

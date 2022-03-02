@@ -4,16 +4,23 @@
 
   <h2>Booking Details</h2>
   <div class="">
-    <p>Date of Booking</p>
+    <p>Date of Booking Start</p>
     <p>
-      {{ booking.date }}
+      {{ booking.initial_date_time }}
     </p>
   </div>
 
   <div class="">
-    <p>Booking Duration</p>
+    <p>Date of Booking End</p>
     <p>
-      {{ booking.duration }}
+      {{ booking.final_date_time }}
+    </p>
+  </div>
+
+  <div class="">
+    <p>Hire period</p>
+    <p>
+      {{ booking.hire_period }}
     </p>
   </div>
 
@@ -21,14 +28,14 @@
     <p>Scooter ID</p>
     <p>
       SN
-      {{ booking.scooterid }}
+      {{ booking.scooter_id }}
     </p>
   </div>
 
   <div class="">
     <p>Pick-Up Location</p>
     <p>
-      {{ booking.location }}
+      {{ location }}
     </p>
   </div>
 

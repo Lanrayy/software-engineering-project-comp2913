@@ -1,9 +1,9 @@
 from flask import render_template, flash
 from app import app, db, bcrypt, models, login_manager
-from .forms import LoginForm, SignUpForm
+from .forms import LoginForm, SignUpForm, AdminBookingForm
 from flask import request, redirect, url_for, abort, make_response
 from flask_login import login_user, current_user, logout_user, login_required
-import os
+import os, datetime
 
 #Unregistered user exclusive pages
 @app.route('/')
@@ -83,24 +83,20 @@ def admin_login():
 
     form = LoginForm()
     if form.validate_on_submit():
-        flash('Succesfully received form data. %s %s'%(form.email.data, form.password.data))
 
         # get first instance of user in db
-        a = models.user.query.filter_by(email = form.email.data).first()
+        u = models.user.query.filter_by(email = form.email.data).first()
 
         # check username and password
-        if a.password == form.password.data:
-            login_user(a)
-            flash('Admin login Successful!', 'success')
-            if u and bcrypt.check_password_hash(u.password, form.password.data):
-                login_user(u)
-                flash('Login Successful!', 'success')
-                if(u.user_type == "employee" or u.user_type == "manager"):
-                    return redirect(url_for('admin_dashboard'))
-                else:
-                    return redirect(url_for('user_dashboard'))
+        if u and bcrypt.check_password_hash(u.password, form.password.data):
+            login_user(u)
+            flash('Admin Login Successful!', 'success')
+            if(u.user_type == "employee" or u.user_type == "manager"):
+                return redirect(url_for('admin_dashboard'))
+            else:
+                return redirect(url_for('user_dashboard'))
         else:
-            flash(f'Admin login unsuccessful. Please check email and password', 'error')
+            flash(f'Admin Login unsuccessful. Please check email and password', 'error')
 
     return render_template('admin_login.html',
                            title='Admin Login',
@@ -227,17 +223,61 @@ def sales_metrics():
 
 @app.route('/booking1_admin')
 def booking1_admin():
+    collection_points = models.collection_point.query.all()
+    scooter = models.scooter
     return render_template('booking1_admin.html',
-                            title='Choose a Location')
+                            title='Choose a Location',
+                            collection_points=collection_points,
+                            scooter=scooter)
 
 
-@app.route('/booking2_admin')
-def booking2_admin():
-    return render_template('booking2_admin.html',
-                            title='Make a Booking')
+@app.route('/booking2_admin/<string:booking_collection_point>/<int:scooter_id>', methods=['GET', 'POST'])
+def booking2_admin(booking_collection_point, scooter_id):
+    form = AdminBookingForm()
+
+    if form.validate_on_submit():
+        print("SUBMITTED")
+        if form.hire_period.data == "1 Hour":
+            cost = 10.00
+            hours = 1
+        if form.hire_period.data == "4 Hours":
+            cost = 39.00
+            hours = 4
+        if form.hire_period.data == "1 Day":
+            cost = 109.00
+            hours = 24
+        if form.hire_period.data == "1 Week":
+            cost = 399.00
+            hours = 168
+
+        booking = models.booking(hire_period = form.hire_period.data,
+                                 status = "active",
+                                 cost = cost,
+                                 initial_date_time = datetime.utcnow(),
+                                 final_date_time = datetime.utcnow() + timedelta(hours = hours),
+                                 email = form.email.data,
+                                 scooter_id = scooter_id,
+                                 collection_id = models.collection_point.query.filter_by(location = booking_collection_point))
+
+        db.session.add(booking)
+        db.session.commit()
+
+        flash(f'Booking Created!', 'success')
+
+        return redirect("/booking3_admin/%s" % booking.id)
+    else:
+        return render_template('booking2_admin.html',
+                                title='Make a Booking',
+                                booking_collection_point=booking_collection_point,
+                                scooter_id=scooter_id,
+                                form=form)
 
 
-@app.route('/booking3_admin')
-def booking3_admin():
+@app.route('/booking3_admin/<int:booking_id>')
+def booking3_admin(booking_id):
+    booking = models.booking.query.filter_by(id = booking_id)
+    location = models.collection_point.query.filter_by(id = booking.collection_id)
     return render_template('booking3_admin.html',
-                            title='Booking Confirmation')
+                            title='Booking Confirmation',
+                            booking=booking,
+                            location=location)
