@@ -33,7 +33,7 @@ def register():
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
 
-        u = models.user(password = hashed_password, email = form.email.data, user_type = "customer", name = form.name.data)
+        u = models.user(password = hashed_password, email = form.email.data, account_type = "customer", user_type = "default", name = form.name.data)
 
         db.session.add(u)    # add user to db
         db.session.commit()     # commit user to db
@@ -64,7 +64,7 @@ def user_login():
         if u and bcrypt.check_password_hash(u.password, form.password.data):
             login_user(u)
             flash('Login Successful!', 'success')
-            if(u.user_type == "employee" or u.user_type == "manager"):
+            if(u.account_type == "employee" or u.account_type == "manager"):
                 return redirect(url_for('admin_dashboard'))
             else:
                 return redirect(url_for('user_dashboard'))
@@ -91,7 +91,7 @@ def admin_login():
         if u and bcrypt.check_password_hash(u.password, form.password.data):
             login_user(u)
             flash('Admin Login Successful!', 'success')
-            if(u.user_type == "employee" or u.user_type == "manager"):
+            if(u.account_type == "employee" or u.account_type == "manager"):
                 return redirect(url_for('admin_dashboard'))
             else:
                 return redirect(url_for('user_dashboard'))
@@ -133,7 +133,7 @@ def profile():
                             title='Your Profile',
                             name=current_user.name,
                             email=current_user.email,
-                            user_type=current_user.user_type)
+                            account_type=current_user.account_type)
 
 
 @app.route('/send_feedback')
