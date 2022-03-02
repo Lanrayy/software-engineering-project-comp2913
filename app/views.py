@@ -2,11 +2,6 @@ from flask import render_template, flash
 from app import app, db, bcrypt, models
 from .forms import LoginForm, SignUpForm
 from flask import request, redirect, url_for, abort, make_response
-<<<<<<< HEAD
-from .models import User
-from app import app, db
-=======
->>>>>>> main
 from flask_login import login_user, current_user, logout_user, login_required
 import os
 
