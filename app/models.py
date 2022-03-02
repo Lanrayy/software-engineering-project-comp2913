@@ -20,8 +20,8 @@ class user(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
-    #account_type = db.Column(db.String(50), nullable=False)
-    user_type = db.Column(db.String(50), nullable=False) #Cannot be 'type' cause its a key variable. Let users pick 1,2,3 rather than type it in. Make integer?
+    account_type = db.Column(db.String(50), nullable=False) #choices are: customer, employee, manager
+    user_type = db.Column(db.String(50), nullable=False) #choices are: default (includes emplyee and managers), senior, and frequent
     password = db.Column(db.String(50), nullable=False)
 
     card = db.relationship('card_details', uselist=False, backref='user') #one-to-one relation, "If you would want to have a one-to-one relationship you can pass uselist=False to relationship()."
@@ -85,18 +85,6 @@ class booking(db.Model):
 
     def __repr__(self):
             return f'Booking {self.id} < Hire_Period={self.hire_period}| Status={self.status}| Cost={self.cost}| Initial Date/Time={self.initial_date_time}| Final Date/Time={self.final_date_time}|Email={self.email}| User_id={self.user_id}| Scooter_id={self.scooter_id}| Collection_id={self.collection_id}>'
-
-
-#Admin Database
-class admin(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    admin_type = db.Column(db.String(50), nullable=False) #default employee, higher level is manager
-    name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(50), unique=True, nullable=False) #Added <unique=True>
-    password = db.Column(db.String(50), nullable=False)
-
-    def __repr__(self):
-            return f'Admin {self.id} < Name={self.name}| Admin Type = {self.admin_type}| Email={self.email}| Password={self.password}>' #Password is shown for testing, remove for security later
 
 #Feedback Database
 class feedback(db.Model):
