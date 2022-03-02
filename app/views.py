@@ -165,10 +165,14 @@ def review_feedback():
     return render_template('review_feedback.html',
                             title='Review Customer Feedback')
 
+
+
 @app.route('/view_scooters')
 def view_scooters():
+
+    rec = models.scooter.query.all()
     return render_template('view_scooters.html',
-                            title='View Scooters')
+                            title='View Scooters', rec=rec)
 
 
 
