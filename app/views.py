@@ -1,9 +1,10 @@
 from flask import render_template, flash
 from app import app, db, bcrypt, models, login_manager
-from .forms import LoginForm, SignUpForm, AdminBookingForm
-from flask import request, redirect, url_for, abort, make_response
+from .forms import LoginForm, SignUpForm, AdminBookingForm, BookingForm
+from flask import request, redirect, url_for, abort, make_response, session
 from flask_login import login_user, current_user, logout_user, login_required
-import os, datetime
+from datetime import datetime, timedelta
+import os
 
 #Unregistered user exclusive pages
 @app.route('/')
@@ -151,14 +152,68 @@ def locations():
 @app.route('/booking1_user')
 def booking1_user():
     #needs to send to user/booking2_saved or user/booking2_unsaved depending on saved card details
+    collection_points = models.collection_point.query.all()
+    scooter = models.scooter
     return render_template('booking1_user.html',
-                            title='Choose a Location')
+                            title='Choose a Location',
+                            collection_points=collection_points,
+                            scooter=scooter)
 
 
-@app.route('/booking2_saved')
+#intermediate route to save the collection point and scooter ID
+@app.route('/booking2_user_variables/<string:booking_collection_point>/<int:scooter_id>')
+def booking2_user_variables(booking_collection_point, scooter_id):
+    session['collection_location'] = booking_collection_point
+    session['collection_id'] = models.collection_point.query.filter_by(location = booking_collection_point).first().id
+    session['scooter_id'] = scooter_id
+
+    return redirect(url_for('booking2_saved'))
+
+
+@app.route('/booking2_saved', methods=['GET', 'POST'])
 def booking2_saved():
-    return render_template('booking2_saved.html',
-                            title='Make a Booking')
+    form = BookingForm()
+
+    if form.validate_on_submit():
+        if form.hire_period.data == 1:
+            cost = 10.00
+            hours = 1
+        if form.hire_period.data == 2:
+            cost = 39.00
+            hours = 4
+        if form.hire_period.data == 3:
+            cost = 109.00
+            hours = 24
+        if form.hire_period.data == 4:
+            cost = 399.00
+            hours = 168
+        else:
+            cost = 10.00
+            hours = 1
+
+        booking = models.booking(hire_period = form.hire_period.data,
+                                 status = "active",
+                                 cost = cost,
+                                 initial_date_time = datetime.utcnow(),
+                                 final_date_time = datetime.utcnow() + timedelta(hours = hours),
+                                 email = current_user.email,
+                                 scooter_id = session.get('scooter_id', None),
+                                 collection_id = session.get('collection_id', None))
+
+        db.session.add(booking)
+        scooter = models.scooter.query.filter_by(id = session.get('scooter_id', None)).first() #find the scooter
+        scooter.availability = 2 #mark as unavailable
+        db.session.commit()
+
+        session['booking_id'] = booking.id
+
+        flash(f'Booking Created!', 'success')
+
+        return redirect("/booking3")
+    else:
+        return render_template('booking2_saved.html',
+                                title='Make a Booking',
+                                form=form)
 
 
 @app.route('/booking2_unsaved')
@@ -167,10 +222,14 @@ def booking2_unsaved():
                             title='Make a Booking')
 
 
-@app.route('/booking3_user')
-def booking3_user():
-    return render_template('booking3_user.html',
-                            title='Booking Confirmation')
+@app.route('/booking3')
+def booking3():
+    booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
+    location = session.get('collection_location', None)
+    return render_template('booking3.html',
+                            title='Booking Confirmation',
+                            booking=booking,
+                            location=location)
 
 
 @app.route('/cancel_booking')
@@ -230,54 +289,57 @@ def booking1_admin():
                             collection_points=collection_points,
                             scooter=scooter)
 
+#intermediate route to save the collection point and scooter ID
+@app.route('/booking2_admin_variables/<string:booking_collection_point>/<int:scooter_id>')
+def booking2_admin_variables(booking_collection_point, scooter_id):
+    session['collection_location'] = booking_collection_point
+    session['collection_id'] = models.collection_point.query.filter_by(location = booking_collection_point).first().id
+    session['scooter_id'] = scooter_id
 
-@app.route('/booking2_admin/<string:booking_collection_point>/<int:scooter_id>', methods=['GET', 'POST'])
-def booking2_admin(booking_collection_point, scooter_id):
+    return redirect(url_for('booking2_admin'))
+
+
+@app.route('/booking2_admin', methods=['GET', 'POST'])
+def booking2_admin():
     form = AdminBookingForm()
 
     if form.validate_on_submit():
-        print("SUBMITTED")
-        if form.hire_period.data == "1 Hour":
+        if form.hire_period.data == 1:
             cost = 10.00
             hours = 1
-        if form.hire_period.data == "4 Hours":
+        if form.hire_period.data == 2:
             cost = 39.00
             hours = 4
-        if form.hire_period.data == "1 Day":
+        if form.hire_period.data == 3:
             cost = 109.00
             hours = 24
-        if form.hire_period.data == "1 Week":
+        if form.hire_period.data == 4:
             cost = 399.00
             hours = 168
+        else:
+            cost = 10.00
+            hours = 1
 
         booking = models.booking(hire_period = form.hire_period.data,
-                                 status = "active",
-                                 cost = cost,
-                                 initial_date_time = datetime.utcnow(),
-                                 final_date_time = datetime.utcnow() + timedelta(hours = hours),
-                                 email = form.email.data,
-                                 scooter_id = scooter_id,
-                                 collection_id = models.collection_point.query.filter_by(location = booking_collection_point))
+        status = "active",
+        cost = cost,
+        initial_date_time = datetime.utcnow(),
+        final_date_time = datetime.utcnow() + timedelta(hours = hours),
+        email = form.email.data,
+        scooter_id = session.get('scooter_id', None),
+        collection_id = session.get('collection_id', None))
 
         db.session.add(booking)
+        scooter = models.scooter.query.filter_by(id = session.get('scooter_id', None)).first() #find the scooter
+        scooter.availability = 2 #mark as unavailable
         db.session.commit()
+
+        session['booking_id'] = booking.id
 
         flash(f'Booking Created!', 'success')
 
-        return redirect("/booking3_admin/%s" % booking.id)
+        return redirect("/booking3")
     else:
         return render_template('booking2_admin.html',
-                                title='Make a Booking',
-                                booking_collection_point=booking_collection_point,
-                                scooter_id=scooter_id,
-                                form=form)
-
-
-@app.route('/booking3_admin/<int:booking_id>')
-def booking3_admin(booking_id):
-    booking = models.booking.query.filter_by(id = booking_id)
-    location = models.collection_point.query.filter_by(id = booking.collection_id)
-    return render_template('booking3_admin.html',
-                            title='Booking Confirmation',
-                            booking=booking,
-                            location=location)
+        title='Make a Booking',
+        form=form)

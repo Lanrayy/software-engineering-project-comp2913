@@ -6,7 +6,7 @@
     Location:
   </h3>
   <h5>
-    {{ booking_collection_point }}
+    {{ session.get('collection_location', None) }}
   </h5>
 
   <!-- Picture of pickup location -->
@@ -17,10 +17,11 @@
 
   <p>
     Scooter ID:
-    {{ scooter_id }}
+    {{ session.get('scooter_id', None) }}
   </p>
 
   <form action="" method="post" name="adminbookingform">
+    {{ form.csrf_token }}
     <h4>Choose a Period of Hire</h4>
     <p>
       {{ form.hire_period }}
@@ -42,45 +43,8 @@
       {% endfor %}
     {% endif %}
 
-    <h4>
-      <br>
-      Card Details
-    </h4>
-
-    <h5>Name on Card</h5>
-    {{ form.name }}
-    {% if form.name.errors %}
-      {% for error in form.name.error %}
-        <span>{{ error }}</span>
-      {% endfor %}
-    {% endif %}
-
-    <h5>Card Number</h5>
-    {{ form.card_number }}
-    {% if form.name.errors %}
-      {% for error in form.name.error %}
-        <span>{{ error }}</span>
-      {% endfor %}
-    {% endif %}
-
-    <p>
-      <br>
-      Valid till
-      {{ form.expiry }}
-      {% if form.expiry.errors %}
-        {% for error in form.expiry.error %}
-          <span>{{ error }}</span>
-        {% endfor %}
-      {% endif %}
-
-      CVV
-      {{ form.cvv }}
-      {% if form.cvv.errors %}
-        {% for error in form.cvv.error %}
-          <span>{{ error }}</span>
-        {% endfor %}
-      {% endif %}
-    </p>
+    <br>
+    <br>
 
     <button type="button submit" class="btn btn-success">Confirm Booking</button>
   </form>

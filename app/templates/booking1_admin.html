@@ -9,7 +9,7 @@
       <h5>{{row.location}}</h5>
       <br>
       {% for scooter in scooter.query.filter_by(collection_id = row.id, availability = 1) %}
-        <a href="/booking2_admin/{{row.location}}/{{scooter.id}}">Scooter ID: {{scooter.id}}</a>
+        <a href="/booking2_admin_variables/{{row.location}}/{{scooter.id}}">Scooter ID: {{scooter.id}}</a>
       {% endfor %}
     </div>
   {% endfor %}
