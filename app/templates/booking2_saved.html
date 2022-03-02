@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Make a Booking</h1>
+
+  <h2>
+    Location:
+    {{ location }}
+  </h2>
+  <!-- Picture of pickup location -->
+
+  <h2>Booking Details</h2>
+  <p>
+    {{ address }}
+  </p>
+  <p>
+    {{ post_code }}
+  </p>
+
+  <h2>Scooters</h2>
+  <!-- Available scooters as buttons -->
+
+  <h2>Choose a Period of Hire</h2>
+  <p>
+    {{ form.period }}
+  </p>
+
+  <h2>
+    Email Address:
+    {{ email }}
+  </h2>
+
+  <h2>Card Details</h2>
+
+  <p>Name on Card</p>
+  {{ form.card_name }}
+
+  <p>Card Number</p>
+  {{ form.card_number }}
+
+  <p>
+    Valid till
+    {{ form.card_expire }}
+    CVV {{ form.card_cvv }}
+  </p>
+
+  <p>
+    Remember details
+    {{ form.remember }}
+  </p>
+{% endblock %}

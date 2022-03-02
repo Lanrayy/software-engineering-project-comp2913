@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>
+    Hi,
+    {{ name }}!
+  </h1>
+
+  <h3>
+    User Details
+  </h3>
+
+  <p>
+    Email:
+    {{ email }}
+  </p>
+
+  <p>
+    User Status:
+    {{ user_type }}
+  </p>
+
+  <br>
+
+  <h3>Card Details</h3>
+  <p>
+    Name on Card:
+    {{ card_name }}
+  </p>
+
+
+  <p>
+    Card Number:
+    {{ card_number }}
+  </p>
+
+
+  <br>
+
+  <h3>Booking History</h3>
+  <!-- Bookings go here -->
+{% endblock %}
