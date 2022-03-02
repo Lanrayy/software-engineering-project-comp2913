@@ -2,6 +2,23 @@
 {% block content %}
   <h1>Make a Booking</h1>
 
-  <h2>Select a Location</h2>
+  <form method="post" name="bookingform">
+    {{ form.csrf_token }}
+    <p>
+      Location <br>
+      {{ form.location_id }}
+    </p>
+    <p><input type="submit" value="Confirm Location"></p>
+    <p>
+      Scooter <br>
+      {{ form.scooter_id }}
+    </p>
+    <p>
+      Hire Period <br>
+      {{ form.hire_period }}
+    </p>
+    <p><input type="submit" value="Go to Payment"></p>
+    
+</form>
   <!-- Location ... No. Scooters Available -->
 {% endblock %}

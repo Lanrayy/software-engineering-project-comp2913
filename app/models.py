@@ -1,7 +1,7 @@
 from app import db
 from app import app, login_manager
 from flask_login import UserMixin
-import datetime
+from datetime import datetime
 
 #Note:
 #Make sure PRAGMA foreign_keys=ON;
@@ -65,11 +65,10 @@ class collection_point(db.Model):
 #Scooter Database
 class scooter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    availability = db.Column(db.Integer, nullable=False)
-
+    availability = db.Column(db.Integer, nullable=False) # 0 is unavailable, 1 is available
     collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
-
     booking = db.relationship('booking', backref='scooter', lazy=True)  #one-to-many relation
+    location = db.Column(db.String(50), nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
 
     def __repr__(self):
             return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'

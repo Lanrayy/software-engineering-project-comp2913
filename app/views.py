@@ -1,9 +1,10 @@
-from flask import render_template, flash
+from flask import render_template, flash, jsonify
 from app import app, db, bcrypt, models
-from .forms import LoginForm, SignUpForm
+from .forms import LoginForm, SignUpForm, BookingForm
 from flask import request, redirect, url_for, abort, make_response
 from flask_login import login_user, current_user, logout_user, login_required
 import os
+from datetime import datetime
 
 #Unregistered user exclusive pages
 @app.route('/')
@@ -124,11 +125,31 @@ def locations():
                             title='Pickup Locations')
 
 
-@app.route('/booking1_user')
+@app.route('/booking1_user', methods=['GET', 'POST'])
 def booking1_user():
-    #needs to send to user/booking2_saved or user/booking2_unsaved depending on saved card details
+    # if user has saved card details
+    # form = BookingForm()
+    #if user does not have saved card details
+    form = BookingForm()
+    
+    form.scooter_id.choices = [("Scooter " + str(scooter.id)) for scooter in models.scooter.query.filter_by(location=form.location_id.data).all()]
+    flash (form.hire_period.data)
+    
+    
+
+
+    date = datetime.now()
+    if form.validate_on_submit():
+        b = models.booking(hire_period=form.hire_period.data, status="Normal", cost=5.0, initial_date_time=date, final_date_time=date,email=current_user.email, user_id=current_user.id, scooter_id=form.scooter_id.data, collection_id=1)
+        db.session.add(b)
+        db.session.commit()
+        flash ("Successful booking")
+
+        return redirect(url_for('user_payment'))
+
     return render_template('booking1_user.html',
-                            title='Choose a Location')
+                            title='Choose a Location', form=form)
+
 
 
 @app.route('/booking2_saved')
@@ -213,3 +234,8 @@ def booking2_admin():
 def booking3_admin():
     return render_template('booking3_admin.html',
                             title='Booking Confirmation')
+
+@app.route('/user_payment')
+def user_payment():
+    return render_template('user_payment.html',
+                            title='Payment')
