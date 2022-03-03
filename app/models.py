@@ -101,6 +101,15 @@ class feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(50), nullable=False)
 
+#Pricing Table
+class pricing(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    duration = db.Column(db.String(20), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        return f'Pricing {self.id} < Duration={self.duration}| Price={self.price}'
+
 #Query User_id for login
 @login_manager.user_loader
 def load_user(user_id):
