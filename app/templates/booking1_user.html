@@ -21,4 +21,13 @@
     
 </form>
   <!-- Location ... No. Scooters Available -->
+  {% for row in collection_points %}
+    <div class="row bg-light">
+      <h5>{{row.location}}</h5>
+      <br>
+      {% for scooter in scooter.query.filter_by(collection_id = row.id, availability = 1) %}
+        <a href="/booking2_user_variables/{{row.location}}/{{scooter.id}}">Scooter ID: {{scooter.id}}</a>
+      {% endfor %}
+    </div>
+  {% endfor %}
 {% endblock %}
