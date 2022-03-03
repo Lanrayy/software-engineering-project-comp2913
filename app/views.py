@@ -1,7 +1,12 @@
 from flask import render_template, flash
 from app import app, db, bcrypt, models
-from .forms import LoginForm, SignUpForm, AdminBookingForm, BookingForm, CardForm
+<<<<<<< app/views.py
+from .forms import LoginForm, SignUpForm, AddScooterForm
+from flask import request, redirect, url_for, abort, make_response
+=======
+from .forms import LoginForm, SignUpForm, AdminBookingForm, BookingForm, CardForm, AddScooterForm
 from flask import request, redirect, url_for, abort, make_response, session
+>>>>>>> app/views.py
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
 import os
@@ -28,20 +33,20 @@ def register():
     form = SignUpForm()
 
     # if form is submitted
-
     if form.validate_on_submit():
-
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
+<<<<<<< app/views.py
+        u = models.user(password = hashed_password, email = form.email.data, user_type = "1", name = form.name.data)
+=======
 
         u = models.user(password = hashed_password, email = form.email.data, account_type = "customer", user_type = "default", name = form.name.data)
 
+>>>>>>> app/views.py
         db.session.add(u)    # add user to db
         db.session.commit()     # commit user to db
         flash(f'Account Created!', 'success')
-
         return redirect(url_for('user_login'))   # redirect to login page
-
     else:
         return render_template('register.html',
                         title='Sign Up',
@@ -55,9 +60,6 @@ def user_login():
 
     form = LoginForm()
     if form.validate_on_submit():
-
-        ##flash('Succesfully received form data. %s %s %s'%(form.username.data, form.password.data, form.remember.data))
-
         # get first instance of user in db
         u = models.user.query.filter_by(email = form.email.data).first()
 
@@ -288,16 +290,52 @@ def review_feedback():
     return render_template('review_feedback.html',
                             title='Review Customer Feedback')
 
+
+
 @app.route('/view_scooters')
 def view_scooters():
+
+    rec = models.scooter.query.all()
     return render_template('view_scooters.html',
-                            title='View Scooters')
+                            title='View Scooters', rec=rec)
 
 
-@app.route('/add_scooter')
+
+
+
+
+
+
+
+@app.route('/add_scooter', methods=['GET','POST'])
 def add_scooter():
+    form = AddScooterForm()
+    
+    if form.validate_on_submit():
+        u = models.scooter(availability = form.availability.data, collection_id = form.location_id.data)
+        db.session.add(u)    # add scooter to db
+        db.session.commit()     # commit scooter to db
     return render_template('add_scooter.html',
-                            title='Add New Scooter')
+                            title='Add New Scooter', form=form)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/configure_scooter')
 def configure_scooter():

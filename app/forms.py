@@ -88,6 +88,38 @@ class ConfigureScooterForm(FlaskForm):
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
         ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class AddScooterForm(FlaskForm):
+    availability = SelectField('availability', choices = [(1, 'Available'), (2, 'Unavailable')], validators=[InputRequired()])
+    location_id = SelectField('location_id', choices=[(1, 'Trinity Centre'), (2, 'Train Station'), (3, 'Merrion Centre'),
+        (4, 'LRI Hospital'), (5, 'UoL Edge Sports Centre')], validators=[InputRequired()])
+
+
+
+
+
+
+
+
+
+
+
+
+
 # feedback form
 class FeedbackForm(FlaskForm):
     feedback = TextAreaField('feedback')

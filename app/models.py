@@ -67,17 +67,6 @@ class collection_point(db.Model):
             return f'CollectionPoint {self.id} < Location={self.location}| Number of scooters={self.num_scooters} >'
 
 
-#Scooter Database
-class scooter(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    availability = db.Column(db.Integer, nullable=False) #1 is available, 2 is unavailable
-
-    collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
-
-    booking = db.relationship('booking', backref='scooter', lazy=True)  #one-to-many relation
-
-    def __repr__(self):
-            return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'
 
 #Booking Database
 class booking(db.Model):
@@ -114,3 +103,12 @@ class pricing(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return user.query.get(int(user_id)) # get user by their ID
+#Scooter Database
+class scooter(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    availability = db.Column(db.Integer, nullable=False)
+    collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
+    booking = db.relationship('booking', backref='scooter', lazy=True)  #one-to-many relation
+
+    def __repr__(self):
+            return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'
