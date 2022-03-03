@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Enter Card Details</h1>
+
+  {% if card_found %}
+  <div>
+      {% for p in data %}
+        <div>
+          <p> <strong>User ID:</strong> {{p.user_id}} | <strong>Card Number:</strong> ({{ p.cardnumber[12:] }} ) | <strong>Expiry Date:</strong>{{ p.expiry_date }} | <strong>CVV:</strong>{{ p.cvv }}</p>
+        </div>
+        <div>
+            <p>{{p.name}}:( {{ p.cardnumber[12:]}} ) | Expiry: {{ p.expiry_date.month }} / {{ p.expiry_date.year }}</p>
+            <p>  </p>
+        </div>
+      {% endfor %}
+      
+  </div>
+  {% else %}
+  <form action="" method="post" name="unsavedbookingform">
+      {{ form.hidden_tag() }}
+      <p>
+        Name on card <br>
+        {{ form.name }}
+        {% if form.name.errors %}
+        {% for error in form.name.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+      </p>
+      <p>
+        Card Number <br>
+        {{ form.card_number }}
+        {% if form.card_number.errors %}
+        {% for error in form.card_number.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+      </p>
+      <p>
+        Expiry Date (mm-yyyy) <br>
+        {{ form.expiry }}
+        {% if form.expiry.errors %}
+        {% for error in form.expiry.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+      </p>
+      <p>
+        cvv <br>
+        {{ form.cvv }}
+        {% if form.cvv.errors %}
+        {% for error in form.cvv.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+      </p>
+      <p>
+        Save Card Details
+        {{ form.save_card_details }}
+      </p>
+      <p><input type="submit" value="Save"></p>
+  </form>
+  {% endif %}
+
+{% endblock %}
