@@ -1,12 +1,7 @@
 from flask import render_template, flash
 from app import app, db, bcrypt, models
-<<<<<<< app/views.py
-from .forms import LoginForm, SignUpForm, AddScooterForm
-from flask import request, redirect, url_for, abort, make_response
-=======
 from .forms import LoginForm, SignUpForm, AdminBookingForm, BookingForm, CardForm, AddScooterForm
 from flask import request, redirect, url_for, abort, make_response, session
->>>>>>> app/views.py
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
 import os
@@ -36,13 +31,7 @@ def register():
     if form.validate_on_submit():
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
-<<<<<<< app/views.py
-        u = models.user(password = hashed_password, email = form.email.data, user_type = "1", name = form.name.data)
-=======
-
         u = models.user(password = hashed_password, email = form.email.data, account_type = "customer", user_type = "default", name = form.name.data)
-
->>>>>>> app/views.py
         db.session.add(u)    # add user to db
         db.session.commit()     # commit user to db
         flash(f'Account Created!', 'success')
