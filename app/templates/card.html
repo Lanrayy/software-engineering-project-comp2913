@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Card</h1>
+  <h1>Enter Card Details</h1>
 
   {% if card_found %}
   <div>
@@ -62,37 +62,4 @@
   </form>
   {% endif %}
 
-  <div>
-    {% for p in data %}
-      <div>
-        <p> <strong>User ID:</strong> {{p.user_id}} | <strong>Card Number:</strong> ({{ p.cardnumber[12:] }} ) | <strong>Expiry Date:</strong>{{ p.expiry_date }} | <strong>CVV:</strong>{{ p.cvv }}</p>
-      </div>
-      <div>
-          <p>{{p.name}}({{ p.cardnumber[12:]}}) | Expiry: {{ p.expiry_date.month }}/{{p.expiry_date.year }}</p>
-      </div>
-    {% endfor %}
-    
-</div>
-
 {% endblock %}
-
-<!-- CHANGES TO MAKE TO MAKE CARD WORK -->
-<!-- 
-    - CHANGE THE CVV INTEGER FIELD INTO A STRING
-    - CHANGE THE CVV INTEGER FIELD INTO A STRING
-    - Added Validators for Cvv and card number unsaved booking form
-
-
-                # flash('Succesfully received form data. %s %s %s'%(form.card_number.data, form.name.data, form.expiry.data))
-
-            # get first instance of user in db
-            # u = models.user.query.filter_by(email = form.email.data).first()
-
-            # # check username and password
-            # if u and bcrypt.check_password_hash(u.password, form.password.data):
-            #     login_user(u)
-            #     flash('Login Successful!', 'success')
-            #     return redirect(url_for('user_dashboard'))
-            # else:
-            #     flash(f'Login unsuccessful. Please check email and password', 'error')
- -->
