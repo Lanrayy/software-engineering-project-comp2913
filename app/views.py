@@ -75,41 +75,34 @@ def user_login():
 # card route - to be integrated with the bookings page
 @app.route('/card', methods=['GET', 'POST'])
 def card():
-    
+    form = CardForm()
     data = models.card_details.query.filter_by(user_id=current_user.id).all()
-    card_found = False # delete this and uncomment below
-    # if data: # the user already has card details saved
-    #     card_found = True
-    # else:
-    #     card_found = False
 
-    if(data):
-        form = UnsavedBookingForm()
+    if data: # if the user already has card details saved
+        card_found = True
     else:
-        form = CardForm()
-        
-
+        card_found = False
+    
     if request.method == 'POST':
         if form.validate_on_submit():
-            flash('Succesfully received form data. %s %s %s'%(form.card_number.data, form.name.data, form.expiry.data))
-            
-            # save information into database
-            p = models.card_details(name = form.name.data,
-                                    cardnumber = form.card_number.data,
-                                    expiry_date = form.expiry.data,
-                                    cvv = form.cvv.data,
-                                    user_id = current_user.id)
-            db.session.add(p)
-            db.session.commit()
-            return redirect(url_for('card'))
-            flash("Card Successful added into database")
-    
+            if form.save_card_details.data:
+                # if the user want to save the card details
+                # save information into database
+                p = models.card_details(name = form.name.data,
+                                        cardnumber = form.card_number.data,
+                                        expiry_date = form.expiry.data,
+                                        cvv = form.cvv.data,
+                                        user_id = current_user.id)
+                db.session.add(p)
+                db.session.commit()
+                flash("Card details saved")
+                return redirect(url_for('card')) # needs to be changed
+                
     return render_template('card.html', 
                            title='Card',
                            form=form,
                            data=data,
                            card_found = card_found)
-
 
 @app.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
