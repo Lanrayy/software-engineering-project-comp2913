@@ -9,6 +9,7 @@ from wtforms import PasswordField
 from wtforms import BooleanField
 from wtforms import ValidationError
 from wtforms import SelectField
+from wtforms import FloatField
 from app import models
 from wtforms.validators import InputRequired, EqualTo, Length, Email, Regexp, NumberRange
 
@@ -90,3 +91,8 @@ class ConfigureScooterForm(FlaskForm):
 # feedback form
 class FeedbackForm(FlaskForm):
     feedback = TextAreaField('feedback')
+
+# configure prices form
+class PricesForm(FlaskForm):
+    duration = SelectField('duration', choices=[('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
+    price = StringField('price', validator=[InputRequired(), FloatField()])
