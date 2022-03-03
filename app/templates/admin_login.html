@@ -1,6 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>Admin Login</h1>
-  <!-- To be added when admin login form is added -->
-  <button type="button submit" class="btn btn-success">Log In</button>
+  <form action="" method="post" name="loginform">
+      {{ form.hidden_tag() }}
+      <p>
+        Email <br>
+        {{ form.email }}
+        {% if form.email.errors %}
+        {% for error in form.email.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+      </p>
+      <p>
+        Password <br>
+        {{ form.password }}
+        {% if form.password.errors %}
+        {% for error in form.password.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+      </p>
+      <p>
+        Remember details
+        {{ form.remember }}
+      </p>
+      <p><input type="submit" value="Login"></p>
+  </form>
 {% endblock %}
