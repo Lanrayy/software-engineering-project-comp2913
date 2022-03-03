@@ -39,14 +39,15 @@ class user(UserMixin, db.Model):
 #Card_Details Database
 class card_details(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
     cardnumber = db.Column(db.String(16), nullable=False)
-    expire_date = db.Column(db.String(5), nullable=False) #example : 08/24
+    expiry_date = db.Column(db.Date, nullable=False) #example : 08/24
     cvv = db.Column(db.String(3), nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-            return f'Card {self.id} < CardNumber={self.cardnumber}| ExpireDate={self.expire_date}| User_id={self.user_id}>'
+            return f'Card {self.id} < CardNumber={self.cardnumber}| ExpireDate={self.expiry_date}| User_id={self.user_id}>'
 
 
 #Collection_Point Database
