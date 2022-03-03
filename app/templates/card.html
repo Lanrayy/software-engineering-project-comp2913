@@ -9,8 +9,8 @@
           <p> <strong>User ID:</strong> {{p.user_id}} | <strong>Card Number:</strong> ({{ p.cardnumber[12:] }} ) | <strong>Expiry Date:</strong>{{ p.expiry_date }} | <strong>CVV:</strong>{{ p.cvv }}</p>
         </div>
         <div>
-            <p>Card Details: {{ p.cardnumber}}</p>
-            <p> Expiry: {{ p.expiry_date }} </p>
+            <p>{{p.name}}:( {{ p.cardnumber[12:]}} ) | Expiry: {{ p.expiry_date.month }} / {{ p.expiry_date.year }}</p>
+            <p>  </p>
         </div>
       {% endfor %}
       
