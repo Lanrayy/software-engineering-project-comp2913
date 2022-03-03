@@ -77,11 +77,11 @@ def user_login():
 def card():
     
     data = models.card_details.query.filter_by(user_id=current_user.id).all()
-    
-    if data: # the user already has card details saved
-        card_found = True
-    else:
-        card_found = False
+    card_found = False # delete this and uncomment below
+    # if data: # the user already has card details saved
+    #     card_found = True
+    # else:
+    #     card_found = False
 
     if(data):
         form = UnsavedBookingForm()
@@ -92,10 +92,11 @@ def card():
     if request.method == 'POST':
         if form.validate_on_submit():
             flash('Succesfully received form data. %s %s %s'%(form.card_number.data, form.name.data, form.expiry.data))
-
+            
             # save information into database
-            p = models.card_details(cardnumber = form.card_number.data,
-                                    expire_date = form.expiry.data,
+            p = models.card_details(name = form.name.data,
+                                    cardnumber = form.card_number.data,
+                                    expiry_date = form.expiry.data,
                                     cvv = form.cvv.data,
                                     user_id = current_user.id)
             db.session.add(p)
