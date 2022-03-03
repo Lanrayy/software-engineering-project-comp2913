@@ -25,12 +25,12 @@
 
         {% if current_user.is_authenticated %}
           <!-- Customer logo -->
-          {% if current_user.isUser() %}
+          {% if not current_user.account_type == "employee" and not current_user.account_type == "manager" %}
             <a class="navbar-brand" href="/user_dashboard">.sctr</a>
           {% endif %}
 
           <!-- Admin logo -->
-          {% if current_user.isAdmin() %}
+          {% if current_user.account_type == "employee" or current_user.account_type == "manager" %}
             <a class="navbar-brand" href="/admin_dashboard">.sctr</a>
           {% endif %}
         {% endif %}
@@ -43,11 +43,11 @@
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <!-- Global nav -->
             <li class="nav-item"><a class="nav-link" href="/info">How it Works</a></li>
-            <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
 
 
             <!-- Unregistered nav -->
             {% if not current_user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
             <li class="nav-item"><a class="nav-link" href="/admin_login">Admin Login</a></li>
             <li class="nav-item"><a class="nav-link" href="/user_login">User Login</a></li>
             <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
@@ -64,7 +64,7 @@
               {% endif %}
 
               <!-- Admin nav -->
-              {% if current_user.isAdmin() %}
+              {% if current_user.account_type == "employee" or current_user.account_type == "manager" %}
               <li class="nav-item"><a class="nav-link" href="/booking1_admin">Make a Booking</a></li>
               <li class="nav-item"><a class="nav-link" href="/review_feedback">Review Feedback</a></li>
               <li class="nav-item"><a class="nav-link" href="/configure_scooter">View Scooters</a></li>
@@ -131,12 +131,12 @@
 
               {% if current_user.is_authenticated %}
                 <!-- Customer logo -->
-                {% if current_user.isUser() %}
+                {% if not current_user.account_type == "employee" and not current_user.account_type == "manager" %}
                   <a class="navbar-brand" href="/user_dashboard">.sctr</a>
                 {% endif %}
 
                 <!-- Admin logo -->
-                {% if current_user.isAdmin() %}
+                {% if current_user.account_type == "employee" or current_user.account_type == "manager" %}
                   <a class="navbar-brand" href="/admin_dashboard">.sctr</a>
                 {% endif %}
               {% endif %}

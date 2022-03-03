@@ -1,6 +1,8 @@
 from app import db
 from app import app, login_manager
 from flask_login import UserMixin
+from sqlalchemy.engine import Engine
+from sqlalchemy import event
 import datetime
 
 #Note:
@@ -15,12 +17,20 @@ import datetime
 #Testing examples through the terminal after calling python :
 #>>> from app import db, models
 
+
+@event.listens_for(Engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
+
 #User Database
 class user(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
-    user_type = db.Column(db.String(50), nullable=False) #Cannot be 'type' cause its a key variable. Let users pick 1,2,3 rather than type it in. Make integer?
+    account_type = db.Column(db.String(50), nullable=False) #choices are: customer, employee, manager
+    user_type = db.Column(db.String(50), nullable=False) #choices are: default (includes emplyee and managers), senior, and frequent
     password = db.Column(db.String(50), nullable=False)
 
     card = db.relationship('card_details', uselist=False, backref='user') #one-to-one relation, "If you would want to have a one-to-one relationship you can pass uselist=False to relationship()."
@@ -29,12 +39,6 @@ class user(UserMixin, db.Model):
 
     def __repr__(self):
         return f'User {self.id} < Name={self.name}| Email={self.email}| Type={self.user_type}| Password={self.password}>' #Password is shown for testing, remove for security later
-
-    def isUser(self):
-        return True
-
-    def isAdmin(self):
-        return False
 
 #Card_Details Database
 class card_details(db.Model):
@@ -66,7 +70,7 @@ class collection_point(db.Model):
 #Scooter Database
 class scooter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    availability = db.Column(db.Integer, nullable=False)
+    availability = db.Column(db.Integer, nullable=False) #1 is available, 2 is unavailable
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
 
@@ -78,7 +82,7 @@ class scooter(db.Model):
 #Booking Database
 class booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    hire_period = db.Column(db.Integer(), nullable=False) #remove?
+    hire_period = db.Column(db.Integer, nullable=False) #remove?
     status = db.Column(db.String(50), nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
     cost = db.Column(db.Float, nullable=False)
     initial_date_time = db.Column(db.DateTime(), nullable=False)
@@ -91,24 +95,6 @@ class booking(db.Model):
 
     def __repr__(self):
             return f'Booking {self.id} < Hire_Period={self.hire_period}| Status={self.status}| Cost={self.cost}| Initial Date/Time={self.initial_date_time}| Final Date/Time={self.final_date_time}|Email={self.email}| User_id={self.user_id}| Scooter_id={self.scooter_id}| Collection_id={self.collection_id}>'
-
-
-#Admin Database
-class admin(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    admin_type = db.Column(db.String(50), nullable=False)
-    name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(50), unique=True, nullable=False) #Added <unique=True>
-    password = db.Column(db.String(50), nullable=False)
-
-    def __repr__(self):
-            return f'Admin {self.id} < Name={self.name}| Admin Type = {self.admin_type}| Email={self.email}| Password={self.password}>' #Password is shown for testing, remove for security later
-
-    def isUser(self):
-        return False
-
-    def isAdmin(self):
-        return True
 
 #Feedback Database
 class feedback(db.Model):
