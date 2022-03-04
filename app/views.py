@@ -80,13 +80,15 @@ def card():
     
     if request.method == 'POST':
         if form.validate_on_submit():
-            if form.save_card_details.data:
-                # if the user want to save the card details
-                # save information into database
+            if form.save_card_details.data: # if the user want to save the card details,  save information into database
+                hashed_card_num = bcrypt.generate_password_hash(form.card_number.data)
+                hashed_cvv = bcrypt.generate_password_hash(form.cvv.data)
+                last_four = form.card_number.data[12:]
                 p = models.card_details(name = form.name.data,
-                                        cardnumber = form.card_number.data,
+                                        cardnumber = hashed_card_num,
+                                        last_four = last_four,
                                         expiry_date = form.expiry.data,
-                                        cvv = form.cvv.data,
+                                        cvv = hashed_cvv,
                                         user_id = current_user.id)
                 db.session.add(p)
                 db.session.commit()
@@ -334,8 +336,33 @@ def configure_scooter():
 
 @app.route('/sales_metrics')
 def sales_metrics():
+    data = models.transactions.query.all()
+    one_hour_metric = 0
+    four_hour_metric = 0
+    twentyfour_hour_metric = 0 
+    one_week_metric = 0
+    date = datetime.utcnow()
+    week_start = date + timedelta(-date.weekday(), weeks=0)
+    week_end = date + timedelta(-date.weekday() + 6)
+    
+    for num in data:
+        if num.hire_period == 1 and num.booking_time > week_start and num.booking_time < week_end:
+            one_hour_metric += 1
+        elif num.hire_period == 4 and num.booking_time > week_start and num.booking_time < week_end:
+            four_hour_metric += 1
+        elif num.hire_period == 24 and num.booking_time > week_start and num.booking_time < week_end:
+            twentyfour_hour_metric += 1
+        elif num.hire_period == 168 and num.booking_time > week_start and num.booking_time < week_end:
+            one_week_metric += 1
+
     return render_template('sales_metrics.html',
-                            title='View Sales Metrics')
+                            title='View Sales Metrics',
+                            one_hour_metric = one_hour_metric,
+                            four_hour_metric = four_hour_metric,
+                            twentyfour_hour_metric = twentyfour_hour_metric,
+                            one_week_metric = one_week_metric,
+                            week_start = week_start,
+                            week_end = week_end)
 
 
 @app.route('/booking1_admin')

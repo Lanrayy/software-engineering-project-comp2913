@@ -45,6 +45,7 @@ class card_details(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     cardnumber = db.Column(db.String(16), nullable=False)
+    last_four = db.Column(db.String(4), nullable=False)
     expiry_date = db.Column(db.Date, nullable=False) #example : 08/24
     cvv = db.Column(db.String(3), nullable=False)
 
@@ -113,3 +114,15 @@ class scooter(db.Model):
 
     def __repr__(self):
             return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'
+
+#Transactions database
+class transactions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    hire_period = db.Column(db.Integer, nullable=False)
+    booking_time = db.Column(db.DateTime(), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+            return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'
+
+
