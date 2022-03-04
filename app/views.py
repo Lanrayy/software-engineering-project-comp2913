@@ -425,6 +425,12 @@ def review_feedback():
 def view_scooters():
 
     rec = models.scooter.query.all()
+
+    if request.method == 'POST':
+        scooter = db.query.filter_by(id=request.form["scooter_button"])
+        # if request.form['scooter_button'] == 
+        db.session.commit()
+        return render_template('configure_scooter.html')
     return render_template('view_scooters.html',
                             title='View Scooters', rec=rec)
 

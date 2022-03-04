@@ -12,8 +12,14 @@
       </tr>
     </thead>
     {% for rec in rec %}
+    <!-- session['scooter_id'] = {{rec.id}}
+    session['availability'] = {{rec.availability}}
+    session['location'] = {{rec.location}} -->
+
     <tr>
-    <th scope="row">{{rec.id}}</th>
+    <th scope="row">
+      {{rec.id}}
+    </th>
 
     <td>
       {% if rec.availability == 1 %}
@@ -45,6 +51,12 @@
       {% if rec.collection_id == 5%}
         <p> UoL Edge Sports Centre</p>        
       {% endif%}      
+    </td>
+
+    <td>
+      <p type="hidden"> </p>
+      <button type="submit" name="scooter_button" value="{{ rec.id }}"
+                            formmethod="post">Edit
     </td>
 
     </tr>
