@@ -345,14 +345,15 @@ def sales_metrics():
     week_start = date + timedelta(-date.weekday(), weeks=0)
     week_end = date + timedelta(-date.weekday() + 6)
     
-    for num in data:
-        if num.hire_period == 1 and num.booking_time > week_start and num.booking_time < week_end:
+    # for each transaction in if it is within the last week add it to the correct metric
+    for transaction in data:
+        if transaction.hire_period == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end:
             one_hour_metric += 1
-        elif num.hire_period == 4 and num.booking_time > week_start and num.booking_time < week_end:
+        elif transaction.hire_period == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end:
             four_hour_metric += 1
-        elif num.hire_period == 24 and num.booking_time > week_start and num.booking_time < week_end:
+        elif transaction.hire_period == 24 and transaction.booking_time > week_start and transaction.booking_time < week_end:
             twentyfour_hour_metric += 1
-        elif num.hire_period == 168 and num.booking_time > week_start and num.booking_time < week_end:
+        elif transaction.hire_period == 168 and transaction.booking_time > week_start and transaction.booking_time < week_end:
             one_week_metric += 1
 
     return render_template('sales_metrics.html',
