@@ -103,6 +103,7 @@ class pricing(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return user.query.get(int(user_id)) # get user by their ID
+
 #Scooter Database
 class scooter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
