@@ -43,14 +43,16 @@ class user(UserMixin, db.Model):
 #Card_Details Database
 class card_details(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
     cardnumber = db.Column(db.String(16), nullable=False)
-    expire_date = db.Column(db.String(5), nullable=False) #example : 08/24
+    last_four = db.Column(db.String(4), nullable=False)
+    expiry_date = db.Column(db.Date, nullable=False) #example : 08/24
     cvv = db.Column(db.String(3), nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-            return f'Card {self.id} < CardNumber={self.cardnumber}| ExpireDate={self.expire_date}| User_id={self.user_id}>'
+            return f'Card {self.id} < CardNumber={self.cardnumber}| ExpireDate={self.expiry_date}| User_id={self.user_id}>'
 
 
 #Collection_Point Database
@@ -66,17 +68,6 @@ class collection_point(db.Model):
             return f'CollectionPoint {self.id} < Location={self.location}| Number of scooters={self.num_scooters} >'
 
 
-#Scooter Database
-class scooter(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    availability = db.Column(db.Integer, nullable=False) #1 is available, 2 is unavailable
-
-    collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
-
-    booking = db.relationship('booking', backref='scooter', lazy=True)  #one-to-many relation
-
-    def __repr__(self):
-            return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'
 
 #Booking Database
 class booking(db.Model):
@@ -100,7 +91,38 @@ class feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(50), nullable=False)
 
+#Pricing Table
+class pricing(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    duration = db.Column(db.String(20), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        return f'Pricing {self.id} < Duration={self.duration}| Price={self.price}'
+
 #Query User_id for login
 @login_manager.user_loader
 def load_user(user_id):
     return user.query.get(int(user_id)) # get user by their ID
+
+#Scooter Database
+class scooter(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    availability = db.Column(db.Integer, nullable=False)
+    collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
+    booking = db.relationship('booking', backref='scooter', lazy=True)  #one-to-many relation
+
+    def __repr__(self):
+            return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'
+
+#Transactions database
+class transactions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    hire_period = db.Column(db.Integer, nullable=False)
+    booking_time = db.Column(db.DateTime(), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+            return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'
+
+

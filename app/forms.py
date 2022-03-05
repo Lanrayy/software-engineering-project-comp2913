@@ -9,9 +9,9 @@ from wtforms import PasswordField
 from wtforms import BooleanField
 from wtforms import ValidationError
 from wtforms import SelectField
+from wtforms import FloatField
 from app import models
-
-from wtforms.validators import InputRequired, EqualTo, Length, Email, Regexp
+from wtforms.validators import InputRequired, EqualTo, Length, Email, Regexp, NumberRange
 
 # sign up form
 class SignUpForm(FlaskForm):
@@ -46,6 +46,16 @@ class UserBookingForm(FlaskForm):
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
     #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
+
+# card form
+class CardForm(FlaskForm):
+    card_number = StringField('card_number', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "Card Number must be a number"), Length(min=16, max=16, message="Card number must be 16 characters")])
+    name = StringField('name', validators=[InputRequired()])
+    expiry = DateField('expiry', format= '%m-%Y', validators=[InputRequired()])
+    cvv = StringField('cvv', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "cvv must be a number"), Length(min=3, max=3, message="cvv must be 3 characters")])
+    save_card_details = BooleanField('save_card_details')
+
+
 # admin booking form
 class AdminBookingForm(FlaskForm):
     scooter_id = SelectField('scooter_id', choices=[])
@@ -62,6 +72,43 @@ class ConfigureScooterForm(FlaskForm):
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
         ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class AddScooterForm(FlaskForm):
+    availability = SelectField('availability', choices = [(1, 'Available'), (2, 'Unavailable')], validators=[InputRequired()])
+    location_id = SelectField('location_id', choices=[(1, 'Trinity Centre'), (2, 'Train Station'), (3, 'Merrion Centre'),
+        (4, 'LRI Hospital'), (5, 'UoL Edge Sports Centre')], validators=[InputRequired()])
+
+
+
+
+
+
+
+
+
+
+
+
+
 # feedback form
 class FeedbackForm(FlaskForm):
     feedback = TextAreaField('feedback')
+
+# configure prices form
+class PricesForm(FlaskForm):
+    duration = SelectField('duration', choices=[('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
+    price = StringField('price', validator=[InputRequired(), FloatField()])
