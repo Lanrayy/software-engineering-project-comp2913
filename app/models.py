@@ -108,7 +108,7 @@ def load_user(user_id):
 #Scooter Database
 class scooter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    availability = db.Column(db.Integer, nullable=False)
+    availability = db.Column(db.Integer, nullable=False) #1 is available, 2 is unavailable
     collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
     booking = db.relationship('booking', backref='scooter', lazy=True)  #one-to-many relation
 
@@ -124,5 +124,3 @@ class transactions(db.Model):
 
     def __repr__(self):
             return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'
-
-
