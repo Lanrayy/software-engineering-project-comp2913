@@ -1,6 +1,7 @@
 from flask import render_template, flash, request, redirect, url_for, abort, make_response, session, jsonify
 from app import app, db, bcrypt, models, login_manager
-from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm
+from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm
+from app import app, db, bcrypt, models
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
 import os
@@ -27,20 +28,14 @@ def register():
     form = SignUpForm()
 
     # if form is submitted
-
     if form.validate_on_submit():
-
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
-
         u = models.user(password = hashed_password, email = form.email.data, account_type = "customer", user_type = "default", name = form.name.data)
-
         db.session.add(u)    # add user to db
         db.session.commit()     # commit user to db
         flash(f'Account Created!', 'success')
-
         return redirect(url_for('user_login'))   # redirect to login page
-
     else:
         return render_template('register.html',
                         title='Sign Up',
@@ -54,9 +49,6 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
-
-        ##flash('Succesfully received form data. %s %s %s'%(form.username.data, form.password.data, form.remember.data))
-
         # get first instance of user in db
         u = models.user.query.filter_by(email = form.email.data).first()
 
@@ -71,8 +63,73 @@ def login():
         else:
             flash(f'Login unsuccessful. Please check email and password', 'error')
 
+<<<<<<< app/views.py
     return render_template('login.html',
                            title='Login',
+=======
+    return render_template('user_login.html',
+                           title='User Login',
+                           form=form)
+
+# card route - to be integrated with the bookings page
+@app.route('/card', methods=['GET', 'POST'])
+def card():
+    form = CardForm()
+    data = models.card_details.query.filter_by(user_id=current_user.id).all()
+
+    if data: # if the user already has card details saved
+        card_found = True
+    else:
+        card_found = False
+    
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            if form.save_card_details.data: # if the user want to save the card details,  save information into database
+                hashed_card_num = bcrypt.generate_password_hash(form.card_number.data)
+                hashed_cvv = bcrypt.generate_password_hash(form.cvv.data)
+                last_four = form.card_number.data[12:]
+                p = models.card_details(name = form.name.data,
+                                        cardnumber = hashed_card_num,
+                                        last_four = last_four,
+                                        expiry_date = form.expiry.data,
+                                        cvv = hashed_cvv,
+                                        user_id = current_user.id)
+                db.session.add(p)
+                db.session.commit()
+                flash("Card details saved")
+                return redirect(url_for('card')) # needs to be changed
+                
+    return render_template('card.html', 
+                           title='Card',
+                           form=form,
+                           data=data,
+                           card_found = card_found)
+
+@app.route('/admin_login', methods=['GET', 'POST'])
+def admin_login():
+    if current_user.is_authenticated:   # if current user is logged in
+        return redirect (url_for('index'))
+
+    form = LoginForm()
+    if form.validate_on_submit():
+
+        # get first instance of user in db
+        u = models.user.query.filter_by(email = form.email.data).first()
+
+        # check username and password
+        if u and bcrypt.check_password_hash(u.password, form.password.data):
+            login_user(u)
+            flash('Admin Login Successful!', 'success')
+            if(u.account_type == "employee" or u.account_type == "manager"):
+                return redirect(url_for('admin_dashboard'))
+            else:
+                return redirect(url_for('user_dashboard'))
+        else:
+            flash(f'Admin Login unsuccessful. Please check email and password', 'error')
+
+    return render_template('admin_login.html',
+                           title='Admin Login',
+>>>>>>> app/views.py
                            form=form)
 
 
@@ -296,16 +353,52 @@ def review_feedback():
     return render_template('review_feedback.html',
                             title='Review Customer Feedback')
 
+
+
 @app.route('/view_scooters')
 def view_scooters():
+
+    rec = models.scooter.query.all()
     return render_template('view_scooters.html',
-                            title='View Scooters')
+                            title='View Scooters', rec=rec)
 
 
-@app.route('/add_scooter')
+
+
+
+
+
+
+
+@app.route('/add_scooter', methods=['GET','POST'])
 def add_scooter():
+    form = AddScooterForm()
+    
+    if form.validate_on_submit():
+        u = models.scooter(availability = form.availability.data, collection_id = form.location_id.data)
+        db.session.add(u)    # add scooter to db
+        db.session.commit()     # commit scooter to db
     return render_template('add_scooter.html',
-                            title='Add New Scooter')
+                            title='Add New Scooter', form=form)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/configure_scooter')
 def configure_scooter():
@@ -315,5 +408,100 @@ def configure_scooter():
 
 @app.route('/sales_metrics')
 def sales_metrics():
+    data = models.transactions.query.all()
+    one_hour_metric = 0
+    four_hour_metric = 0
+    twentyfour_hour_metric = 0 
+    one_week_metric = 0
+    date = datetime.utcnow()
+    week_start = date + timedelta(-date.weekday(), weeks=0)
+    week_end = date + timedelta(-date.weekday() + 6)
+    
+    # for each transaction in if it is within the last week add it to the correct metric
+    for transaction in data:
+        if transaction.hire_period == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end:
+            one_hour_metric += 1
+        elif transaction.hire_period == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end:
+            four_hour_metric += 1
+        elif transaction.hire_period == 24 and transaction.booking_time > week_start and transaction.booking_time < week_end:
+            twentyfour_hour_metric += 1
+        elif transaction.hire_period == 168 and transaction.booking_time > week_start and transaction.booking_time < week_end:
+            one_week_metric += 1
+
     return render_template('sales_metrics.html',
+<<<<<<< app/views.py
                             title='View Sales Metrics')
+=======
+                            title='View Sales Metrics',
+                            one_hour_metric = one_hour_metric,
+                            four_hour_metric = four_hour_metric,
+                            twentyfour_hour_metric = twentyfour_hour_metric,
+                            one_week_metric = one_week_metric,
+                            week_start = week_start,
+                            week_end = week_end)
+
+
+@app.route('/booking1_admin')
+def booking1_admin():
+    collection_points = models.collection_point.query.all()
+    scooter = models.scooter
+    return render_template('booking1_admin.html',
+                            title='Choose a Location',
+                            collection_points=collection_points,
+                            scooter=scooter)
+
+#intermediate route to save the collection point and scooter ID
+@app.route('/booking2_admin_variables/<string:booking_collection_point>/<int:scooter_id>')
+def booking2_admin_variables(booking_collection_point, scooter_id):
+    session['collection_location'] = booking_collection_point
+    session['collection_id'] = models.collection_point.query.filter_by(location = booking_collection_point).first().id
+    session['scooter_id'] = scooter_id
+
+    return redirect(url_for('booking2_admin'))
+
+
+@app.route('/booking2_admin', methods=['GET', 'POST'])
+def booking2_admin():
+    form = AdminBookingForm()
+
+    if form.validate_on_submit():
+        if form.hire_period.data == 1:
+            cost = 10.00
+            hours = 1
+        if form.hire_period.data == 2:
+            cost = 39.00
+            hours = 4
+        if form.hire_period.data == 3:
+            cost = 109.00
+            hours = 24
+        if form.hire_period.data == 4:
+            cost = 399.00
+            hours = 168
+        else:
+            cost = 10.00
+            hours = 1
+
+        booking = models.booking(hire_period = form.hire_period.data,
+        status = "active",
+        cost = cost,
+        initial_date_time = datetime.utcnow(),
+        final_date_time = datetime.utcnow() + timedelta(hours = hours),
+        email = form.email.data,
+        scooter_id = session.get('scooter_id', None),
+        collection_id = session.get('collection_id', None))
+
+        db.session.add(booking)
+        scooter = models.scooter.query.filter_by(id = session.get('scooter_id', None)).first() #find the scooter
+        scooter.availability = 2 #mark as unavailable
+        db.session.commit()
+
+        session['booking_id'] = booking.id
+
+        flash(f'Booking Created!', 'success')
+
+        return redirect("/booking3")
+    else:
+        return render_template('booking2_admin.html',
+        title='Make a Booking',
+        form=form)
+>>>>>>> app/views.py
