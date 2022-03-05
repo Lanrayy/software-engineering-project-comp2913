@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 #global variables
 app = Flask(__name__)
@@ -18,3 +20,16 @@ login_manager.login_message_category = 'info'
 migrate = Migrate(app, db)
 
 from app import views, models
+
+# admin 
+admin = Admin(app)
+
+admin.add_view(ModelView(models.user, db.session))
+admin.add_view(ModelView(models.card_details, db.session))
+admin.add_view(ModelView(models.collection_point, db.session))
+admin.add_view(ModelView(models.booking, db.session))
+admin.add_view(ModelView(models.feedback, db.session))
+admin.add_view(ModelView(models.pricing, db.session))
+admin.add_view(ModelView(models.scooter, db.session))
+
+
