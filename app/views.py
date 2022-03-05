@@ -1,7 +1,6 @@
 from flask import render_template, flash, request, redirect, url_for, abort, make_response, session, jsonify
 from app import app, db, bcrypt, models, login_manager
 from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm
-from app import app, db, bcrypt, models
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
 import os
