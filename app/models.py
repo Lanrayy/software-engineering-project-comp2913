@@ -72,7 +72,7 @@ class collection_point(db.Model):
 #Booking Database
 class booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    hire_period = db.Column(db.Integer, nullable=False) #remove?
+    duration = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
     cost = db.Column(db.Float, nullable=False)
     initial_date_time = db.Column(db.DateTime(), nullable=False)
@@ -84,7 +84,7 @@ class booking(db.Model):
     collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
 
     def __repr__(self):
-            return f'Booking {self.id} < Hire_Period={self.hire_period}| Status={self.status}| Cost={self.cost}| Initial Date/Time={self.initial_date_time}| Final Date/Time={self.final_date_time}|Email={self.email}| User_id={self.user_id}| Scooter_id={self.scooter_id}| Collection_id={self.collection_id}>'
+            return f'Booking {self.id} < Durationd={self.duration}| Status={self.status}| Cost={self.cost}| Initial Date/Time={self.initial_date_time}| Final Date/Time={self.final_date_time}|Email={self.email}| User_id={self.user_id}| Scooter_id={self.scooter_id}| Collection_id={self.collection_id}>'
 
 #Feedback Database
 class feedback(db.Model):

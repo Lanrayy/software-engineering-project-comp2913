@@ -39,25 +39,12 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember Me')
 
 # user booking form
-class BookingForm(FlaskForm):
-    #scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
-    # location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
-    #     ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
+class UserBookingForm(FlaskForm):
+    scooter_id = SelectField('scooter_id', choices=[])
+    location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
+                                                      ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
     #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
-
-# unsaved Booking Form 
-class UnsavedBookingForm(FlaskForm):
-    scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
-    # location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
-    #     ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
-    hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
-    # My changes
-    card_number = StringField('card_number', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "Card Number must be a number"), Length(min=16, max=16, message="Card number must be 16 characters")])
-    name = StringField('name', validators=[InputRequired()])
-    expiry = DateField('expiry', format= '%m-%Y', validators=[InputRequired()])
-    cvv = StringField('cvv', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "cvv must be a number"), Length(min=3, max=3, message="cvv must be 3 characters")])
-    save_card_details = BooleanField('save_card_details')
 
 
 # card form
@@ -71,15 +58,12 @@ class CardForm(FlaskForm):
 
 # admin booking form
 class AdminBookingForm(FlaskForm):
-    # scooter_id = SelectField('scooter_id', choices=available_scooters, validators=[InputRequired()])
-    # location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
-    #     ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
+    scooter_id = SelectField('scooter_id', choices=[])
+    location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
+                                                      ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
     email = StringField('email', validators=[InputRequired(), Email()])
-    # card_number = IntegerField('card_number', validators=[InputRequired()])
-    # name = StringField('name', validators=[InputRequired()])
-    # expiry = DateField('expiry', validators=[InputRequired()])
-    # cvv = IntegerField('cvv', validators=[InputRequired()])
+    #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
 # configure scooter form
 class ConfigureScooterForm(FlaskForm):
