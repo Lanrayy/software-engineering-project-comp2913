@@ -2,15 +2,52 @@
 {% block content %}
   <h1>Make a Booking</h1>
 
-  <h2>Select a Location</h2>
   <!-- Location ... No. Scooters Available -->
-  {% for row in collection_points %}
-    <div class="row bg-light">
-      <h5>{{row.location}}</h5>
-      <br>
-      {% for scooter in scooter.query.filter_by(collection_id = row.id, availability = 1) %}
-        <a href="/booking2_admin_variables/{{row.location}}/{{scooter.id}}">Scooter ID: {{scooter.id}}</a>
-      {% endfor %}
-    </div>
-  {% endfor %}
+  <form  method="post" name="bookingform">
+    {{ form.csrf_token }}
+    {{ form.hidden_tag() }}
+    <p>
+      Choose a Collection Point <br>
+      {{ form.location_id }}
+    </p>
+    <p>
+      Choose a Scooter <br>
+      {{ form.scooter_id }}
+    </p>
+    <p>
+      Select a Hire Period <br>
+      {{ form.hire_period }}
+    </p>
+    <p>
+      Please enter your email address <br>
+      {{ form.email }}
+    </p>
+    <p><input type="submit" value="Go to Payment"></p>
+  </form>
+
+  <script>
+    let location_select = document.getElementById('location_id');
+    let scooter_select = document.getElementById('scooter_id');
+
+    location_select.onchange = function() {
+      location_id = location_select.value;
+
+      fetch('booking1/' + location_id).then(function(response) {
+        response.json().then(function(data) {
+          let optionHTML = '';
+          let count = 0;
+          for(let scooter of data.scooters) {
+            optionHTML += '<option value = "' + scooter.id + '">' + "Scooter ID: " + scooter.id + '</option>';
+            count++;
+          }
+
+          if(count == 0) {
+            optionHTML = '<option value = "0">No Scooters Available</option>';
+          }
+
+          scooter_select.innerHTML = optionHTML;
+        });
+      });
+    }
+  </script>
 {% endblock %}
