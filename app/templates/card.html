@@ -13,11 +13,12 @@
             <p>  </p>
         </div>
       {% endfor %}
-      
+
   </div>
   {% else %}
   <form action="" method="post" name="unsavedbookingform">
-      {{ form.hidden_tag() }}
+    {{ form.csrf_token }}
+    {{ form.hidden_tag() }}
       <p>
         Name on card <br>
         {{ form.name }}

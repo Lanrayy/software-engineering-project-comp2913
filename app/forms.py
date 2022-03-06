@@ -51,7 +51,8 @@ class UserBookingForm(FlaskForm):
 class CardForm(FlaskForm):
     card_number = StringField('card_number', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "Card Number must be a number"), Length(min=16, max=16, message="Card number must be 16 characters")])
     name = StringField('name', validators=[InputRequired()])
-    expiry = DateField('expiry', format= '%m-%Y', validators=[InputRequired()])
+    # expiry = DateField('expiry', format= '%m-%Y', validators=[InputRequired()])
+    expiry = DateField('expiry', validators=[InputRequired()]) #had to remove the format month year or it wouldn't validate
     cvv = StringField('cvv', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "cvv must be a number"), Length(min=3, max=3, message="cvv must be 3 characters")])
     save_card_details = BooleanField('save_card_details')
 
