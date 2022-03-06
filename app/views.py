@@ -189,7 +189,10 @@ def booking1():
         form.location_id.choices = [(collection_point.id, collection_point.location)
                                     for collection_point in models.collection_point.query.all()]
 
-        form.location_id.data = '1'
+        if form.start_date.data == None:
+            form.start_date.data = datetime.now()
+        if form.location_id.data == None:
+            form.location_id.data = '1'
 
         form.scooter_id.choices = [(scooter.id, "Scooter ID: " + str(scooter.id))
                                     for scooter in models.scooter.query.filter_by(collection_id = form.location_id.data, availability = 1).all()]
@@ -197,7 +200,7 @@ def booking1():
         if len(form.scooter_id.choices) == 0:
             form.scooter_id.choices = [("0", "No Scooters Available")]
 
-        if form.is_submitted:
+        if form.is_submitted():
             if form.scooter_id.data == "0":
                 flash("Please choose a location with available scooters")
                 return render_template('booking1_user.html',
@@ -205,7 +208,7 @@ def booking1():
                                         form = form)
 
             if form.start_date.data == None:
-                flash("PLease enter a valid date")
+                flash("Please enter a valid date")
                 return render_template('booking1_user.html',
                                         title='Choose a Location',
                                         form = form)
@@ -217,16 +220,16 @@ def booking1():
                                         form = form)
 
             if form.hire_period.data == '1':
-                cost = 10.00
+                cost = models.pricing.query.filter_by(id = 1).first().price
                 hours = 1
             elif form.hire_period.data == '2':
-                cost = 39.00
+                cost = models.pricing.query.filter_by(id = 1).first().price
                 hours = 4
             elif form.hire_period.data == '3':
-                cost = 109.00
+                cost = models.pricing.query.filter_by(id = 1).first().price
                 hours = 24
             elif form.hire_period.data == '4':
-                cost = 399.00
+                cost = models.pricing.query.filter_by(id = 1).first().price
                 hours = 168
             else:
                 cost = 10.00
@@ -280,7 +283,10 @@ def booking1():
         form.location_id.choices = [(collection_point.id, collection_point.location)
                                     for collection_point in models.collection_point.query.all()]
 
-        form.location_id.data = '1'
+        if form.start_date.data == None:
+            form.start_date.data = datetime.now()
+        if form.location_id.data == None:
+            form.location_id.data = '1'
 
         form.scooter_id.choices = [(scooter.id, "Scooter ID: " + str(scooter.id))
                                     for scooter in models.scooter.query.filter_by(collection_id = form.location_id.data, availability = 1).all()]
@@ -289,22 +295,35 @@ def booking1():
             form.scooter_id.choices = [("0", "No Scooters Available")]
 
         if form.is_submitted():
-            if(form.scooter_id.data == "0"):
+            if form.scooter_id.data == "0":
                 flash("Please choose a location with available scooters")
                 return render_template('booking1_admin.html',
                                         title='Choose a Location',
                                         form = form)
+
+            if form.start_date.data == None:
+                flash("Please enter a valid date")
+                return render_template('booking1_admin.html',
+                                        title='Choose a Location',
+                                        form = form)
+
+            if form.start_date.data < datetime.now():
+                flash("The start date can't be in the past")
+                return render_template('booking1_admin.html',
+                                        title='Choose a Location',
+                                        form = form)
+
             if form.hire_period.data == '1':
-                cost = 10.00
+                cost = models.pricing.query.filter_by(id = 1).first().price
                 hours = 1
             elif form.hire_period.data == '2':
-                cost = 39.00
+                cost = models.pricing.query.filter_by(id = 1).first().price
                 hours = 4
             elif form.hire_period.data == '3':
-                cost = 109.00
+                cost = models.pricing.query.filter_by(id = 1).first().price
                 hours = 24
             elif form.hire_period.data == '4':
-                cost = 399.00
+                cost = models.pricing.query.filter_by(id = 1).first().price
                 hours = 168
             else:
                 cost = 10.00
@@ -344,6 +363,16 @@ def booking1_location(location_id):
 @app.route('/booking2')
 def booking2():
     booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
+
+    if booking.duration == 1:
+        session['booking_period'] = "1 Hour"
+    elif booking.duration == 4:
+        session['booking_period'] = "4 Hours"
+    elif booking.duration == 24:
+        session['booking_period'] = "1 Day"
+    elif booking.duration == 168:
+        session['booking_period'] = "1 Week"
+
     location = session.get('collection_location', None)
     return render_template('booking2.html',
                             title='Booking Confirmation',
