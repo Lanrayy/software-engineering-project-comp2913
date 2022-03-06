@@ -39,6 +39,28 @@ class FlaskTestCase(unittest.TestCase):
         self.assertTrue(b'Locations' in response.data)
 
 
+    # ensure that sign up behaves correctly given the correct credentials
+    def test_correct_signup(self):
+        
+        tester = app.test_client(self)
+        response = tester.post('/register', 
+                                data=dict(name="user1",
+                                email="user1@demo.com", 
+                                password1="user1",
+                                password2="user1"), 
+                                follow_redirects=True)
+        #self.assertIn(b'Remember details', response.data)
+
+    # ensure that sign up behaves correctly given the INCORRECT credentials
+    def test_incorrect_signup(self):
+        
+        tester = app.test_client(self)
+        response = tester.post('/register', 
+                                data=dict(email="jeodn@demo.com", 
+                                password="lwidm"), 
+                                follow_redirects=True)
+        self.assertIn(b'Name', response.data)
+
     # ensure that login behaves correctly given the correct credentials
     def test_correct_login(self):
         
@@ -54,10 +76,10 @@ class FlaskTestCase(unittest.TestCase):
         
         tester = app.test_client(self)
         response = tester.post('/login', 
-                                data=dict(email="testuser@demo.com", 
-                                password="testing"), 
+                                data=dict(email="notuser@demo.com", 
+                                password="wdsd"), 
                                 follow_redirects=True)
-        self.assertIn(b'View Profile', response.data)
+        self.assertIn(b'Login unsuccessful', response.data)
 
 
 if __name__ == '__main__':
