@@ -20,7 +20,7 @@
   <div class="">
     <h5>Hire period</h5>
     <p>
-      {{ booking.hire_period }}
+      {{ session.get('booking_period', None) }}
     </p>
   </div>
 
