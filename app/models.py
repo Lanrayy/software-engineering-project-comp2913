@@ -94,7 +94,7 @@ class feedback(db.Model):
 #Pricing Table
 class pricing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    duration = db.Column(db.String(20), nullable=False)
+    duration = db.Column(db.String(20), nullable=False) # Options are "1 hour", "4 hours", "1 day", "1 week"
     price = db.Column(db.Float, nullable=False)
 
     def __repr__(self):
