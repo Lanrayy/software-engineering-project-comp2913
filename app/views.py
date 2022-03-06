@@ -93,7 +93,39 @@ def card():
                 db.session.add(p)
                 db.session.commit()
                 flash("Card details saved")
-                return redirect(url_for('card')) # needs to be changed
+
+            booking = 0
+
+            if session.get('booking_user_id') == 0:
+                booking = models.booking(duration = session.get('booking_duration', None),
+                                         status= session.get('booking_status', None),
+                                         cost = session.get('booking_cost', None),
+                                         initial_date_time = session.get('booking_initial', None),
+                                         final_date_time = session.get('booking_final', None),
+                                         email = session.get('booking_email', None),
+                                         scooter_id = session.get('booking_scooter_id', None),
+                                         collection_id = session.get('booking_collection_id', None))
+                db.session.add(booking)
+            else:
+                booking = models.booking(duration = session.get('booking_duration', None),
+                                         status= session.get('booking_status', None),
+                                         cost = session.get('booking_cost', None),
+                                         initial_date_time = session.get('booking_initial', None),
+                                         final_date_time = session.get('booking_final', None),
+                                         email = session.get('booking_email', None),
+                                         user_id = session.get('booking_user_id', None),
+                                         scooter_id = session.get('booking_scooter_id', None),
+                                         collection_id = session.get('booking_collection_id', None))
+                db.session.add(booking)
+
+            scooter = models.scooter.query.filter_by(id = session.get('booking_scooter_id', None)).first() #find the scooter
+            scooter.availability = 2 #mark as unavailable
+            db.session.commit()
+
+            session['booking_id'] = booking.id
+
+            flash("Booking Successful!")
+            return redirect("/booking2") #send to booking confirmation
 
     return render_template('card.html',
                            title='Card',
@@ -187,34 +219,42 @@ def booking1():
                 cost = 10.00
                 hours = 1
 
-            booking = models.booking(duration = hours,
-                                     status="active",
-                                     cost = cost,
-                                     initial_date_time = datetime.utcnow(),
-                                     final_date_time = datetime.utcnow() + timedelta(hours = hours),
-                                     email = current_user.email,
-                                     user_id = current_user.id,
-                                     scooter_id = int(form.scooter_id.data),
-                                     collection_id = int(form.location_id.data))
-
-            db.session.add(booking)
-            scooter = models.scooter.query.filter_by(id = form.scooter_id.data).first() #find the scooter
-            scooter.availability = 2 #mark as unavailable
-            db.session.commit()
-
-            session['booking_id'] = booking.id
+            session['booking_duration'] = hours
+            session['booking_status'] = "active"
+            session['booking_cost'] = cost
+            session['booking_initial'] = datetime.utcnow()
+            session['booking_final'] = datetime.utcnow() + timedelta(hours = hours)
+            session['booking_user_id'] = current_user.id
+            session['booking_email'] = current_user.email
+            session['booking_scooter_id'] = int(form.scooter_id.data)
+            session['booking_collection_id'] = int(form.location_id.data)
 
             #card details do not exist, send to payment page
             exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
-            print(exists)
             if(exists):
-                #card details exist, send to confirmation page straight away
+                #card details exist, book then send to confirmation page straight away
+                booking = models.booking(duration = hours,
+                                         status="active",
+                                         cost = cost,
+                                         initial_date_time = datetime.utcnow(),
+                                         final_date_time = datetime.utcnow() + timedelta(hours = hours),
+                                         email = current_user.email,
+                                         user_id = current_user.id,
+                                         scooter_id = int(form.scooter_id.data),
+                                         collection_id = int(form.location_id.data))
+
+                db.session.add(booking)
+                scooter = models.scooter.query.filter_by(id = form.scooter_id.data).first() #find the scooter
+                scooter.availability = 2 #mark as unavailable
+                db.session.commit()
+
+                session['booking_id'] = booking.id
+
                 flash("Booking Successful!")
                 return redirect("/booking2")
             else:
-                #card details do no exist, send to payment page
-                flash("Booking Successful from an unsaved user")
-                return redirect("/booking2")
+                #card details do not exist, send to payment page
+                return redirect("/card")
 
         return render_template('booking1_user.html',
                                 title='Choose a Location',
@@ -257,25 +297,17 @@ def booking1():
                 cost = 10.00
                 hours = 1
 
-            booking = models.booking(duration = hours,
-                                     status="active",
-                                     cost = cost,
-                                     initial_date_time = datetime.utcnow(),
-                                     final_date_time = datetime.utcnow() + timedelta(hours = hours),
-                                     email = form.email.data,
-                                     user_id = current_user.id,
-                                     scooter_id = int(form.scooter_id.data),
-                                     collection_id = int(form.location_id.data))
+            session['booking_duration'] = hours
+            session['booking_status'] = "active"
+            session['booking_cost'] = cost
+            session['booking_initial'] = datetime.utcnow()
+            session['booking_final'] = datetime.utcnow() + timedelta(hours = hours)
+            session['booking_user_id'] = 0
+            session['booking_email'] = form.email.data
+            session['booking_scooter_id'] = int(form.scooter_id.data)
+            session['booking_collection_id'] = int(form.location_id.data)
 
-            db.session.add(booking)
-            scooter = models.scooter.query.filter_by(id = form.scooter_id.data).first() #find the scooter
-            scooter.availability = 2 #mark as unavailable
-            db.session.commit()
-
-            session['booking_id'] = booking.id
-
-            flash("Booking Successful from an admin")
-            return redirect("/booking2")
+            return redirect("/card")
 
         return render_template('booking1_admin.html',
                                 title='Choose a Location',
