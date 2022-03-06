@@ -197,12 +197,25 @@ def booking1():
         if len(form.scooter_id.choices) == 0:
             form.scooter_id.choices = [("0", "No Scooters Available")]
 
-        if form.is_submitted():
-            if(form.scooter_id.data == "0"):
+        if form.is_submitted:
+            if form.scooter_id.data == "0":
                 flash("Please choose a location with available scooters")
                 return render_template('booking1_user.html',
                                         title='Choose a Location',
                                         form = form)
+
+            if form.start_date.data == None:
+                flash("PLease enter a valid date")
+                return render_template('booking1_user.html',
+                                        title='Choose a Location',
+                                        form = form)
+
+            if form.start_date.data < datetime.now():
+                flash("The start date can't be in the past")
+                return render_template('booking1_user.html',
+                                        title='Choose a Location',
+                                        form = form)
+
             if form.hire_period.data == '1':
                 cost = 10.00
                 hours = 1
@@ -222,8 +235,8 @@ def booking1():
             session['booking_duration'] = hours
             session['booking_status'] = "active"
             session['booking_cost'] = cost
-            session['booking_initial'] = datetime.utcnow()
-            session['booking_final'] = datetime.utcnow() + timedelta(hours = hours)
+            session['booking_initial'] = form.start_date.data
+            session['booking_final'] = form.start_date.data + timedelta(hours = hours)
             session['booking_user_id'] = current_user.id
             session['booking_email'] = current_user.email
             session['booking_scooter_id'] = int(form.scooter_id.data)
@@ -236,8 +249,8 @@ def booking1():
                 booking = models.booking(duration = hours,
                                          status="active",
                                          cost = cost,
-                                         initial_date_time = datetime.utcnow(),
-                                         final_date_time = datetime.utcnow() + timedelta(hours = hours),
+                                         initial_date_time = form.start_date.data,
+                                         final_date_time = form.start_date.data + timedelta(hours = hours),
                                          email = current_user.email,
                                          user_id = current_user.id,
                                          scooter_id = int(form.scooter_id.data),
