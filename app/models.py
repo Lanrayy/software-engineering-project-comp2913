@@ -58,7 +58,7 @@ class card_details(db.Model):
 #Collection_Point Database
 class collection_point(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    location = db.Column(db.String(50), nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
+    location = db.Column(db.String(50), nullable=False) #The name of the location
     num_scooters = db.Column(db.Integer, nullable=False)
 
     scooter = db.relationship('scooter', backref='collection_point', lazy=True)  #one-to-many relation

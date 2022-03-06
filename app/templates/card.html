@@ -55,10 +55,12 @@
         {% endfor %}
       {% endif %}
       </p>
-      <p>
-        Save Card Details
-        {{ form.save_card_details }}
-      </p>
+      {% if current_user.account_type == "employee" or current_user.account_type == "manager" %}
+        <p>
+          Save Card Details
+          {{ form.save_card_details }}
+        </p>
+      {% endif %}
       <p><input type="submit" value="Save"></p>
   </form>
   {% endif %}
