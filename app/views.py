@@ -1,12 +1,7 @@
 from flask import render_template, flash
 from app import app, db, bcrypt, models
-<<<<<<< app/views.py
-from .forms import LoginForm, SignUpForm, AddScooterForm
-from flask import request, redirect, url_for, abort, make_response
-=======
-from .forms import LoginForm, SignUpForm, AdminBookingForm, BookingForm, CardForm, AddScooterForm
+from .forms import LoginForm, SignUpForm, AdminBookingForm, BookingForm, CardForm, AddScooterForm, PricesForm
 from flask import request, redirect, url_for, abort, make_response, session
->>>>>>> app/views.py
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
 import os
@@ -36,13 +31,7 @@ def register():
     if form.validate_on_submit():
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
-<<<<<<< app/views.py
-        u = models.user(password = hashed_password, email = form.email.data, user_type = "1", name = form.name.data)
-=======
-
         u = models.user(password = hashed_password, email = form.email.data, account_type = "customer", user_type = "default", name = form.name.data)
-
->>>>>>> app/views.py
         db.session.add(u)    # add user to db
         db.session.commit()     # commit user to db
         flash(f'Account Created!', 'success')
@@ -328,19 +317,34 @@ def add_scooter():
 
 
 
-
-
-
-
-
-
-
-
-
 @app.route('/configure_scooter')
 def configure_scooter():
     return render_template('configure_scooter.html',
                             title='Configure A Scooter')
+
+
+
+
+
+@app.route('/configure_costs', methods =['GET', 'POST'])
+def configure_costs():
+    rec = models.pricing.query.all()
+    form = PricesForm()
+
+
+    if form.validate_on_submit():
+        dur = models.pricing.query.filter_by(duration = form.duration.data).first()
+
+        if dur:
+            dur.price = form.price.data
+            flash("Price updated")
+        else:
+            flash("Error price not updated")
+
+
+        db.session.commit()     # commit scooter to db
+    return render_template('configure_costs.html',
+                            rec=rec, form=form)
 
 
 @app.route('/sales_metrics')

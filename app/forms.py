@@ -126,5 +126,5 @@ class FeedbackForm(FlaskForm):
 
 # configure prices form
 class PricesForm(FlaskForm):
-    duration = SelectField('duration', choices=[('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
-    price = StringField('price', validator=[InputRequired(), FloatField()])
+    duration = SelectField('duration', choices=[('1', '1 hour'), ('2', '4 hour'), ('3', '1 day'), ('4', '1 week')], validators=[InputRequired()])
+    price = StringField('price', validators=[InputRequired(), Regexp("^[0-9]*$" ,message="Numerical value only")])

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Configure Scooter Costs</h2>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Duration</th>
+        <th scope="col">Price</th>
+      </tr>
+    </thead>
+    {% for rec in rec %}
+    <tr>
+    <th scope="row">{{rec.id}}</th>
+
+    <td>
+      {% if rec.duration == "1"%}
+        <p>1 Hour </p>
+      {% endif %}
+      
+      {% if rec.duration == "2"%}
+        <p>4 Hours </p>
+      {% endif %}
+
+      {% if rec.duration == "3"%}
+        <p>1 Day </p>
+      {% endif %}
+
+      {% if rec.duration == "4"%}
+        <p>1 Week </p>
+      {% endif %}
+
+    </td>
+
+    <td>
+        {{ rec.price }}
+
+    </td>
+
+    </tr>
+    {% endfor %}
+  </table>
+  <form action="" method="post" name="addScooter">
+        {{ form.hidden_tag() }}
+  
+        <p>
+          Select Duration <br>
+          {{ form.duration }}
+        </p>
+        <p>
+          Select Price <br>
+          {{ form.price}}
+        </p>
+        <button type="button submit" class="btn btn-success">Change price</button>
+    </form>
+
+
+
+{% endblock %}
