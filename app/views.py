@@ -157,14 +157,21 @@ def pricing():
     return render_template('pricing.html',
                             title='Our Prices')
 
-
 @app.route('/profile')
 def profile():
+
+    #filter the query into the bookings and card
+    cards = models.card_details.query.first()
+    bookings =  models.booking.query.all()
+    test 
+
     return render_template('profile.html',
                             title='Your Profile',
                             name=current_user.name,
                             email=current_user.email,
-                            account_type=current_user.account_type)
+                            account_type=current_user.account_type,
+                            cards = cards,
+                            booking = bookings)
 
 
 @app.route('/send_feedback')
