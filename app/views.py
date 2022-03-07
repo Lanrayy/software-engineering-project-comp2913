@@ -163,7 +163,6 @@ def profile():
     #filter the query into the bookings and card
     cards = models.card_details.query.first()
     bookings =  models.booking.query.all()
-    test 
 
     return render_template('profile.html',
                             title='Your Profile',
