@@ -55,7 +55,7 @@
         {% endfor %}
       {% endif %}
       </p>
-      {% if current_user.account_type == "employee" or current_user.account_type == "manager" %}
+      {% if not current_user.account_type == "employee" and not current_user.account_type == "manager" %}
         <p>
           Save Card Details
           {{ form.save_card_details }}
