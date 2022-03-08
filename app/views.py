@@ -1,6 +1,6 @@
 from flask import render_template, flash
 from app import app, db, bcrypt, models
-from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm, FeedbackForm
+from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm, FeedbackForm, EditFeedbackForm
 from flask import request, redirect, url_for, abort, make_response, session
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
@@ -173,7 +173,7 @@ def send_feedback():
     form = FeedbackForm()
 
     if request.method == 'POST':
-        f = models.feedback(message=form.feedback.data, priority=1)
+        f = models.feedback(message=form.feedback.data, priority=0, resolved=0)
         db.session.add(f)
         db.session.commit()
         flash(f'Feedback Submitted', 'success')
@@ -410,11 +410,35 @@ def admin_dashboard():
                             title='Admin Dashboard')
 
 
-@app.route('/review_feedback')
+@app.route('/review_feedback', methods=('GET', 'POST'))
 def review_feedback():
+    employee = (current_user.account_type == 'employee')
+    if employee:
+        recs = models.feedback.query.filter_by(priority=0, resolved=0)
+    else:
+        recs = models.feedback.query.filter_by(priority=1, resolved=0)
     return render_template('review_feedback.html',
-                            title='Review Customer Feedback')
+                            title='Review Customer Feedback', recs=recs)
 
+
+@app.route('/edit_feedback/<id>', methods=('GET', 'POST'))
+def edit_feedback(id):
+    form = EditFeedbackForm()
+    rec = models.feedback.query.filter_by(id=id).first()
+
+    if request.method == 'POST':
+        f = models.feedback.query.filter_by(id=id).first()
+
+        if form.priority.data:
+            f.priority = (f.priority + 1) % 2 # Toggles high priority (1 goes to 0, 0 goes to 1)
+
+        if form.resolve.data:
+            f.resolved = (f.resolved + 1) % 2 # Toggles resolved (1 goes to 0, 0 goes to 1)
+
+        db.session.commit()
+        return redirect(url_for('review_feedback'))
+
+    return render_template('edit_feedback.html', rec=rec, form=form)
 
 
 @app.route('/view_scooters')

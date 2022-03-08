@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Feedback Details</h1>
+
+  <form action="" method="post" name="editfeedbackform">
+    {{ form.csrf_token }}
+    <p>ID: {{ rec.id }}</p>
+    <br>
+    <p>Message: {{ rec.message }}</p>
+    <br>
+    <p>Toggle High Priority {{ form.priority }}</p>
+    <br>
+    <p>Resolve {{ form.resolve }}</p>
+    <br>
+    <p><input type="submit" value="Submit"></p>
+  </form>
+{% endblock %}
