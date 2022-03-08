@@ -1,6 +1,6 @@
 from flask import render_template, flash
 from app import app, db, bcrypt, models
-from .forms import LoginForm, SignUpForm, AdminBookingForm, BookingForm, CardForm, AddScooterForm
+from .forms import LoginForm, SignUpForm, AdminBookingForm, BookingForm, CardForm, AddScooterForm, FeedbackForm
 from flask import request, redirect, url_for, abort, make_response, session
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
@@ -159,10 +159,19 @@ def profile():
                             account_type=current_user.account_type)
 
 
-@app.route('/send_feedback')
+@app.route('/send_feedback', methods=('GET', 'POST'))
 def send_feedback():
+    form = FeedbackForm()
+
+    if request.method == 'POST':
+        f = models.feedback(message=form.feedback.data, priority=1)
+        db.session.add(f)
+        db.session.commit()
+        flash(f'Feedback Submitted', 'success')
+        return redirect(url_for('send_feedback'))
     return render_template('send_feedback.html',
-                            title='Send Us Your Feedback')
+                            title='Send Us Your Feedback',
+                            form=form)
 
 
 @app.route('/locations')

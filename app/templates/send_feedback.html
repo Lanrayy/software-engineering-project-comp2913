@@ -3,5 +3,11 @@
   <h1>Send Feedback</h1>
   <p>Please provide feedback or describe the issue in the box below</p>
   <!-- Feedback form -->
-  <button type="button submit" class="btn btn-success">Submit Feedback</button>
+  <form action="" method="post" name="feedbackform">
+    {{ form.csrf_token }}
+    {{ form.feedback }}
+    <br>
+    <p><input type="submit" value="Submit"></p>
+  </form>
+
 {% endblock %}
