@@ -113,6 +113,11 @@ class AddScooterForm(FlaskForm):
 class FeedbackForm(FlaskForm):
     feedback = TextAreaField('feedback')
 
+# edit feedback form
+class EditFeedbackForm(FlaskForm):
+    priority = BooleanField()
+    resolve = BooleanField()
+
 # configure prices form
 class PricesForm(FlaskForm):
     duration = SelectField('duration', choices=[('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
