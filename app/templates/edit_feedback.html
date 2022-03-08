@@ -4,14 +4,24 @@
 
   <form action="" method="post" name="editfeedbackform">
     {{ form.csrf_token }}
-    <p>ID: {{ rec.id }}</p>
-    <br>
-    <p>Message: {{ rec.message }}</p>
-    <br>
-    <p>Toggle High Priority {{ form.priority }}</p>
-    <br>
-    <p>Resolve {{ form.resolve }}</p>
-    <br>
+    <table id="feedback" class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Message</th>
+          <th>Toggle Priority</th>
+          <th>Resolve</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><p>{{ rec.id }}</p></td>
+          <td><p>{{ rec.message }}</p></td>
+          <td><p>{{ form.priority }}</p></td>
+          <td><p>{{ form.resolve }}</p></td>
+        </tr>
+      </tbody>
+    </table>
     <p><input type="submit" value="Submit"></p>
   </form>
 {% endblock %}
