@@ -90,7 +90,8 @@ class booking(db.Model):
 class feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(50), nullable=False)
-    priority = db.Column(db.Integer, nullable=False)
+    priority = db.Column(db.Integer, nullable=False) # 0 for low priority, 1 for high
+    resolved = db.Column(db.Integer, nullable=False) # 0 for not resolved, 1 for resolved
 
 #Pricing Table
 class pricing(db.Model):
