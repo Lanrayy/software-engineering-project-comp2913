@@ -498,12 +498,41 @@ def sales_metrics():
 
     # Weekly income metrics
     monday_metrics = 0
+    # one_hour_monday_metric = 0
+    # four_hour_monday_metric = 0
+    # one_day_monday_metric = 0
+    # one_week_monday_metric = 0
+
     tuesday_metrics = 0
+    # one_hour_tuesday_metric = 0
+    # four_hour_tuesday_metric = 0
+    # one_day_tuesday_metric = 0
+    # one_week_tuesday_metric = 0
     wednesday_metrics = 0
+    # one_hour_wednesday_metric = 0
+    # four_hour_wednesday_metric = 0
+    # one_day_wednesday_metric = 0
+    # one_week_wednesday_metric = 0
     thursday_metrics = 0
+    one_hour_thursday_metric = 0
+    four_hour_thursday_metric = 0
+    one_day_thursday_metric = 0
+    one_week_thursday_metric = 0
     friday_metrics = 0
+    one_hour_friday_metric = 0
+    four_hour_friday_metric = 0
+    one_day_friday_metric = 0
+    one_week_friday_metric = 0
     saturday_metrics = 0
+    one_hour_saturday_metric = 0
+    four_hour_saturday_metric = 0
+    one_day_saturday_metric = 0
+    one_week_saturday_metric = 0
     sunday_metrics = 0
+    one_hour_sunday_metric = 0
+    four_hour_sunday_metric = 0
+    one_day_sunday_metric = 0
+    one_week_sunday_metric = 0
 
     # get all the bookings
     bookings = models.booking.query.all()
