@@ -273,11 +273,11 @@ def booking1():
 
                 # add a new transaction to the transactions table - used on the metrics page
                 new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
-                                                    booking_time = session.get('booking_initial', None),
-                                                    user_id = session.get('booking_user_id', None))
+                                                      booking_time = session.get('booking_initial', None),
+                                                      user_id = session.get('booking_user_id', None))
                 db.session.add(new_transaction) # add transaction
                 db.session.commit()
-                
+
                 session['booking_id'] = booking.id
 
                 flash("Booking Successful!")
