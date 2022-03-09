@@ -449,14 +449,8 @@ def configure_scooter():
 
 @app.route('/sales_metrics')
 def sales_metrics():
-    one_hour_price = 0
-    four_hour_price = 0
-    one_day_price = 0
-    one_week_price = 0
-    one_hour_metric = 0
-    four_hour_metric = 0
-    one_day_metric = 0
-    one_week_metric = 0
+    one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0 
+    one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     date = datetime.utcnow()
     week_start = date + timedelta(-date.weekday(), weeks=0)
     week_end = date + timedelta(-date.weekday() + 6)
