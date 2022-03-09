@@ -81,10 +81,10 @@ def card():
     if request.method == 'POST':
         if form.validate_on_submit():
             if form.save_card_details.data: # if the user want to save the card details,  save information into database
-                hashed_card_num = bcrypt.generate_password_hash(form.card_number.data)
+                hashed_card_num = bcrypt.generate_password_hash(form.card_number.data) # hash the card number
                 hashed_cvv = bcrypt.generate_password_hash(form.cvv.data)
-                last_four = form.card_number.data[12:]
-                p = models.card_details(name = form.name.data,
+                last_four = form.card_number.data[12:] # save the last four digits of the card number
+                p = models.card_details(name = form.name.data, 
                                         cardnumber = hashed_card_num,
                                         last_four = last_four,
                                         expiry_date = form.expiry.data,
@@ -94,8 +94,10 @@ def card():
                 db.session.commit()
                 flash("Card details saved")
 
-            booking = 0
 
+
+            booking = 0
+            # if admin is is making a booking don't save the user id 
             if session.get('booking_user_id') == 0:
                 booking = models.booking(duration = session.get('booking_duration', None),
                                          status= session.get('booking_status', None),
@@ -120,10 +122,16 @@ def card():
 
             scooter = models.scooter.query.filter_by(id = session.get('booking_scooter_id', None)).first() #find the scooter
             scooter.availability = 2 #mark as unavailable
-            db.session.commit()
-
+            
             session['booking_id'] = booking.id
 
+            # add a new transation
+            new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
+                                                booking_time = session.get('booking_initial', None),
+                                                user_id = session.get('booking_user_id', None))
+            db.session.add(new_transaction) # add new transaction to the transaction table- used on the metrics page                   
+            
+            db.session.commit()
             flash("Booking Successful!")
             return redirect("/booking2") #send to booking confirmation
 
@@ -262,6 +270,12 @@ def booking1():
                 db.session.add(booking)
                 scooter = models.scooter.query.filter_by(id = form.scooter_id.data).first() #find the scooter
                 scooter.availability = 2 #mark as unavailable
+
+                # add a new transaction to the transactions table - used on the metrics page
+                new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
+                                                      booking_time = session.get('booking_initial', None),
+                                                      user_id = session.get('booking_user_id', None))
+                db.session.add(new_transaction) # add transaction
                 db.session.commit()
 
                 session['booking_id'] = booking.id
