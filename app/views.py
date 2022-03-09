@@ -424,9 +424,10 @@ def review_feedback():
 @app.route('/view_scooters', methods=['GET', 'POST'])
 def view_scooters():
 
-    rec = models.scooter.query.all()
+    rec = models.scooter.query.all() # retrieve all scooters
     form = ConfigureScooterForm()
 
+    # redirect to configure scooter page with the selected scooter
     if request.method == 'POST':
         id = request.form["edit_button"]
         u = models.scooter.query.get(id)
@@ -451,16 +452,17 @@ def add_scooter():
 
 @app.route('/configure_scooter', methods=['GET', 'POST'])
 def configure_scooter():
+    #retrieve details to display and store in form
     scooter = models.scooter.query.get(session['confg_sctr_id'])
+
     form = ConfigureScooterForm()
-    #retrieve details to display
     form.scooter_id.data = session['confg_sctr_id']
     form.availability.data = scooter.availability
     form.location_id.data = scooter.collection_id
+
     if request.method == 'POST':
         # update details if user clicks confirm
         if request.form.get("cancel") is None:
-            print("updating scooter")
             scooter.availability = request.form.get("availability")
             scooter.collection_id = request.form.get("location_id")
             db.session.commit()
