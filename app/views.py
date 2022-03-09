@@ -1,6 +1,6 @@
 from flask import render_template, flash
 from app import app, db, bcrypt, models
-from .forms import LoginForm, SignUpForm, AdminBookingForm, BookingForm, CardForm, AddScooterForm
+from .forms import LoginForm, SignUpForm, AdminBookingForm, BookingForm, CardForm, AddScooterForm, ConfigureScooterForm
 from flask import request, redirect, url_for, abort, make_response, session
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
@@ -281,24 +281,26 @@ def review_feedback():
 
 
 
-@app.route('/view_scooters')
+@app.route('/view_scooters', methods=['GET', 'POST'])
 def view_scooters():
 
     rec = models.scooter.query.all()
+    form = ConfigureScooterForm()
 
     if request.method == 'POST':
-        scooter = db.query.filter_by(id=request.form["scooter_button"])
-        # if request.form['scooter_button'] == 
-        db.session.commit()
-        return render_template('configure_scooter.html')
+        id = request.form["edit_button"]
+        u = models.scooter.query.get(id)
+        print("id: ", id, "data:", u)
+        # session['confg_sctr_id'] = form.scooter_id.data
+        session['confg_sctr_id'] = u.id
+
+        # session['confg_sctr_avail'] = u.availability
+        # session['confg_sctr_loc'] = u.collection_id
+        print("u.scooterid", u.id, "location:", session['confg_sctr_loc'])
+        return redirect(url_for('configure_scooter'))
+
     return render_template('view_scooters.html',
                             title='View Scooters', rec=rec)
-
-
-
-
-
-
 
 
 
@@ -314,28 +316,28 @@ def add_scooter():
                             title='Add New Scooter', form=form)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@app.route('/configure_scooter')
+@app.route('/configure_scooter', methods=['GET', 'POST'])
 def configure_scooter():
+    scooter = models.scooter.query.get(session['confg_sctr_id'])
+    form = ConfigureScooterForm()
+    # print("scooter before:", scooter)
+    #retrieve details to display
+    form.scooter_id.data = session['confg_sctr_id']
+    form.availability.data = scooter.availability
+    form.location_id.data = scooter.collection_id
+    if request.method == 'POST':
+        # update details if user clicks confirm
+        if request.form.get("cancel") is None:
+            print("updating scooter")
+            # scooter = models.scooter.query.get(session['confg_sctr_id'])
+            scooter.availability = request.form.get("availability")
+            scooter.collection_id = request.form.get("location_id")
+            db.session.commit()
+            # print(models.scooter.query.all())
+            flash(f'Scooter Details Updated', 'success')
+        return redirect(url_for('view_scooters'))
     return render_template('configure_scooter.html',
-                            title='Configure A Scooter')
+                            title='Configure A Scooter', form=form)
 
 
 @app.route('/sales_metrics')

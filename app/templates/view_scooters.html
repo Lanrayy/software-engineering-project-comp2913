@@ -3,66 +3,65 @@
   <h1>View Scooter Details and Availability</h1>
   <h2>Scooter Details</h2>
   <!-- Scooters go here -->
-  <table class="table">
-    <thead>
+  <form action="" method="post" name="configurescootersform">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Availability</th>
+          <th scope="col">Current Location</th>
+        </tr>
+      </thead>
+      {% for rec in rec %}
+
       <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Availability</th>
-        <th scope="col">Current Location</th>
+      <th scope="row">
+        {{rec.id}}
+      </th>
+
+      <td>
+        {% if rec.availability == 1 %}
+          <p>Available </p>
+        {% endif %}
+
+        {% if rec.availability == 2 %}
+          <p>Unavailable </p>
+        {% endif %}
+      </td>
+
+      <td>
+        {% if rec.collection_id == 1%}
+            <p>Trinity Centre</p>        
+        {% endif%}
+
+        {% if rec.collection_id == 2%}
+          <p>Train Station</p>        
+        {% endif%}
+
+        {% if rec.collection_id == 3%}
+          <p> Merrion Centre</p>        
+        {% endif%}
+
+        {% if rec.collection_id == 4%}
+          <p> LRI Hospital</p>        
+        {% endif%}
+
+        {% if rec.collection_id == 5%}
+          <p> UoL Edge Sports Centre</p>        
+        {% endif%}      
+      </td>
+
+      <td>
+        <!-- <p type="hidden"> </p> -->
+        <button type="button submit"  class="btn btn-success" name="edit_button"  value="{{ rec.id }}">Edit</button>
+        <!-- <button type="button submit" class="btn btn-success">Submit</button> -->
+
+      </td>
+
       </tr>
-    </thead>
-    {% for rec in rec %}
-    <!-- session['scooter_id'] = {{rec.id}}
-    session['availability'] = {{rec.availability}}
-    session['location'] = {{rec.location}} -->
-
-    <tr>
-    <th scope="row">
-      {{rec.id}}
-    </th>
-
-    <td>
-      {% if rec.availability == 1 %}
-        <p>Available </p>
-      {% endif %}
-
-      {% if rec.availability == 2 %}
-        <p>Unavailable </p>
-       {% endif %}
-    </td>
-
-    <td>
-      {% if rec.collection_id == 1%}
-          <p>Trinity Centre</p>        
-      {% endif%}
-
-      {% if rec.collection_id == 2%}
-        <p>Train Station</p>        
-      {% endif%}
-
-      {% if rec.collection_id == 3%}
-        <p> Merrion Centre</p>        
-      {% endif%}
-
-      {% if rec.collection_id == 4%}
-        <p> LRI Hospital</p>        
-      {% endif%}
-
-      {% if rec.collection_id == 5%}
-        <p> UoL Edge Sports Centre</p>        
-      {% endif%}      
-    </td>
-
-    <td>
-      <p type="hidden"> </p>
-      <button type="submit" name="scooter_button" value="{{ rec.id }}"
-                            formmethod="post">Edit
-    </td>
-
-    </tr>
-    {% endfor %}
-  </table>
-  
+      {% endfor %}
+    </table>
+  </form>
 
   <!-- add new scooter button -->
   <a href="/add_scooter"><button type="button" class="btn btn-primary">Add New Scooter</button></a>
