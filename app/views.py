@@ -449,31 +449,95 @@ def configure_scooter():
 
 @app.route('/sales_metrics')
 def sales_metrics():
-    data = models.transactions.query.all()
+    one_hour_price = 0
+    four_hour_price = 0
+    one_day_price = 0
+    one_week_price = 0
     one_hour_metric = 0
     four_hour_metric = 0
-    twentyfour_hour_metric = 0
+    one_day_metric = 0
     one_week_metric = 0
     date = datetime.utcnow()
     week_start = date + timedelta(-date.weekday(), weeks=0)
     week_end = date + timedelta(-date.weekday() + 6)
 
-    # for each transaction in if it is within the last week add it to the correct metric
+    # get all the transations
+    data = models.transactions.query.all()
+
+    # get the current prices from the database
+    pricings = models.pricing.query.all()
+
+    # for each transaction in if it is within the last week count it to the correct metric
+    # need to multiply by the cost of each
     for transaction in data:
         if transaction.hire_period == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end:
             one_hour_metric += 1
         elif transaction.hire_period == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end:
             four_hour_metric += 1
         elif transaction.hire_period == 24 and transaction.booking_time > week_start and transaction.booking_time < week_end:
-            twentyfour_hour_metric += 1
+            one_day_metric += 1
         elif transaction.hire_period == 168 and transaction.booking_time > week_start and transaction.booking_time < week_end:
             one_week_metric += 1
+
+    # get all the current pricings for each hire period in the pricing table
+    for pricing in pricings:
+        if pricing.duration == "1 Hour":
+            one_hour_price = pricing.price
+        if pricing.duration == "4 Hours":
+            four_hour_price = pricing.price
+        if pricing.duration == "1 Day":
+            one_day_price = pricing.price
+        if pricing.duration == "1 Week":
+            one_week_price = pricing.price
+    
+    # Update the income amount
+    one_hour_metric *= one_hour_price
+    four_hour_metric *= four_hour_price
+    one_day_metric *= one_day_price
+    one_week_metric *= one_week_price
+
+    # Weekly income metrics
+    monday_metrics = 0
+    tuesday_metrics = 0
+    wednesday_metrics = 0
+    thursday_metrics = 0
+    friday_metrics = 0
+    saturday_metrics = 0
+    sunday_metrics = 0
+
+    # get all the bookings
+    bookings = models.booking.query.all()
+
+    for booking in bookings:
+        if booking.status != "cancelled": # only adds booking that were not cancelled to the metrics
+            # checks what day the booking was started
+            if booking.initial_date_time.weekday() == 0 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Monday
+                monday_metrics += booking.cost
+            elif booking.initial_date_time.weekday() == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Tuesday
+                tuesday_metrics += booking.cost
+            elif booking.initial_date_time.weekday() == 2 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Wednesday
+                wednesday_metrics += booking.cost
+            elif booking.initial_date_time.weekday() == 3 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Thursday
+                thursday_metrics += booking.cost
+            elif booking.initial_date_time.weekday() == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Friday
+                friday_metrics += booking.cost
+            elif booking.initial_date_time.weekday() == 5 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Saturday
+                saturday_metrics += booking.cost
+            elif booking.initial_date_time.weekday() == 6 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Sunday
+                sunday_metrics += booking.cost
 
     return render_template('sales_metrics.html',
                             title='View Sales Metrics',
                             one_hour_metric = one_hour_metric,
                             four_hour_metric = four_hour_metric,
-                            twentyfour_hour_metric = twentyfour_hour_metric,
+                            one_day_metric = one_day_metric,
                             one_week_metric = one_week_metric,
                             week_start = week_start,
-                            week_end = week_end)
+                            week_end = week_end,
+                            monday_metrics = monday_metrics,
+                            tuesday_metrics = tuesday_metrics,
+                            wednesday_metrics = wednesday_metrics,
+                            thursday_metrics = thursday_metrics,
+                            friday_metrics = friday_metrics,
+                            saturday_metrics = saturday_metrics,
+                            sunday_metrics = sunday_metrics)
