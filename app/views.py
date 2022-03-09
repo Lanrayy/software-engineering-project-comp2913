@@ -430,13 +430,7 @@ def view_scooters():
     if request.method == 'POST':
         id = request.form["edit_button"]
         u = models.scooter.query.get(id)
-        print("id: ", id, "data:", u)
-        # session['confg_sctr_id'] = form.scooter_id.data
         session['confg_sctr_id'] = u.id
-
-        # session['confg_sctr_avail'] = u.availability
-        # session['confg_sctr_loc'] = u.collection_id
-        print("u.scooterid", u.id, "location:", session['confg_sctr_loc'])
         return redirect(url_for('configure_scooter'))
 
     return render_template('view_scooters.html',
@@ -459,7 +453,6 @@ def add_scooter():
 def configure_scooter():
     scooter = models.scooter.query.get(session['confg_sctr_id'])
     form = ConfigureScooterForm()
-    # print("scooter before:", scooter)
     #retrieve details to display
     form.scooter_id.data = session['confg_sctr_id']
     form.availability.data = scooter.availability
@@ -468,7 +461,6 @@ def configure_scooter():
         # update details if user clicks confirm
         if request.form.get("cancel") is None:
             print("updating scooter")
-            # scooter = models.scooter.query.get(session['confg_sctr_id'])
             scooter.availability = request.form.get("availability")
             scooter.collection_id = request.form.get("location_id")
             db.session.commit()
