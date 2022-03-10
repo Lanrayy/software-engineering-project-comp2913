@@ -5,7 +5,7 @@
   <!-- Feedback form -->
   <form action="" method="post" name="feedbackform">
     {{ form.csrf_token }}
-    {{ form.feedback }}
+    {{ form.feedback(cols="45", rows="5") }}
     <br>
     <p><input type="submit" value="Submit"></p>
   </form>
