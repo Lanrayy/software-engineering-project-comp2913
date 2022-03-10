@@ -412,11 +412,11 @@ def admin_dashboard():
 
 @app.route('/review_feedback', methods=('GET', 'POST'))
 def review_feedback():
-    employee = (current_user.account_type == 'employee')
+    employee = (current_user.account_type == 'employee') # True if 'employee', False if 'manager'
     if employee:
-        recs = models.feedback.query.filter_by(priority=0, resolved=0)
+        recs = models.feedback.query.filter_by(priority=0, resolved=0) # Employee meant to see low priority
     else:
-        recs = models.feedback.query.filter_by(priority=1, resolved=0)
+        recs = models.feedback.query.filter_by(priority=1, resolved=0) # Manager meant to see high priority
     return render_template('review_feedback.html',
                             title='Review Customer Feedback', recs=recs)
 

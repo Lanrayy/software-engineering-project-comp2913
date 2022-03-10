@@ -115,6 +115,7 @@ class FeedbackForm(FlaskForm):
 
 # edit feedback form
 class EditFeedbackForm(FlaskForm):
+    # The only fields needed in form are priority and resolve
     priority = BooleanField()
     resolve = BooleanField()
 
