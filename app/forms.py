@@ -73,9 +73,9 @@ class AdminBookingForm(FlaskForm):
 # configure scooter form
 class ConfigureScooterForm(FlaskForm):
     scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
-    availability = SelectField('availability', choices = [('1', 'Available'), ('2', 'Unavailable')], validators=[InputRequired()])
+    availability = SelectField('availability', choices = [('1', 'Available'), ('2', 'Unavailable')], validators=[InputRequired()],coerce=int)
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
-        ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
+        ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()], coerce=int)
 
 
 
