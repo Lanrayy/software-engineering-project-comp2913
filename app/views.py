@@ -333,15 +333,26 @@ def configure_costs():
 
 
     if form.validate_on_submit():
-        dur = models.pricing.query.filter_by(duration = form.duration.data).first()
+        #assign corresponding db value based on the SelectForm value.
+        
+        if form.duration.data == "1":
+            durationToCheck = "1 hour"
+        if form.duration.data == "2":
+            durationToCheck = "4 hour"
+        if form.duration.data == "3":
+            durationToCheck = "1 day"
+        if form.duration.data == "4":
+            durationToCheck = "1 week"
+
+        #find record and change price. 
+        dur = models.pricing.query.filter_by(duration = durationToCheck).first()
 
         if dur:
             dur.price = form.price.data
             flash("Price updated")
         else:
             flash("Error price not updated")
-
-
+            
         db.session.commit()     # commit scooter to db
     return render_template('configure_costs.html',
                             rec=rec, form=form)
