@@ -55,7 +55,6 @@
             {% if current_user.is_authenticated %}
               <!-- Customer nav -->
               {% if not current_user.account_type == "employee" and not current_user.account_type == "manager" %}
-              <li class="nav-item"><a class="nav-link" href="/card">Card</a></li>
               <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
               <li class="nav-item"><a class="nav-link" href="/booking1">Make a Booking</a></li>
               <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
