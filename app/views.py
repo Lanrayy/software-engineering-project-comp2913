@@ -193,7 +193,7 @@ def profile():
     #    db.session.commit()
     #flask('Card deleted')
 
-    bookings =  models.booking.query.all()
+    bookings =  models.booking.query.filter_by(email = current_user.email)
 
     return render_template('profile.html',
                             title='Your Profile',
