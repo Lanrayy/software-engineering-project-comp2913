@@ -1,6 +1,6 @@
 from flask import render_template, flash, request, redirect, url_for, abort, make_response, session, jsonify
 from app import app, db, bcrypt, models, login_manager
-from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm, ConfigureScooterForm, FeedbackForm, EditFeedbackForm
+from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm, ConfigureScooterForm, FeedbackForm, EditFeedbackForm, PricesForm
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
 import os
@@ -604,6 +604,37 @@ def configure_scooter():
         return redirect(url_for('view_scooters'))
     return render_template('configure_scooter.html',
                             title='Configure A Scooter', form=form)
+
+
+@app.route('/configure_costs', methods =['GET', 'POST'])
+def configure_costs():
+    rec = models.pricing.query.all()
+    form = PricesForm()
+    
+    if form.validate_on_submit():
+        #assign corresponding db value based on the SelectForm value.
+        
+        if form.duration.data == "1":
+            durationToCheck = "1 hour"
+        if form.duration.data == "2":
+            durationToCheck = "4 hour"
+        if form.duration.data == "3":
+            durationToCheck = "1 day"
+        if form.duration.data == "4":
+            durationToCheck = "1 week"
+
+        #find record and change price. 
+        dur = models.pricing.query.filter_by(duration = durationToCheck).first()
+
+        if dur:
+            dur.price = form.price.data
+            flash("Price updated")
+        else:
+            flash("Error price not updated")
+            
+        db.session.commit()     # commit scooter to db
+    return render_template('configure_costs.html',
+                            rec=rec, form=form)
 
 
 @app.route('/sales_metrics')
