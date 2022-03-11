@@ -1,13 +1,6 @@
-<<<<<<< app/views.py
-from flask import render_template, flash
-from app import app, db, bcrypt, models
-from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm, FeedbackForm, EditFeedbackForm
-from flask import request, redirect, url_for, abort, make_response, session
-=======
 from flask import render_template, flash, request, redirect, url_for, abort, make_response, session, jsonify
 from app import app, db, bcrypt, models, login_manager
 from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm, ConfigureScooterForm, FeedbackForm, EditFeedbackForm
->>>>>>> app/views.py
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
 import os
