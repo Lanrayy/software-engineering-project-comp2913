@@ -30,7 +30,7 @@ class user(UserMixin, db.Model):
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     account_type = db.Column(db.String(50), nullable=False) #choices are: customer, employee, manager
-    user_type = db.Column(db.String(50), nullable=False) #choices are: default (includes emplyee and managers), senior, and frequent, #choices are: senior, frequent, student
+    user_type = db.Column(db.String(50), nullable=False) #choices are: default (includes emplyee and managers), senior, student, and frequent, #choices are: default, senior, frequent, student, frequent is automatically given
     password = db.Column(db.String(50), nullable=False)
 
     card = db.relationship('card_details', uselist=False, backref='user') #one-to-one relation
@@ -79,7 +79,7 @@ class booking(db.Model):
     final_date_time = db.Column(db.DateTime(), nullable=False) # end date and time of the booking
     email = db.Column(db.String(50), nullable=False) #manually link this to the user through the code
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) 
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     scooter_id = db.Column(db.Integer, db.ForeignKey('scooter.id'), nullable=False)
     collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
 
