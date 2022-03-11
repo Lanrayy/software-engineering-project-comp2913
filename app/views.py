@@ -1,9 +1,11 @@
 from flask import render_template, flash, request, redirect, url_for, abort, make_response, session, jsonify
-from app import app, db, bcrypt, models, login_manager
+from app import app, db, bcrypt, models, login_manager, mail
 from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm, ConfigureScooterForm, FeedbackForm, EditFeedbackForm, PricesForm
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
 import os
+import smtplib
+from flask_mail import Message
 
 #Unregistered user exclusive pages
 @app.route('/')
@@ -134,9 +136,19 @@ def card():
 
             db.session.commit()
 
-            session['booking_id'] = booking.id
+            msg = Message('Booking Confirmation',
+                            sender='scootersleeds@gmail.com',
+                            recipients=[current_user.email])
+            
+            msg.body = (f'Thank You, your booking has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) + 
+            '\nEnd Date and Time: ' + str(booking.final_date_time) + 
+            '\nScooter ID: ' + str(booking.scooter_id) + 
+            '\nReference Number: ' + str(booking.id))
+            mail.send(msg)
 
+            session['booking_id'] = booking.id
             flash("Booking Successful!")
+            
             return redirect("/booking2") #send to booking confirmation
 
     return render_template('card.html',
@@ -200,10 +212,16 @@ def locations():
                             title='Pickup Locations')
 
 
+
+
 @app.route('/booking1', methods=['GET', 'POST'])
 def booking1():
 
     if not current_user.account_type == "employee" and not current_user.account_type == "manager":
+
+        msg = Message('Booking Confirmation',
+                            sender='scootersleeds@gmail.com',
+                            recipients=[current_user.email])
         #User booking
         form = UserBookingForm()
 
@@ -320,7 +338,7 @@ def booking1():
 
             #card details do not exist, send to payment page
             exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
-            if(exists):
+            if(exists):                
                 #card details exist, book then send to confirmation page straight away
                 booking = models.booking(duration = session.get('booking_duration', None),
                                          status= session.get('booking_status', None),
@@ -342,8 +360,13 @@ def booking1():
 
                 db.session.commit()
 
+                
+
                 session['booking_id'] = booking.id
 
+                
+                msg.body = (f'Thank You, your booking has been confirmed. ' + str(session.get('booking_id')))
+                mail.send(msg)
                 flash("Booking Successful!")
                 return redirect("/booking2") #send to booking confirmation
             else:
