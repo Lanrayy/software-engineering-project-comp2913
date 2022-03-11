@@ -2,5 +2,40 @@
 {% block content %}
   <h1>Configure Scooter Status and Availability</h1>
   <h2>Change Scooter Details</h2>
+  
+
+
+  <form action="" method="post" name="configurescootersform">
+    <h3>Scooter ID: {{ session['confg_sctr_id'] }}</h3>
+    <h3>Availability:  
+    {{ form.csrf_token }}
+
+      {{ form.availability }}
+      {% if form.availability.errors %}
+        {% for error in form.availability.error %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+    </h3>
+
+    <h3>
+      Location: {{ form.location_id }}
+      {% if form.location_id.errors %}
+        {% for error in form.location_id.error %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+    </h3>
+    <!-- <h4>Choose a Period of Hire</h4> -->
+    
+
+  <h4>
+  </h4>
+  <p>
+  </p>
+
+  <button type="button submit" class="btn btn-success" name="cancel">Cancel</button>
+  <button type="button submit" class="btn btn-success">Confirm Changes</button>
+</form>
   <!-- Scooters go here -->
 {% endblock %}
