@@ -21,6 +21,7 @@ class SignUpForm(FlaskForm):
     email = StringField('email', validators=[InputRequired(), Email()])
     password1 = PasswordField('password1', validators=[InputRequired()])
     password2 = PasswordField('password2', validators=[EqualTo('password1'), InputRequired()]) #makes sure password1 equals password2
+    user_type = SelectField('user_type', choices = [('default', 'default'), ('senior', 'senior'), ('student', 'student')], validators=[InputRequired()])
 
     # validate username
     def validate_email(self, email) :

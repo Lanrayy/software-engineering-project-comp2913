@@ -32,7 +32,7 @@ def register():
     if form.validate_on_submit():
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
-        u = models.user(password = hashed_password, email = form.email.data, account_type = "customer", user_type = "default", name = form.name.data)
+        u = models.user(password = hashed_password, email = form.email.data, account_type = "customer", user_type = form.user_type.data, name = form.name.data)
         db.session.add(u)    # add user to db
         db.session.commit()     # commit user to db
         flash(f'Account Created!', 'success')
@@ -193,7 +193,7 @@ def profile():
     #    db.session.commit()
     #flask('Card deleted')
 
-    bookings =  models.booking.query.all()  
+    bookings =  models.booking.query.all()
 
     return render_template('profile.html',
                             title='Your Profile',
