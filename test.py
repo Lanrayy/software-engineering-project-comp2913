@@ -19,7 +19,7 @@ class FlaskTestCase(unittest.TestCase):
         tester = app.test_client(self)
         response = tester.get('/register', content_type='html/text')
         self.assertTrue(b'Name' in response.data)
-    
+
     # Ensure login page loads correctly
     def testing_login_page_loads(self):
         tester = app.test_client(self)
@@ -41,43 +41,43 @@ class FlaskTestCase(unittest.TestCase):
 
     # ensure that sign up behaves correctly given the correct credentials
     def test_correct_signup(self):
-        
+
         tester = app.test_client(self)
-        response = tester.post('/register', 
+        response = tester.post('/register',
                                 data=dict(name="user1",
-                                email="user1@demo.com", 
+                                email="user1@demo.com",
                                 password1="user1",
-                                password2="user1"), 
+                                password2="user1"),
                                 follow_redirects=True)
         #self.assertIn(b'Remember details', response.data)
 
     # ensure that sign up behaves correctly given the INCORRECT credentials
     def test_incorrect_signup(self):
-        
+
         tester = app.test_client(self)
-        response = tester.post('/register', 
-                                data=dict(email="jeodn@demo.com", 
-                                password="lwidm"), 
+        response = tester.post('/register',
+                                data=dict(email="jeodn@demo.com",
+                                password="lwidm"),
                                 follow_redirects=True)
         self.assertIn(b'Name', response.data)
 
     # ensure that login behaves correctly given the correct credentials
     def test_correct_login(self):
-        
+
         tester = app.test_client(self)
-        response = tester.post('/login', 
-                                data=dict(email="testuser@demo.com", 
-                                password="testing"), 
+        response = tester.post('/login',
+                                data=dict(email="testuser@demo.com",
+                                password="testing"),
                                 follow_redirects=True)
         self.assertIn(b'View Profile', response.data)
-    
+
     # Ensure sign up behaves correctly given the INCORRECT credentials
     def test_incorrect_login(self):
-        
+
         tester = app.test_client(self)
-        response = tester.post('/login', 
-                                data=dict(email="notuser@demo.com", 
-                                password="wdsd"), 
+        response = tester.post('/login',
+                                data=dict(email="notuser@demo.com",
+                                password="wdsd"),
                                 follow_redirects=True)
         self.assertIn(b'Login unsuccessful', response.data)
 

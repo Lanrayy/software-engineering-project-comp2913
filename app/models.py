@@ -1,13 +1,9 @@
 from app import db
 from app import app, login_manager
 from flask_login import UserMixin
-<<<<<<< HEAD
-from datetime import datetime
-=======
 from sqlalchemy.engine import Engine
 from sqlalchemy import event
 import datetime
->>>>>>> main
 
 #Note:
 #Make sure PRAGMA foreign_keys=ON;
@@ -72,19 +68,6 @@ class collection_point(db.Model):
             return f'CollectionPoint {self.id} < Location={self.location}| Number of scooters={self.num_scooters} >'
 
 
-<<<<<<< HEAD
-#Scooter Database
-class scooter(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    availability = db.Column(db.Integer, nullable=False) # 0 is unavailable, 1 is available
-    collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
-    booking = db.relationship('booking', backref='scooter', lazy=True)  #one-to-many relation
-    location = db.Column(db.String(50), nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
-
-    def __repr__(self):
-            return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'
-=======
->>>>>>> main
 
 #Booking Database
 class booking(db.Model):
@@ -107,6 +90,8 @@ class booking(db.Model):
 class feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(50), nullable=False)
+    priority = db.Column(db.Integer, nullable=False) # 0 for low priority, 1 for high
+    resolved = db.Column(db.Integer, nullable=False) # 0 for not resolved, 1 for resolved
 
 #Pricing Table
 class pricing(db.Model):
