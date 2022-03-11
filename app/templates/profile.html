@@ -7,12 +7,12 @@
     border-collapse: collapse;
     width: 100%;
   }
-  
+
   td, th {
     text-align: left;
     padding: 20px;
   }
-  
+
   tr:nth-child(even) {
     background-color: #dddddd;
   }
@@ -45,11 +45,11 @@
 
   <br><br>
 
-  
+
   <h3>Card Details</h3>
 
   <table>
-     
+
         <tr>
           <th>Name on Card</th>
           <th>Card Number</th>
@@ -71,9 +71,9 @@
   <br><br>
 
   <h3>Booking History</h3>
-  
+
   <table>
-      
+
       <tr>
         <th>Date of Booking</th>
         <th>Duration</th>
@@ -97,16 +97,16 @@
             <td><a href="/extend_booking"><input type="submit" class="btn btn-primary" value="O"></a></td>
             <!-- if booking is UPCOMING then show cancel-->
             <td><a href="/cancel_booking"><input type="submit" class="btn btn-primary" value="x"></a></td>
-        
+
           </tr>
       {% endfor %}
 
   </table>
   <br>
 
-  
+
   <a href="/send_feedback"><input type="submit" class="btn btn-primary" value="Submit Feedback"></a></td>
-  
+
 </body>
-  
+
 {% endblock %}
