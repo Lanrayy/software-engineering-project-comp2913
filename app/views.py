@@ -139,16 +139,16 @@ def card():
             msg = Message('Booking Confirmation',
                             sender='scootersleeds@gmail.com',
                             recipients=[current_user.email])
-            
-            msg.body = (f'Thank You, your booking has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) + 
-            '\nEnd Date and Time: ' + str(booking.final_date_time) + 
-            '\nScooter ID: ' + str(booking.scooter_id) + 
+
+            msg.body = (f'Thank You, your booking has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+            '\nEnd Date and Time: ' + str(booking.final_date_time) +
+            '\nScooter ID: ' + str(booking.scooter_id) +
             '\nReference Number: ' + str(booking.id))
             mail.send(msg)
 
             session['booking_id'] = booking.id
             flash("Booking Successful!")
-            
+
             return redirect("/booking2") #send to booking confirmation
 
     return render_template('card.html',
@@ -338,7 +338,7 @@ def booking1():
 
             #card details do not exist, send to payment page
             exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
-            if(exists):                
+            if(exists):
                 #card details exist, book then send to confirmation page straight away
                 booking = models.booking(duration = session.get('booking_duration', None),
                                          status= session.get('booking_status', None),
@@ -360,13 +360,20 @@ def booking1():
 
                 db.session.commit()
 
-                
+
 
                 session['booking_id'] = booking.id
 
-                
-                msg.body = (f'Thank You, your booking has been confirmed. ' + str(session.get('booking_id')))
+                msg = Message('Booking Confirmation',
+                                sender='scootersleeds@gmail.com',
+                                recipients=[current_user.email])
+
+                msg.body = (f'Thank You, your booking has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+                '\nEnd Date and Time: ' + str(booking.final_date_time) +
+                '\nScooter ID: ' + str(booking.scooter_id) +
+                '\nReference Number: ' + str(booking.id))
                 mail.send(msg)
+
                 flash("Booking Successful!")
                 return redirect("/booking2") #send to booking confirmation
             else:
