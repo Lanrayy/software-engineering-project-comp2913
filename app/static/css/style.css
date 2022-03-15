@@ -1,5 +1,17 @@
 .nav-brand{
   font-weight: bolder;
 }
-p {
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  text-align: left;
+  padding: 20px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
 }

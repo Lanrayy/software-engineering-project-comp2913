@@ -74,7 +74,7 @@ class booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     duration = db.Column(db.Integer, nullable=False) # Duration of the booking
     status = db.Column(db.String(50), nullable=False) # choices are: active, cancelled, expired, upcoming
-    cost = db.Column(db.Float, nullable=False) # the cost of booking this scooter for the duration period above
+    cost = db.Column(db.Float, nullable=False) # the cost of booking this scooter altogether
     initial_date_time = db.Column(db.DateTime(), nullable=False) # start date and time of the booking
     final_date_time = db.Column(db.DateTime(), nullable=False) # end date and time of the booking
     email = db.Column(db.String(50), nullable=False) #manually link this to the user through the code
@@ -122,7 +122,7 @@ class scooter(db.Model):
 #Transactions database
 class transactions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    hire_period = db.Column(db.Integer, nullable=False) # how long the scooter was booked for options are "1 hour", "4 hours", "1 day", "1 week"
+    hire_period = db.Column(db.Integer, nullable=False) # store in hours (1, 4, 24, 168)
     booking_time = db.Column(db.DateTime(), nullable=False) # start date and time
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #problem
