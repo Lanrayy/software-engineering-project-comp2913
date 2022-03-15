@@ -19,7 +19,7 @@
   </style>
 
   <h1>
-    Hi,
+    Hiii,
     {{ name }}!!
   </h1>
 
@@ -47,9 +47,8 @@
 
 
   <h3>Card Details</h3>
-
+  {% if cards.name != NULL %}
   <table>
-
         <tr>
           <th>Name on Card</th>
           <th>Card Number</th>
@@ -58,15 +57,16 @@
 
           <tr>
             <td>{{cards.name}}</td>
-            <td>{{cards.cardnumber}}</td>
-            <td>XXX</td> <!--ONly if a card exits-->
+            <td>XXXX XXXX XXXX {{cards.last_four}} </td>
+            <td>XXX</td> 
           </tr>
 
           <tr>
+            <!-- DELET DOES NOT WORK-->
             <td><input type="submit" class="btn btn-primary" method="POST" value="Delete card"></a></td>
           </tr>
-
   </table>
+  {% endif %}
 
   <br><br>
 
@@ -93,10 +93,13 @@
             <td>{{b.status}}</td>
             <td>BN000{{b.id}}</td>
 
-            <!-- if booking is ACTIVE then show extend-->
+            {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->
             <td><a href="/extend_booking"><input type="submit" class="btn btn-primary" value="O"></a></td>
-            <!-- if booking is UPCOMING then show cancel-->
+            {% endif %}
+            
+            {% if b.status == "upcoming" %} <!-- if booking is UPCOMING then show cancel-->
             <td><a href="/cancel_booking"><input type="submit" class="btn btn-primary" value="x"></a></td>
+            {% endif %}
 
           </tr>
       {% endfor %}
