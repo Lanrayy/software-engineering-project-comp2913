@@ -186,12 +186,14 @@ def profile():
 
     #filter the query into the bookings and card
     cards = models.card_details.query.first()
+    location = models.collection_point.query.all()
 
-    #Doesn't delete cards
-    #if request.method == 'POST':
-    #    db.session.delete(cards)
-    #    db.session.commit()
-    #flask('Card deleted')
+    #Doesn't delete
+    if request.method == "POST":
+        flash("button pressed")
+        db.session.delete(cards)
+        db.session.commit()
+        flash("Sucessfully deleted card")
 
     bookings =  models.booking.query.filter_by(email = current_user.email)
 
@@ -201,7 +203,8 @@ def profile():
                             email=current_user.email,
                             account_type=current_user.account_type,
                             cards = cards,
-                            booking = bookings)
+                            booking = bookings,
+                            location = location)
 
 
 @app.route('/send_feedback', methods=('GET', 'POST'))

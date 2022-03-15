@@ -63,7 +63,7 @@
 
           <tr>
             <!-- DELET DOES NOT WORK-->
-            <td><input type="submit" class="btn btn-primary" method="POST" value="Delete card"></a></td>
+              <td><input type="submit" class="btn btn-primary" method="POST" value="Delete card"></a></td> 
           </tr>
   </table>
   {% endif %}
@@ -89,7 +89,13 @@
             <td>{{ b.initial_date_time }}</td>
             <td>{{b.duration}}</td>
             <td>SN{{b.scooter_id}}</td>
-            <td> location </td>  <!-- show booking location-->
+
+            {% for loc in location%}
+              {% if b.collection_id == loc.id%}
+                <td> {{loc.location}} </td>  <!-- show booking location-->
+              {% endif %}
+            {% endfor %}
+
             <td>{{b.status}}</td>
             <td>BN000{{b.id}}</td>
 
