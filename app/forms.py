@@ -71,6 +71,10 @@ class AdminBookingForm(FlaskForm):
     email = StringField('email', validators=[InputRequired(), Email()])
     #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
+# extend booking form
+class ExtendBookingForm(FlaskForm):
+    hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
+
 # configure scooter form
 class ConfigureScooterForm(FlaskForm):
     scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
