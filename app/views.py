@@ -123,17 +123,17 @@ def card():
                 db.session.commit()
 
                 #write the email message
-                msg = Message('Booking Extention Confirmation',
+                msg = Message('Booking Extension Confirmation',
                                 sender='scootersleeds@gmail.com',
                                 recipients=[current_user.email])
 
-                msg.body = (f'Thank You, your booking extention has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+                msg.body = (f'Thank You, your booking extension has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
                 '\nEnd Date and Time: ' + str(booking.final_date_time) +
                 '\nScooter ID: ' + str(booking.scooter_id) +
                 '\nReference Number: ' + str(booking.id))
                 mail.send(msg)
 
-                flash("Booking Extention Successful!")
+                flash("Booking Extension Successful!")
 
                 return redirect("/profile")
             else:
@@ -646,17 +646,17 @@ def extend_booking():
             db.session.commit()
 
             #write the email message
-            msg = Message('Booking Extention Confirmation',
+            msg = Message('Booking Extension Confirmation',
                             sender='scootersleeds@gmail.com',
                             recipients=[current_user.email])
 
-            msg.body = (f'Thank You, your booking extention has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+            msg.body = (f'Thank You, your booking extension has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
             '\nEnd Date and Time: ' + str(booking.final_date_time) +
             '\nScooter ID: ' + str(booking.scooter_id) +
             '\nReference Number: ' + str(booking.id))
             mail.send(msg)
 
-            flash("Booking Extention Successful!")
+            flash("Booking Extension Successful!")
 
             return redirect(url_for('profile'))
         else:
