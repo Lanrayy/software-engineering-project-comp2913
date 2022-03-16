@@ -845,15 +845,7 @@ def sales_metrics():
     wednesday_metrics = 0
     thursday_metrics = 0
     friday_metrics = 0
-    # one_hour_friday_metric = 0
-    # four_hour_friday_metric = 0
-    # one_day_friday_metric = 0
-    # one_week_friday_metric = 0
-    saturday_metrics = 0
-    # one_hour_saturday_metric = 0
-    # four_hour_saturday_metric = 0
-    # one_day_saturday_metric = 0
-    # one_week_saturday_metric = 0
+    saturday_metrics = 00
     sunday_metrics = 0
     # one_hour_sunday_metric = 0
     # four_hour_sunday_metric = 0
