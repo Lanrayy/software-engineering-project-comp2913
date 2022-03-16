@@ -841,12 +841,7 @@ def sales_metrics():
 
     # Weekly income metrics
     monday_metrics = 0
-    
     tuesday_metrics = 0
-    # one_hour_tuesday_metric = 0
-    # four_hour_tuesday_metric = 0
-    # one_day_tuesday_metric = 0
-    # one_week_tuesday_metric = 0
     wednesday_metrics = 0
     # one_hour_wednesday_metric = 0
     # four_hour_wednesday_metric = 0
