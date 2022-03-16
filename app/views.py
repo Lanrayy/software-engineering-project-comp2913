@@ -845,16 +845,13 @@ def sales_metrics():
     wednesday_metrics = 0
     thursday_metrics = 0
     friday_metrics = 0
-    saturday_metrics = 00
+    saturday_metrics = 0
     sunday_metrics = 0
-    # one_hour_sunday_metric = 0
-    # four_hour_sunday_metric = 0
-    # one_day_sunday_metric = 0
-    # one_week_sunday_metric = 0
 
-    # get all the bookings
+    # Get all the bookings
     bookings = models.booking.query.all()
 
+    # calculate booking metric for each day
     for booking in bookings:
         if booking.status != "cancelled": # only adds booking that were not cancelled to the metrics
             # checks what day the booking was started
