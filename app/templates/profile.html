@@ -78,11 +78,15 @@
             <!-- if booking is ACTIVE then show extend-->
             <td>
               <a href="/extend_this_booking/{{ b.id }}">
-                <button type="button submit"  class="btn btn-success" name="extend_button">+</button>
+                <button type="button submit"  class="btn btn-success" name="extend_button">Extend</button>
               </a>
             </td>
             <!-- if booking is UPCOMING then show cancel-->
-            <td><a href="/cancel_booking"><input type="submit" class="btn btn-primary" value="x"></a></td>
+            <td>
+              <a href="/cancel_this_booking/{{ b.id }}">
+                <button type="button submit"  class="btn btn-danger" name="cancel_button">Cancel</button>
+              </a>
+            </td>
 
           </tr>
       {% endfor %}

@@ -101,41 +101,42 @@ def card():
             booking = 0
 
             #check if we were booking or extending
-            if session.pop('extending') == "True":
-                #we are extending, make sure to redirect to profile and send an email about the Extension
-                booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
+            if session.get('extending') != None:
+                if session.pop('extending') == "True":
+                    #we are extending, make sure to redirect to profile and send an email about the Extension
+                    booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
 
-                #get our variables from the session
-                hours = session.get('extend_hours', None)
-                cost = session.get('extend_cost', None)
+                    #get our variables from the session
+                    hours = session.get('extend_hours', None)
+                    cost = session.get('extend_cost', None)
 
-                #extend the booking pointed to by the 'booking_id' in the session, and add to the cost
-                booking.duration = booking.duration + hours
-                booking.cost = booking.cost + cost
-                booking.final_date_time = booking.final_date_time + timedelta(hours = hours)
+                    #extend the booking pointed to by the 'booking_id' in the session, and add to the cost
+                    booking.duration = booking.duration + hours
+                    booking.cost = booking.cost + cost
+                    booking.final_date_time = booking.final_date_time + timedelta(hours = hours)
 
-                #add a new transaction, with the date for the transaction set as now
-                new_transaction = models.transactions(hire_period = hours,
-                                                    booking_time = datetime.utcnow(),
-                                                    user_id = current_user.id)
-                db.session.add(new_transaction)
+                    #add a new transaction, with the date for the transaction set as now
+                    new_transaction = models.transactions(hire_period = hours,
+                                                        booking_time = datetime.utcnow(),
+                                                        user_id = current_user.id)
+                    db.session.add(new_transaction)
 
-                db.session.commit()
+                    db.session.commit()
 
-                #write the email message
-                msg = Message('Booking Extension Confirmation',
-                                sender='scootersleeds@gmail.com',
-                                recipients=[current_user.email])
+                    #write the email message
+                    msg = Message('Booking Extension Confirmation',
+                                    sender='scootersleeds@gmail.com',
+                                    recipients=[current_user.email])
 
-                msg.body = (f'Thank You, your booking extension has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
-                '\nEnd Date and Time: ' + str(booking.final_date_time) +
-                '\nScooter ID: ' + str(booking.scooter_id) +
-                '\nReference Number: ' + str(booking.id))
-                mail.send(msg)
+                    msg.body = (f'Thank You, your booking extension has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+                    '\nEnd Date and Time: ' + str(booking.final_date_time) +
+                    '\nScooter ID: ' + str(booking.scooter_id) +
+                    '\nReference Number: ' + str(booking.id))
+                    mail.send(msg)
 
-                flash("Booking Extension Successful!")
+                    flash("Booking Extension Successful!")
 
-                return redirect("/profile")
+                    return redirect("/profile")
             else:
                 #not extending, so booking
                 # if admin is is making a booking, the booking_user_id = 0
@@ -269,7 +270,7 @@ def locations():
 
 @app.route('/booking1', methods=['GET', 'POST'])
 def booking1():
-
+    #current user is a customer
     if not current_user.account_type == "employee" and not current_user.account_type == "manager":
 
         msg = Message('Booking Confirmation',
@@ -296,6 +297,14 @@ def booking1():
         #if the location doesn't actually have any scooters tied to it, initialse the scooter selectfield
         if len(form.scooter_id.choices) == 0:
             form.scooter_id.choices = [("0", "No Scooters Available")]
+
+        #check if the current user has card details or not
+        data = models.card_details.query.filter_by(user_id=current_user.id).first()
+
+        if data: # if the user already has card details saved
+            card_found = True
+        else:
+            card_found = False
 
         #as long as the submit button is pressed
         if form.is_submitted():
@@ -436,7 +445,9 @@ def booking1():
         #send the current user to the user version of the booking1 page
         return render_template('booking1_user.html',
                                 title='Choose a Location',
-                                form = form)
+                                form=form,
+                                data=data,
+                                card_found=card_found)
 
     #if the current user is an employee or manager
     elif current_user.account_type == "employee" or current_user.account_type == "manager":
@@ -586,10 +597,42 @@ def booking2():
                             location=location)
 
 
-@app.route('/cancel_booking')
+#intermediary page for cancelling booking
+@app.route('/cancel_this_booking/<booking_id>')
+def cancel_this_booking(booking_id):
+    session['booking_id'] = booking_id
+
+    return redirect(url_for('cancel_booking'))
+
+
+@app.route('/cancel_booking', methods=('GET', 'POST'))
 def cancel_booking():
+
+    booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
+    collection_points = models.collection_point
+
+    #if the confirm cancellation button is pressed
+    if request.method == 'POST':
+        #delete the transaction only if it is an upcoming booking
+        #we do this by deleting the first transaction with that hire_period, and that user_id
+        #slight problem with this, because we don't store when a booking is made in the booking table, we can't tell which booking we're deleting
+        #right now we're deleting all bookings that appears with this duration and ID, reason is that delete only works with queries, not single row entities
+        # if booking.status == "upcoming":
+        #     models.transactions.query.filter_by(hire_period = booking.duration).filter_by(user_id = booking.id).delete()
+
+        #delete the actual booking
+        models.booking.query.filter_by(id = session.get('booking_id', None)).delete()
+
+        db.session.commit()
+
+        flash("Booking successfully cancelled!")
+
+        return redirect(url_for('profile'))
+
     return render_template('cancel_booking.html',
-                            title='Cancel Booking')
+                            title='Cancel Booking',
+                            booking=booking,
+                            collection_points=collection_points)
 
 
 #intermediary page for extending booking
