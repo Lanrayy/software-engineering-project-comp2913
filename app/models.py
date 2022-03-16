@@ -30,10 +30,10 @@ class user(UserMixin, db.Model):
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     account_type = db.Column(db.String(50), nullable=False) #choices are: customer, employee, manager
-    user_type = db.Column(db.String(50), nullable=False) #choices are: default (includes emplyee and managers), senior, and frequent
+    user_type = db.Column(db.String(50), nullable=False) #choices are: default (includes emplyee and managers), senior, student, and frequent, #choices are: default, senior, frequent, student, frequent is automatically given
     password = db.Column(db.String(50), nullable=False)
 
-    card = db.relationship('card_details', uselist=False, backref='user') #one-to-one relation, "If you would want to have a one-to-one relationship you can pass uselist=False to relationship()."
+    card = db.relationship('card_details', uselist=False, backref='user') #one-to-one relation
     booking = db.relationship('booking', backref='user', lazy=True)  #one-to-many relation
 
 
@@ -45,11 +45,11 @@ class card_details(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     cardnumber = db.Column(db.String(16), nullable=False)
-    last_four = db.Column(db.String(4), nullable=False)
+    last_four = db.Column(db.String(4), nullable=False) # last four digits on card
     expiry_date = db.Column(db.Date, nullable=False) #example : 08/24
     cvv = db.Column(db.String(3), nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) #one-to-one relation
 
     def __repr__(self):
             return f'Card {self.id} < CardNumber={self.cardnumber}| ExpireDate={self.expiry_date}| User_id={self.user_id}>'
@@ -59,7 +59,7 @@ class card_details(db.Model):
 class collection_point(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     location = db.Column(db.String(50), nullable=False) #The name of the location
-    num_scooters = db.Column(db.Integer, nullable=False)
+    num_scooters = db.Column(db.Integer, nullable=False) # NUmber of scooters available at that location
 
     scooter = db.relationship('scooter', backref='collection_point', lazy=True)  #one-to-many relation
     booking = db.relationship('booking', backref='collection_point', lazy=True)  #one-to-many relation
@@ -72,11 +72,11 @@ class collection_point(db.Model):
 #Booking Database
 class booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    duration = db.Column(db.Integer, nullable=False)
-    status = db.Column(db.String(50), nullable=False) #Let users pick 1,2,3 rather than type it in. Make integer?
-    cost = db.Column(db.Float, nullable=False)
-    initial_date_time = db.Column(db.DateTime(), nullable=False)
-    final_date_time = db.Column(db.DateTime(), nullable=False)
+    duration = db.Column(db.Integer, nullable=False) # Duration of the booking
+    status = db.Column(db.String(50), nullable=False) # choices are: active, cancelled, expired, upcoming
+    cost = db.Column(db.Float, nullable=False) # the cost of booking this scooter altogether
+    initial_date_time = db.Column(db.DateTime(), nullable=False) # start date and time of the booking
+    final_date_time = db.Column(db.DateTime(), nullable=False) # end date and time of the booking
     email = db.Column(db.String(50), nullable=False) #manually link this to the user through the code
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -90,6 +90,8 @@ class booking(db.Model):
 class feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(50), nullable=False)
+    priority = db.Column(db.Integer, nullable=False) # 0 for low priority, 1 for high
+    resolved = db.Column(db.Integer, nullable=False) # 0 for not resolved, 1 for resolved
 
 #Pricing Table
 class pricing(db.Model):
@@ -110,6 +112,8 @@ class scooter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     availability = db.Column(db.Integer, nullable=False) #1 is available, 2 is unavailable
     collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
+
+
     booking = db.relationship('booking', backref='scooter', lazy=True)  #one-to-many relation
 
     def __repr__(self):
@@ -118,9 +122,10 @@ class scooter(db.Model):
 #Transactions database
 class transactions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    hire_period = db.Column(db.Integer, nullable=False)
-    booking_time = db.Column(db.DateTime(), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    hire_period = db.Column(db.Integer, nullable=False) # store in hours (1, 4, 24, 168)
+    booking_time = db.Column(db.DateTime(), nullable=False) # start date and time
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #problem
 
     def __repr__(self):
             return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'

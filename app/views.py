@@ -1,9 +1,11 @@
 from flask import render_template, flash, request, redirect, url_for, abort, make_response, session, jsonify
-from app import app, db, bcrypt, models, login_manager
-from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm
+from app import app, db, bcrypt, models, login_manager, mail
+from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm, ConfigureScooterForm, FeedbackForm, EditFeedbackForm, PricesForm, ExtendBookingForm
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
 import os
+import smtplib
+from flask_mail import Message
 
 #Unregistered user exclusive pages
 @app.route('/')
@@ -30,7 +32,7 @@ def register():
     if form.validate_on_submit():
         #encrypt password
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
-        u = models.user(password = hashed_password, email = form.email.data, account_type = "customer", user_type = "default", name = form.name.data)
+        u = models.user(password = hashed_password, email = form.email.data, account_type = "customer", user_type = form.user_type.data, name = form.name.data)
         db.session.add(u)    # add user to db
         db.session.commit()     # commit user to db
         flash(f'Account Created!', 'success')
@@ -79,12 +81,13 @@ def card():
         card_found = False
 
     if request.method == 'POST':
+        #if the card details check out
         if form.validate_on_submit():
             if form.save_card_details.data: # if the user want to save the card details,  save information into database
                 hashed_card_num = bcrypt.generate_password_hash(form.card_number.data) # hash the card number
                 hashed_cvv = bcrypt.generate_password_hash(form.cvv.data)
                 last_four = form.card_number.data[12:] # save the last four digits of the card number
-                p = models.card_details(name = form.name.data, 
+                p = models.card_details(name = form.name.data,
                                         cardnumber = hashed_card_num,
                                         last_four = last_four,
                                         expiry_date = form.expiry.data,
@@ -94,46 +97,97 @@ def card():
                 db.session.commit()
                 flash("Card details saved")
 
-
-
+            #initialise booking
             booking = 0
-            # if admin is is making a booking don't save the user id 
-            if session.get('booking_user_id') == 0:
-                booking = models.booking(duration = session.get('booking_duration', None),
-                                         status= session.get('booking_status', None),
-                                         cost = session.get('booking_cost', None),
-                                         initial_date_time = session.get('booking_initial', None),
-                                         final_date_time = session.get('booking_final', None),
-                                         email = session.get('booking_email', None),
-                                         scooter_id = session.get('booking_scooter_id', None),
-                                         collection_id = session.get('booking_collection_id', None))
-                db.session.add(booking)
+
+            #check if we were booking or extending
+            if session.pop('extending') == "True":
+                #we are extending, make sure to redirect to profile and send an email about the Extension
+                booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
+
+                #get our variables from the session
+                hours = session.get('extend_hours', None)
+                cost = session.get('extend_cost', None)
+
+                #extend the booking pointed to by the 'booking_id' in the session, and add to the cost
+                booking.duration = booking.duration + hours
+                booking.cost = booking.cost + cost
+                booking.final_date_time = booking.final_date_time + timedelta(hours = hours)
+
+                #add a new transaction, with the date for the transaction set as now
+                new_transaction = models.transactions(hire_period = hours,
+                                                    booking_time = datetime.utcnow(),
+                                                    user_id = current_user.id)
+                db.session.add(new_transaction)
+
+                db.session.commit()
+
+                #write the email message
+                msg = Message('Booking Extention Confirmation',
+                                sender='scootersleeds@gmail.com',
+                                recipients=[current_user.email])
+
+                msg.body = (f'Thank You, your booking extention has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+                '\nEnd Date and Time: ' + str(booking.final_date_time) +
+                '\nScooter ID: ' + str(booking.scooter_id) +
+                '\nReference Number: ' + str(booking.id))
+                mail.send(msg)
+
+                flash("Booking Extention Successful!")
+
+                return redirect("/profile")
             else:
-                booking = models.booking(duration = session.get('booking_duration', None),
-                                         status= session.get('booking_status', None),
-                                         cost = session.get('booking_cost', None),
-                                         initial_date_time = session.get('booking_initial', None),
-                                         final_date_time = session.get('booking_final', None),
-                                         email = session.get('booking_email', None),
-                                         user_id = session.get('booking_user_id', None),
-                                         scooter_id = session.get('booking_scooter_id', None),
-                                         collection_id = session.get('booking_collection_id', None))
-                db.session.add(booking)
+                #not extending, so booking
+                # if admin is is making a booking, the booking_user_id = 0
+                if session.get('booking_user_id') == 0:
+                    #admin is making the booking
+                    booking = models.booking(duration = session.get('booking_duration', None),
+                                             status= session.get('booking_status', None),
+                                             cost = session.get('booking_cost', None),
+                                             initial_date_time = session.get('booking_initial', None),
+                                             final_date_time = session.get('booking_final', None),
+                                             email = session.get('booking_email', None),
+                                             scooter_id = session.get('booking_scooter_id', None),
+                                             collection_id = session.get('booking_collection_id', None))
+                    db.session.add(booking)
+                    # add new transaction to the transaction table- used on the metrics page, no user id
+                    new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
+                                                        booking_time = datetime.utcnow())
+                    db.session.add(new_transaction)
+                else:
+                    #user is making the booking
+                    booking = models.booking(duration = session.get('booking_duration', None),
+                                             status= session.get('booking_status', None),
+                                             cost = session.get('booking_cost', None),
+                                             initial_date_time = session.get('booking_initial', None),
+                                             final_date_time = session.get('booking_final', None),
+                                             email = session.get('booking_email', None),
+                                             user_id = session.get('booking_user_id', None),
+                                             scooter_id = session.get('booking_scooter_id', None),
+                                             collection_id = session.get('booking_collection_id', None))
+                    db.session.add(booking)
+                    # add new transaction to the transaction table- used on the metrics page, with user id
+                    new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
+                                                        booking_time = datetime.utcnow(),
+                                                        user_id = session.get('booking_user_id', None))
+                    db.session.add(new_transaction)
 
-            scooter = models.scooter.query.filter_by(id = session.get('booking_scooter_id', None)).first() #find the scooter
-            scooter.availability = 2 #mark as unavailable
-            
-            session['booking_id'] = booking.id
+                db.session.commit()
 
-            # add a new transation
-            new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
-                                                booking_time = session.get('booking_initial', None),
-                                                user_id = session.get('booking_user_id', None))
-            db.session.add(new_transaction) # add new transaction to the transaction table- used on the metrics page                   
-            
-            db.session.commit()
-            flash("Booking Successful!")
-            return redirect("/booking2") #send to booking confirmation
+                msg = Message('Booking Confirmation',
+                                sender='scootersleeds@gmail.com',
+                                recipients=[current_user.email])
+
+                msg.body = (f'Thank You, your booking has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+                '\nEnd Date and Time: ' + str(booking.final_date_time) +
+                '\nScooter ID: ' + str(booking.scooter_id) +
+                '\nReference Number: ' + str(booking.id))
+                mail.send(msg)
+
+                session['booking_id'] = booking.id
+                flash("Booking Successful!")
+
+                return redirect("/booking2") #send to booking confirmation
 
     return render_template('card.html',
                            title='Card',
@@ -165,20 +219,44 @@ def pricing():
     return render_template('pricing.html',
                             title='Our Prices')
 
-
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
+
+    #filter the query into the bookings and card
+    cards = models.card_details.query.first()
+
+    #Doesn't delete cards
+    #if request.method == 'POST':
+    #    db.session.delete(cards)
+    #    db.session.commit()
+    #flask('Card deleted')
+
+    bookings =  models.booking.query.filter_by(email = current_user.email)
+    collection_points = models.collection_point
+
     return render_template('profile.html',
                             title='Your Profile',
                             name=current_user.name,
                             email=current_user.email,
-                            account_type=current_user.account_type)
+                            account_type=current_user.account_type,
+                            cards = cards,
+                            booking = bookings,
+                            collection_points=collection_points)
 
 
-@app.route('/send_feedback')
+@app.route('/send_feedback', methods=('GET', 'POST'))
 def send_feedback():
+    form = FeedbackForm()
+
+    if request.method == 'POST':
+        f = models.feedback(message=form.feedback.data, priority=0, resolved=0)
+        db.session.add(f)
+        db.session.commit()
+        flash(f'Feedback Submitted', 'success')
+        return redirect(url_for('send_feedback'))
     return render_template('send_feedback.html',
-                            title='Send Us Your Feedback')
+                            title='Send Us Your Feedback',
+                            form=form)
 
 
 @app.route('/locations')
@@ -187,64 +265,114 @@ def locations():
                             title='Pickup Locations')
 
 
+
+
 @app.route('/booking1', methods=['GET', 'POST'])
 def booking1():
 
     if not current_user.account_type == "employee" and not current_user.account_type == "manager":
+
+        msg = Message('Booking Confirmation',
+                            sender='scootersleeds@gmail.com',
+                            recipients=[current_user.email])
         #User booking
         form = UserBookingForm()
 
+        #fill the location field with the locations in the table
         form.location_id.choices = [(collection_point.id, collection_point.location)
                                     for collection_point in models.collection_point.query.all()]
 
+        #initialises the start date with the current time
         if form.start_date.data == None:
-            form.start_date.data = datetime.now()
+            form.start_date.data = datetime.utcnow()
+        #initialise the location field with the first location_id in the table
         if form.location_id.data == None:
             form.location_id.data = '1'
 
+        #initialise the scooter field with the scooters inside the first location_id
         form.scooter_id.choices = [(scooter.id, "Scooter ID: " + str(scooter.id))
                                     for scooter in models.scooter.query.filter_by(collection_id = form.location_id.data, availability = 1).all()]
 
+        #if the location doesn't actually have any scooters tied to it, initialse the scooter selectfield
         if len(form.scooter_id.choices) == 0:
             form.scooter_id.choices = [("0", "No Scooters Available")]
 
+        #as long as the submit button is pressed
         if form.is_submitted():
+            #checks that the user didn't try to book when location is empty of scooters
             if form.scooter_id.data == "0":
                 flash("Please choose a location with available scooters")
                 return render_template('booking1_user.html',
                                         title='Choose a Location',
                                         form = form)
 
+            #check that they actually put a start date
             if form.start_date.data == None:
                 flash("Please enter a valid date")
                 return render_template('booking1_user.html',
                                         title='Choose a Location',
                                         form = form)
 
-            if form.start_date.data < datetime.now():
+            #check if the start date further in the past than now, with a grace period of 5 minutes
+            if form.start_date.data < datetime.utcnow() + timedelta(minutes = -5):
                 flash("The start date can't be in the past")
                 return render_template('booking1_user.html',
                                         title='Choose a Location',
                                         form = form)
 
+            #convert the option selected in the SelectField into a cost and the number of hours
             if form.hire_period.data == '1':
                 cost = models.pricing.query.filter_by(id = 1).first().price
                 hours = 1
             elif form.hire_period.data == '2':
-                cost = models.pricing.query.filter_by(id = 1).first().price
+                cost = models.pricing.query.filter_by(id = 2).first().price
                 hours = 4
             elif form.hire_period.data == '3':
-                cost = models.pricing.query.filter_by(id = 1).first().price
+                cost = models.pricing.query.filter_by(id = 3).first().price
                 hours = 24
             elif form.hire_period.data == '4':
-                cost = models.pricing.query.filter_by(id = 1).first().price
+                cost = models.pricing.query.filter_by(id = 4).first().price
                 hours = 168
             else:
                 cost = 10.00
                 hours = 1
 
+            #check every booking made with this scooter
+            #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
+            #only check currently "upcoming" or "active" bookings
+            current_active_bookings = models.booking.query.filter_by(scooter_id = form.scooter_id.data, status = "active")
+            current_upcoming_bookings = models.booking.query.filter_by(scooter_id = form.scooter_id.data, status = "upcoming")
+            #check active bookings
+            for booking in current_active_bookings:
+                #check that the selected start date doesn't fall during a booking
+                if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
+                    flash("The scooter is unavailable for that start time")
+                    return render_template('booking1_user.html',
+                                            title='Choose a Location',
+                                            form = form)
+                #check that the projected end date doesn't fall during a booking
+                if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
+                    flash("The projected end time falls within a pre-existing booking")
+                    return render_template('booking1_user.html',
+                                            title='Choose a Location',
+                                            form = form)
+            #check upcoming bookings
+            for booking in current_upcoming_bookings:
+                #check that the selected start date doesn't fall during a booking
+                if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
+                    flash("The scooter is unavailable for that start time")
+                    return render_template('booking1_user.html',
+                                            title='Choose a Location',
+                                            form = form)
+                #check that the projected end date doesn't fall during a booking
+                if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
+                    flash("The projected end time falls within a pre-existing booking")
+                    return render_template('booking1_user.html',
+                                            title='Choose a Location',
+                                            form = form)
+
+            #store the booking details as a session to be used on successful payment
             session['booking_duration'] = hours
-            session['booking_status'] = "active"
             session['booking_cost'] = cost
             session['booking_initial'] = form.start_date.data
             session['booking_final'] = form.start_date.data + timedelta(hours = hours)
@@ -253,108 +381,171 @@ def booking1():
             session['booking_scooter_id'] = int(form.scooter_id.data)
             session['booking_collection_id'] = int(form.location_id.data)
 
+            #check if the booking should be currently active or upcoming
+            if session.get('booking_initial', None) < datetime.utcnow():
+                #if the start time is before now, it's currently active
+                session['booking_status'] = "active"
+            else:
+                #else it must be in the future
+                session['booking_status'] = "upcoming"
+
             #card details do not exist, send to payment page
             exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
             if(exists):
                 #card details exist, book then send to confirmation page straight away
-                booking = models.booking(duration = hours,
-                                         status="active",
-                                         cost = cost,
-                                         initial_date_time = form.start_date.data,
-                                         final_date_time = form.start_date.data + timedelta(hours = hours),
-                                         email = current_user.email,
-                                         user_id = current_user.id,
-                                         scooter_id = int(form.scooter_id.data),
-                                         collection_id = int(form.location_id.data))
-
+                booking = models.booking(duration = session.get('booking_duration', None),
+                                         status= session.get('booking_status', None),
+                                         cost = session.get('booking_cost', None),
+                                         initial_date_time = session.get('booking_initial', None),
+                                         final_date_time = session.get('booking_final', None),
+                                         email = session.get('booking_email', None),
+                                         user_id = session.get('booking_user_id', None),
+                                         scooter_id = session.get('booking_scooter_id', None),
+                                         collection_id = session.get('booking_collection_id', None))
                 db.session.add(booking)
-                scooter = models.scooter.query.filter_by(id = form.scooter_id.data).first() #find the scooter
-                scooter.availability = 2 #mark as unavailable
 
-                # add a new transaction to the transactions table - used on the metrics page
+
+                # add new transaction to the transaction table- used on the metrics page
                 new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
-                                                      booking_time = session.get('booking_initial', None),
-                                                      user_id = session.get('booking_user_id', None))
-                db.session.add(new_transaction) # add transaction
+                                                    booking_time = datetime.utcnow(),
+                                                    user_id = session.get('booking_user_id', None))
+                db.session.add(new_transaction)
+
                 db.session.commit()
+
+
 
                 session['booking_id'] = booking.id
 
+                msg = Message('Booking Confirmation',
+                                sender='scootersleeds@gmail.com',
+                                recipients=[current_user.email])
+
+                msg.body = (f'Thank You, your booking has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+                '\nEnd Date and Time: ' + str(booking.final_date_time) +
+                '\nScooter ID: ' + str(booking.scooter_id) +
+                '\nReference Number: ' + str(booking.id))
+                mail.send(msg)
+
                 flash("Booking Successful!")
-                return redirect("/booking2")
+                return redirect("/booking2") #send to booking confirmation
             else:
-                #card details do not exist, send to payment page
+                #user does not have existing
                 return redirect("/card")
 
+        #send the current user to the user version of the booking1 page
         return render_template('booking1_user.html',
                                 title='Choose a Location',
                                 form = form)
 
+    #if the current user is an employee or manager
     elif current_user.account_type == "employee" or current_user.account_type == "manager":
         #Employee or Manager booking
         form = AdminBookingForm()
 
+        #fill the location field with the locations in the table
         form.location_id.choices = [(collection_point.id, collection_point.location)
                                     for collection_point in models.collection_point.query.all()]
 
+        #initialises the start date with the current time
         if form.start_date.data == None:
-            form.start_date.data = datetime.now()
+            form.start_date.data = datetime.utcnow()
+        #initialise the location field with the first location_id in the table
         if form.location_id.data == None:
             form.location_id.data = '1'
 
+        #initialise the scooter field with the scooters inside the first location_id
         form.scooter_id.choices = [(scooter.id, "Scooter ID: " + str(scooter.id))
                                     for scooter in models.scooter.query.filter_by(collection_id = form.location_id.data, availability = 1).all()]
 
-        if len(form.scooter_id.choices) == 0:
-            form.scooter_id.choices = [("0", "No Scooters Available")]
-
+        #as long as the submit button is pressed
         if form.is_submitted():
+            #checks that the user didn't try to book when location is empty of scooters
             if form.scooter_id.data == "0":
                 flash("Please choose a location with available scooters")
                 return render_template('booking1_admin.html',
                                         title='Choose a Location',
                                         form = form)
 
+            #check that they actually put a start date
             if form.start_date.data == None:
                 flash("Please enter a valid date")
                 return render_template('booking1_admin.html',
                                         title='Choose a Location',
                                         form = form)
 
-            if form.start_date.data < datetime.now():
+            #check if the start date further in the past than now, with a grace period of 5 minutes
+            if form.start_date.data < datetime.utcnow() + timedelta(minutes = -5):
                 flash("The start date can't be in the past")
                 return render_template('booking1_admin.html',
                                         title='Choose a Location',
                                         form = form)
 
+            #convert the option selected in the SelectField into a cost and the number of hours
             if form.hire_period.data == '1':
                 cost = models.pricing.query.filter_by(id = 1).first().price
                 hours = 1
             elif form.hire_period.data == '2':
-                cost = models.pricing.query.filter_by(id = 1).first().price
+                cost = models.pricing.query.filter_by(id = 2).first().price
                 hours = 4
             elif form.hire_period.data == '3':
-                cost = models.pricing.query.filter_by(id = 1).first().price
+                cost = models.pricing.query.filter_by(id = 3).first().price
                 hours = 24
             elif form.hire_period.data == '4':
-                cost = models.pricing.query.filter_by(id = 1).first().price
+                cost = models.pricing.query.filter_by(id = 4).first().price
                 hours = 168
             else:
                 cost = 10.00
                 hours = 1
 
+            #check every booking made with this scooter
+            #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
+            #only check currently "upcoming" or "active" bookings
+            current_active_bookings = models.booking.query.filter_by(scooter_id = form.scooter_id.data, status = "active")
+            current_upcoming_bookings = models.booking.query.filter_by(scooter_id = form.scooter_id.data, status = "upcoming")
+            #check active bookings
+            for booking in current_active_bookings:
+                #check that the selected start date doesn't fall during a booking
+                if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
+                    flash("The scooter is unavailable for that start time")
+                    return render_template('booking1_admin.html',
+                                            title='Choose a Location',
+                                            form = form)
+                #check that the projected end date doesn't fall during a booking
+                if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
+                    flash("The projected end time falls within a pre-existing booking")
+                    return render_template('booking1_admin.html',
+                                            title='Choose a Location',
+                                            form = form)
+            #check upcoming bookings
+            for booking in current_upcoming_bookings:
+                #check that the selected start date doesn't fall during a booking
+                if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
+                    flash("The scooter is unavailable for that start time")
+                    return render_template('booking1_admin.html',
+                                            title='Choose a Location',
+                                            form = form)
+                #check that the projected end date doesn't fall during a booking
+                if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
+                    flash("The projected end time falls within a pre-existing booking")
+                    return render_template('booking1_admin.html',
+                                            title='Choose a Location',
+                                            form = form)
+
+            #store the booking details as a session to be used on successful payment
             session['booking_duration'] = hours
-            session['booking_status'] = "active"
             session['booking_cost'] = cost
-            session['booking_initial'] = datetime.utcnow()
-            session['booking_final'] = datetime.utcnow() + timedelta(hours = hours)
+            session['booking_initial'] = form.start_date.data
+            session['booking_final'] = form.start_date.data + timedelta(hours = hours)
             session['booking_user_id'] = 0
             session['booking_email'] = form.email.data
             session['booking_scooter_id'] = int(form.scooter_id.data)
             session['booking_collection_id'] = int(form.location_id.data)
 
+            #send admin user to payment page
             return redirect("/card")
 
+        #send current_user to the admin version of the booking1 page
         return render_template('booking1_admin.html',
                                 title='Choose a Location',
                                 form = form)
@@ -378,16 +569,17 @@ def booking1_location(location_id):
 def booking2():
     booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
 
-    if booking.duration == 1:
+    location = models.collection_point.query.filter_by(id = booking.collection_id).first().location
+
+    if session.get('booking_duration', None) == 1:
         session['booking_period'] = "1 Hour"
-    elif booking.duration == 4:
+    elif session.get('booking_duration', None) == 4:
         session['booking_period'] = "4 Hours"
-    elif booking.duration == 24:
+    elif session.get('booking_duration', None) == 24:
         session['booking_period'] = "1 Day"
-    elif booking.duration == 168:
+    elif session.get('booking_duration', None) == 168:
         session['booking_period'] = "1 Week"
 
-    location = session.get('collection_location', None)
     return render_template('booking2.html',
                             title='Booking Confirmation',
                             booking=booking,
@@ -400,10 +592,86 @@ def cancel_booking():
                             title='Cancel Booking')
 
 
-@app.route('/extend_booking')
+#intermediary page for extending booking
+@app.route('/extend_this_booking/<booking_id>')
+def extend_this_booking(booking_id):
+    session['booking_id'] = booking_id
+
+    return redirect(url_for('extend_booking'))
+
+
+#extend booking page that takes info from the page in between profile and extend
+@app.route('/extend_booking', methods=('GET', 'POST'))
 def extend_booking():
+    form = ExtendBookingForm()
+    booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
+    collection_points = models.collection_point
+
+    #when the form is submitted
+    if form.validate_on_submit():
+        #convert the option selected in the SelectField into a cost and the number of hours
+        if form.hire_period.data == '1':
+            cost = models.pricing.query.filter_by(id = 1).first().price
+            hours = 1
+        elif form.hire_period.data == '2':
+            cost = models.pricing.query.filter_by(id = 2).first().price
+            hours = 4
+        elif form.hire_period.data == '3':
+            cost = models.pricing.query.filter_by(id = 3).first().price
+            hours = 24
+        elif form.hire_period.data == '4':
+            cost = models.pricing.query.filter_by(id = 4).first().price
+            hours = 168
+        else:
+            cost = 10.00
+            hours = 1
+
+
+
+        #check if user has saved card details
+        exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
+        if(exists):
+            #has card details
+            #extend the booking pointed to by the 'booking_id' in the session, and add to the cost
+            booking.duration = booking.duration + hours
+            booking.cost = booking.cost + cost
+            booking.final_date_time = booking.final_date_time + timedelta(hours = hours)
+
+            #add a new transaction, with the date for the transaction set as now
+            new_transaction = models.transactions(hire_period = hours,
+                                                booking_time = datetime.utcnow(),
+                                                user_id = current_user.id)
+            db.session.add(new_transaction)
+
+            db.session.commit()
+
+            #write the email message
+            msg = Message('Booking Extention Confirmation',
+                            sender='scootersleeds@gmail.com',
+                            recipients=[current_user.email])
+
+            msg.body = (f'Thank You, your booking extention has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+            '\nEnd Date and Time: ' + str(booking.final_date_time) +
+            '\nScooter ID: ' + str(booking.scooter_id) +
+            '\nReference Number: ' + str(booking.id))
+            mail.send(msg)
+
+            flash("Booking Extention Successful!")
+
+            return redirect(url_for('profile'))
+        else:
+            #doesn't have card details
+            #need to tell the /card page that we're extending, not booking a new booking
+            session['extending'] = 'True'
+            session['extend_hours'] = hours
+            session['extend_cost'] = cost
+            return redirect(url_for('card'))
+
     return render_template('extend_booking.html',
-                            title='Extend Booking')
+                            title='Extend Booking',
+                            booking=booking,
+                            form=form,
+                            collection_points=collection_points)
 
 
 #Admin exclusive pages
@@ -414,17 +682,50 @@ def admin_dashboard():
                             title='Admin Dashboard')
 
 
-@app.route('/review_feedback')
+@app.route('/review_feedback', methods=('GET', 'POST'))
 def review_feedback():
+    employee = (current_user.account_type == 'employee') # True if 'employee', False if 'manager'
+    if employee:
+        recs = models.feedback.query.filter_by(priority=0, resolved=0) # Employee meant to see low priority
+    else:
+        recs = models.feedback.query.filter_by(priority=1, resolved=0) # Manager meant to see high priority
     return render_template('review_feedback.html',
-                            title='Review Customer Feedback')
+                            title='Review Customer Feedback', recs=recs)
 
 
+@app.route('/edit_feedback/<id>', methods=('GET', 'POST'))
+def edit_feedback(id):
+    form = EditFeedbackForm()
+    rec = models.feedback.query.filter_by(id=id).first()
 
-@app.route('/view_scooters')
+    if request.method == 'POST':
+        f = models.feedback.query.filter_by(id=id).first()
+
+        if form.priority.data:
+            f.priority = (f.priority + 1) % 2 # Toggles high priority (1 goes to 0, 0 goes to 1)
+
+        if form.resolve.data:
+            f.resolved = (f.resolved + 1) % 2 # Toggles resolved (1 goes to 0, 0 goes to 1)
+
+        db.session.commit()
+        return redirect(url_for('review_feedback'))
+
+    return render_template('edit_feedback.html', rec=rec, form=form)
+
+
+@app.route('/view_scooters', methods=['GET', 'POST'])
 def view_scooters():
 
-    rec = models.scooter.query.all()
+    rec = models.scooter.query.all() # retrieve all scooters
+    form = ConfigureScooterForm()
+
+    # redirect to configure scooter page with the selected scooter
+    if request.method == 'POST':
+        id = request.form["edit_button"]
+        u = models.scooter.query.get(id)
+        session['confg_sctr_id'] = u.id
+        return redirect(url_for('configure_scooter'))
+
     return render_template('view_scooters.html',
                             title='View Scooters', rec=rec)
 
@@ -441,10 +742,58 @@ def add_scooter():
                             title='Add New Scooter', form=form)
 
 
-@app.route('/configure_scooter')
+@app.route('/configure_scooter', methods=['GET', 'POST'])
 def configure_scooter():
+    #retrieve details to display and store in form
+    scooter = models.scooter.query.get(session['confg_sctr_id'])
+
+    form = ConfigureScooterForm()
+    form.scooter_id.data = session['confg_sctr_id']
+    form.availability.data = scooter.availability
+    form.location_id.data = scooter.collection_id
+
+    if request.method == 'POST':
+        # update details if user clicks confirm
+        if request.form.get("cancel") is None:
+            scooter.availability = request.form.get("availability")
+            scooter.collection_id = request.form.get("location_id")
+            db.session.commit()
+            # print(models.scooter.query.all())
+            flash(f'Scooter Details Updated', 'success')
+        return redirect(url_for('view_scooters'))
     return render_template('configure_scooter.html',
-                            title='Configure A Scooter')
+                            title='Configure A Scooter', form=form)
+
+
+@app.route('/configure_costs', methods =['GET', 'POST'])
+def configure_costs():
+    rec = models.pricing.query.all()
+    form = PricesForm()
+
+    if form.validate_on_submit():
+        #assign corresponding db value based on the SelectForm value.
+
+        if form.duration.data == "1":
+            durationToCheck = "1 hour"
+        if form.duration.data == "2":
+            durationToCheck = "4 hour"
+        if form.duration.data == "3":
+            durationToCheck = "1 day"
+        if form.duration.data == "4":
+            durationToCheck = "1 week"
+
+        #find record and change price.
+        dur = models.pricing.query.filter_by(duration = durationToCheck).first()
+
+        if dur:
+            dur.price = form.price.data
+            flash("Price updated")
+        else:
+            flash("Error price not updated")
+
+        db.session.commit()     # commit scooter to db
+    return render_template('configure_costs.html',
+                            rec=rec, form=form)
 
 
 @app.route('/sales_metrics')

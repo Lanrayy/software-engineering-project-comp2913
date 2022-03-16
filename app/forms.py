@@ -21,6 +21,7 @@ class SignUpForm(FlaskForm):
     email = StringField('email', validators=[InputRequired(), Email()])
     password1 = PasswordField('password1', validators=[InputRequired()])
     password2 = PasswordField('password2', validators=[EqualTo('password1'), InputRequired()]) #makes sure password1 equals password2
+    user_type = SelectField('user_type', choices = [('default', 'default'), ('senior', 'senior'), ('student', 'student')], validators=[InputRequired()])
 
     # validate username
     def validate_email(self, email) :
@@ -70,12 +71,16 @@ class AdminBookingForm(FlaskForm):
     email = StringField('email', validators=[InputRequired(), Email()])
     #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
+# extend booking form
+class ExtendBookingForm(FlaskForm):
+    hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
+
 # configure scooter form
 class ConfigureScooterForm(FlaskForm):
     scooter_id = SelectField('scooter_id', choices=[('1', 'Select Scooter ID')], validators=[InputRequired()])
-    availability = SelectField('availability', choices = [('1', 'Available'), ('2', 'Unavailable')], validators=[InputRequired()])
+    availability = SelectField('availability', choices = [('1', 'Available'), ('2', 'Unavailable')], validators=[InputRequired()],coerce=int)
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
-        ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
+        ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()], coerce=int)
 
 
 
@@ -113,7 +118,13 @@ class AddScooterForm(FlaskForm):
 class FeedbackForm(FlaskForm):
     feedback = TextAreaField('feedback')
 
+# edit feedback form
+class EditFeedbackForm(FlaskForm):
+    # The only fields needed in form are priority and resolve
+    priority = BooleanField()
+    resolve = BooleanField()
+
 # configure prices form
 class PricesForm(FlaskForm):
-    duration = SelectField('duration', choices=[('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
-    price = StringField('price', validator=[InputRequired(), FloatField()])
+    duration = SelectField('duration', choices=[('1', '1 hour'), ('2', '4 hour'), ('3', '1 day'), ('4', '1 week')], validators=[InputRequired()])
+    price = StringField('price', validators=[InputRequired(), Regexp("^[0-9]*$" ,message="Numerical value only")])

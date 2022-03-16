@@ -4,24 +4,22 @@
   <h2>Report Details</h2>
 
   <!-- Feedback goes here -->
-  <div class="row">
-    <div class="col align-items-center">
-      <p>Date Received</p>
-
-    </div>
-
-    <div class="col align-items-center">
-      <p>Content</p>
-
-    </div>
-
-    <div class="col align-items-center">
-      <p>Current Priority</p>
-
-    </div>
-
-    <div class="col align-items-center">
-
-    </div>
-  </div>
+  <table id="feedback" class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Message</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rec in recs %}
+        <tr>
+          <td><p>{{ rec.id }}</p></td>
+          <td><p>{{ rec.message }}</p></td>
+          <td><a href="/edit_feedback/{{rec.id}}"><button type="button">Edit</button></a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}
