@@ -1,0 +1,6 @@
+landing-page-splash.jpg: https://pixabay.com/photos/wall-moped-scooter-motorcycle-6958508/
+booking app: https://www.flaticon.com/free-icon/booking-app_2038035
+booking: https://www.flaticon.com/free-icon/booking_2907150
+scooter: https://www.flaticon.com/premium-icon/electric-scooter_3696508?term=scooter&page=1&position=13&page=1&position=13&related_id=3696508&origin=search
+range: https://www.flaticon.com/free-icon/range_3696394?related_id=3696394
+
