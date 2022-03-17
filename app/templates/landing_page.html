@@ -1,19 +1,79 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>.sctr</h1>
-  <p>insert company slogan</p>
-  <div>
-    <a href="/register"><button type="button" class="btn btn-primary">Sign Up</button></a>
-    <a href="/login"><button type="button" class="btn btn-primary">Log In</button></a>
+  <div class="main-container">
+    <div class="row1">
+      <div class="row-1-column-1">
+        <div>
+
+            <h1 class="title">Reimagine transport</h1>
+            <p>...as far your wheels can take you</p>
+        </div>
+        <div class="call-to-action-buttons">
+            <a href="/register"><button type="button" class="btn btn-primary custom-button">Sign Up</button></a>
+            <a href="/login"><button type="button" class="btn btn-primary custom-button">Log In</button></a>
+        </div>
+      </div>
+      <div>
+          <img class="image" src="{{url_for('static', filename='images/landing-page-splash.jpg')}}" alt="Splash">
+      </div>
+    </div> 
+    <div class="row2">
+      <div class="">
+          <h2>How .sctr works</h2>
+      </div>
+      
+      <div class="windows">
+          <div class="row-2-column">
+              <div>
+                  <img class="row-2-image" src="{{url_for('static', filename='images/booking-app.png')}}" alt="Splash">
+              </div>
+              <h2>Join in minutes</h2>
+              <h5> Create an account online and you'll be ready to immediately start booking with us</h5>
+          </div>
+          <div class="row-2-column">
+              
+              <div>
+                  <img class="row-2-image" src="{{url_for('static', filename='images/booking.png')}}" alt="Splash">
+              </div>
+              <h2>Book a scooter</h2>
+              <h5>Book a .sctr any time of the day and we'll make sure it ready for your trip.</h5>
+
+
+            
+          </div>
+          <div class="row-2-column">
+              
+              <div>
+                  <img class="row-2-image" src="{{url_for('static', filename='images/range.png')}}" alt="Splash">
+              </div>
+              <h2>Ride off into the sunset</h2>
+              <h5>...just make sure you bring back your scooter before your hire period is over.</h5>
+
+            
+          </div>
+      </div>
+      <a href="/info"><button type="button" class="btn btn-primary custom-button">Learn More</button></a>
+
+      
+    
+    </div>   
+
+    <div class="row3">
+      <div class="row-title">
+          <h2>Where are we?</h2>
+          <h5>Whether you're running late to lectures or your lazying around the city center. We've got you covered. </h5>
+          <h5>Use the map below to find the locations near you. </h5>
+
+      </div>
+      <div class="map">
+          <!-- MAP HERE -->
+          <iframe src="https://www.google.com/maps/d/embed?mid=1KtDebi-rELyFWD2SYbJ_qJXrftcFUD9A&hl=en&ehbc=2E312F"></iframe>
+      </div>
+      
+
+    </div>
+
+
   </div>
-
-  <br><br>
-  <h2>How it works</h2>
-  <p>blurb on booking process</p>
-  <a href="/info"><button type="button" class="btn btn-primary">Learn More</button></a>
-
-  <br><br> <br>
-  <!-- MAP HERE -->
-  <iframe src="https://www.google.com/maps/d/embed?mid=1KtDebi-rELyFWD2SYbJ_qJXrftcFUD9A&hl=en&ehbc=2E312F" width="640" height="480"></iframe>
-  <br><br>
+  <h1>.sctr</h1>
 {% endblock %}
