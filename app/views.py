@@ -155,6 +155,8 @@ def card():
                     new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                         booking_time = datetime.utcnow())
                     db.session.add(new_transaction)
+                    #set the specified email to recipient
+                    recipients=[session.get('booking_email', None)]
                 else:
                     #user is making the booking
                     booking = models.booking(duration = session.get('booking_duration', None),
@@ -172,12 +174,14 @@ def card():
                                                         booking_time = datetime.utcnow(),
                                                         user_id = session.get('booking_user_id', None))
                     db.session.add(new_transaction)
+                    #set user to recipient
+                    recipients=[current_user.email]
 
                 db.session.commit()
 
                 msg = Message('Booking Confirmation',
                                 sender='scootersleeds@gmail.com',
-                                recipients=[current_user.email])
+                                recipients=recipients)
 
                 msg.body = (f'Thank You, your booking has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
                 '\nEnd Date and Time: ' + str(booking.final_date_time) +
@@ -362,18 +366,18 @@ def booking1():
             else:
                 cost = 10.00
                 hours = 1
-            
+
              #if the user is a student or a senior apply the discount
             if current_user.user_type == "senior" or current_user.user_type == "student":
                 flash("you are eligible for a student/senior discount")
                 cost = cost * (0.8)
-    
-            else : 
+
+            else :
                 bookings =  models.booking.query.filter_by(email = current_user.email, status = "expired") # expired user booking
-                total_hours = 0 # total hours in the past week 
+                total_hours = 0 # total hours in the past week
 
                 #find the datetime a week ago
-                today_date = datetime.now() 
+                today_date = datetime.now()
                 days = timedelta(days = 7)
                 week_date = today_date - days
 
@@ -383,7 +387,7 @@ def booking1():
                         total_hours += b.duration
                         if (total_hours > 8):
                             break
-                
+
                 if (total_hours >= 8) :
                     flash("you are eligible for a frequent user discount")
                     cost = cost * (0.8)
@@ -555,18 +559,18 @@ def booking1():
             #**************************************************************************
             #**********************APPLY DISCOUNT**************************************
             #**************************************************************************
-        
+
             #if the user is a student or a senior apply the discount
             if current_user.user_type == "senior" or current_user.user_type == "student":
                 flash("you are eligible for a student/senior discount")
                 cost = cost * (0.8)
-    
-            else : 
+
+            else :
                 bookings =  models.booking.query.filter_by(email = current_user.email, status = "expired") # expired user booking
-                total_hours = 0 # total hours in the past week 
+                total_hours = 0 # total hours in the past week
 
                 #find the datetime a week ago
-                today_date = datetime.now() 
+                today_date = datetime.now()
                 days = timedelta(days = 7)
                 week_date = today_date - days
 
@@ -575,7 +579,7 @@ def booking1():
                         total_hours += b.duration
                         if (total_hours > 8):
                             break
-                
+
                 if (total_hours >= 8) :
                     flash("you are eligible for a frequent user discount")
                     cost = cost * (0.8)
@@ -915,7 +919,7 @@ def configure_costs():
 
 @app.route('/sales_metrics')
 def sales_metrics():
-    one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0 
+    one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     date = datetime.utcnow()
     week_start = date + timedelta(-date.weekday(), weeks=-1)
@@ -949,7 +953,7 @@ def sales_metrics():
             one_day_price = pricing.price
         if pricing.duration == "1 Week":
             one_week_price = pricing.price
-    
+
     # Update the income amount
     one_hour_metric *= one_hour_price
     four_hour_metric *= four_hour_price
