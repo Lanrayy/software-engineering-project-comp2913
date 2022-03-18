@@ -10,3 +10,4 @@ flask-wtf
 flask-babel
 coverage
 email_validator
+matplotlib
