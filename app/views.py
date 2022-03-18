@@ -362,6 +362,31 @@ def booking1():
             else:
                 cost = 10.00
                 hours = 1
+            
+             #if the user is a student or a senior apply the discount
+            if current_user.user_type == "senior" or current_user.user_type == "student":
+                flash("you are eligible for a student/senior discount")
+                cost = cost * (0.8)
+    
+            else : 
+                bookings =  models.booking.query.filter_by(email = current_user.email, status = "expired") # expired user booking
+                total_hours = 0 # total hours in the past week 
+
+                #find the datetime a week ago
+                today_date = datetime.now() 
+                days = timedelta(days = 7)
+                week_date = today_date - days
+
+                #check if they are a frequent user
+                for b in bookings :
+                    if (b.initial_date_time > week_date):
+                        total_hours += b.duration
+                        if (total_hours > 8):
+                            break
+                
+                if (total_hours >= 8) :
+                    flash("you are eligible for a frequent user discount")
+                    cost = cost * (0.8)
 
 
             #check every booking made with this scooter
@@ -526,6 +551,37 @@ def booking1():
             else:
                 cost = 10.00
                 hours = 1
+
+            #**************************************************************************
+            #**********************APPLY DISCOUNT**************************************
+            #**************************************************************************
+        
+            #if the user is a student or a senior apply the discount
+            if current_user.user_type == "senior" or current_user.user_type == "student":
+                flash("you are eligible for a student/senior discount")
+                cost = cost * (0.8)
+    
+            else : 
+                bookings =  models.booking.query.filter_by(email = current_user.email, status = "expired") # expired user booking
+                total_hours = 0 # total hours in the past week 
+
+                #find the datetime a week ago
+                today_date = datetime.now() 
+                days = timedelta(days = 7)
+                week_date = today_date - days
+
+                for b in bookings :
+                    if (b.initial_date_time > week_date):
+                        total_hours += b.duration
+                        if (total_hours > 8):
+                            break
+                
+                if (total_hours >= 8) :
+                    flash("you are eligible for a frequent user discount")
+                    cost = cost * (0.8)
+
+            #**************************************************************************
+            #**************************************************************************
 
             #check every booking made with this scooter
             #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
