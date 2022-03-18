@@ -220,17 +220,34 @@ def pricing():
     return render_template('pricing.html',
                             title='Our Prices')
 
+@app.route('/delete/<int:id>', methods=['GET', 'POST'])
+def delete(id):
+    #to_complete is a variable to get the id passed by pressing the complete button
+    to_delete=models.cards.query.get_or_404(id)
+
+    try:
+        #change the status value of this id into complete and commit to the database
+        db.session.delete(to_delete)
+        db.session.commit()
+
+        return redirect('/profile')
+
+    except:
+        return 'there was an error'
+
+
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
 
     #filter the query into the bookings and card
-    cards = models.card_details.query.first()
+    #cards = models.card_details.query.filter_by(user_id = current_user.id)  #FOREIGN KEY
+    cards = models.card_details.query.all()
+    locations = models.collection_point.query.all()
 
-    #Doesn't delete cards
-    #if request.method == 'POST':
-    #    db.session.delete(cards)
-    #    db.session.commit()
-    #flask('Card deleted')
+    #Doesn't delete
+    if request.method == "POST":
+        flash("button pressed")
+        return redirect('profile')
 
     bookings =  models.booking.query.filter_by(email = current_user.email)
     collection_points = models.collection_point
@@ -242,7 +259,7 @@ def profile():
                             account_type=current_user.account_type,
                             cards = cards,
                             booking = bookings,
-                            collection_points=collection_points)
+                            location = locations)
 
 
 @app.route('/send_feedback', methods=('GET', 'POST'))
@@ -345,6 +362,7 @@ def booking1():
             else:
                 cost = 10.00
                 hours = 1
+
 
             #check every booking made with this scooter
             #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
