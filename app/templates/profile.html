@@ -1,23 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-
-  <style>
-  table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-  }
-
-  td, th {
-    text-align: left;
-    padding: 20px;
-  }
-
-  tr:nth-child(even) {
-    background-color: #dddddd;
-  }
-  </style>
-
   <h1>
     Hiii,
     {{ name }}!!
@@ -91,7 +73,6 @@
             <td>{{ b.initial_date_time }}</td>
             <td>{{b.duration}}</td>
             <td>SN{{b.scooter_id}}</td>
-
             {% for loc in location%}
               {% if b.collection_id == loc.id%}
                 <td> {{loc.location}} </td>  <!-- show booking location-->
@@ -102,13 +83,21 @@
             <td>BN000{{b.id}}</td>
 
             {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->
-            <td><a href="/extend_booking"><input type="submit" class="btn btn-primary" value="O"></a></td>
+            <td>
+              <a href="/extend_this_booking/{{ b.id }}">
+                <button type="button submit"  class="btn btn-success" name="extend_button">Extend</button>
+              </a>
+            </td>
             {% endif %}
             
             {% if b.status == "upcoming" %} <!-- if booking is UPCOMING then show cancel-->
-            <td><a href="/cancel_booking"><input type="submit" class="btn btn-primary" value="x"></a></td>
+            <td>
+              <a href="/cancel_this_booking/{{ b.id }}">
+                <button type="button submit"  class="btn btn-danger" name="cancel_button">Cancel</button>
+              </a>
+            </td>
             {% endif %}
-
+            
           </tr>
       {% endfor %}
 
