@@ -181,19 +181,34 @@ def pricing():
     return render_template('pricing.html',
                             title='Our Prices')
 
+@app.route('/delete/<int:id>', methods=['GET', 'POST'])
+def delete(id):
+    #to_complete is a variable to get the id passed by pressing the complete button
+    to_delete=models.cards.query.get_or_404(id)
+
+    try:
+        #change the status value of this id into complete and commit to the database
+        db.session.delete(to_delete)
+        db.session.commit()
+
+        return redirect('/profile')
+
+    except:
+        return 'there was an error'
+
+
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
 
     #filter the query into the bookings and card
-    cards = models.card_details.query.first()
+    #cards = models.card_details.query.filter_by(user_id = current_user.id)  #FOREIGN KEY
+    cards = models.card_details.query.all()
     locations = models.collection_point.query.all()
 
     #Doesn't delete
     if request.method == "POST":
         flash("button pressed")
-        db.session.delete(cards)
-        db.session.commit()
-        flash("Sucessfully deleted card")
+        return redirect('profile')
 
     bookings =  models.booking.query.filter_by(email = current_user.email)
 

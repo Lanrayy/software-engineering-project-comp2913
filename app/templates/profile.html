@@ -47,26 +47,28 @@
 
 
   <h3>Card Details</h3>
+  
   {% if cards.name != NULL %}
-  <table>
-        <tr>
-          <th>Name on Card</th>
-          <th>Card Number</th>
-          <th>cvv</th>
-        </tr>
-
+    <table>
           <tr>
-            <td>{{cards.name}}</td>
-            <td>XXXX XXXX XXXX {{cards.last_four}} </td>
-            <td>XXX</td> 
+            <th>Name on Card</th>
+            <th>Card Number</th>
+            <th>cvv</th>
           </tr>
 
-          <tr>
-            <!-- DELET DOES NOT WORK-->
-              <td><input type="submit" class="btn btn-primary" method="POST" value="Delete card"></a></td> 
-          </tr>
-  </table>
+            <tr>
+              <td>{{cards.name}}</td>
+              <td>XXXX XXXX XXXX {{cards.last_four}} </td>
+              <td>XXX</td> 
+            </tr>
+
+            <tr>
+                <td><a href="/delete/{{cards.id}}"><input type="submit" class="btn btn-primary method="POST"" value="Delete card"></a></td>
+            </tr>
+    </table>
   {% endif %}
+
+  
 
   <br><br>
 
