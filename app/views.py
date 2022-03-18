@@ -171,8 +171,14 @@ def logout():
 #User exclusive pages
 @app.route('/user_dashboard')
 def user_dashboard():
+
+    bookings =  models.booking.query.filter_by(email = current_user.email, status = "upcoming")
+    locations = models.collection_point.query.all()
+
     return render_template('user_dashboard.html',
                             name=current_user.name,
+                            booking = bookings,
+                            location = locations,
                             title='User Dashboard')
 
 

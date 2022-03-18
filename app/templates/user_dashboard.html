@@ -19,5 +19,49 @@
 
   <br>
 
+  <br><br>
+
+  <h3>Upcoming Bookings</h3>
+
+  <table>
+
+      <tr>
+        <th>Date of Booking</th>
+        <th>Duration</th>
+        <th>Scooter ID</th>
+        <th>PickUp location</th>
+        <th>Status</th>
+        <th>Reference No.</th>
+      </tr>
+
+
+      {% for b in booking %}
+        <tr>
+            <td>{{ b.initial_date_time }}</td>
+            <td>{{b.duration}}</td>
+            <td>SN{{b.scooter_id}}</td>
+
+            {% for loc in location%}
+              {% if b.collection_id == loc.id%}
+                <td> {{loc.location}} </td>  <!-- show booking location-->
+              {% endif %}
+            {% endfor %}
+
+            <td>{{b.status}}</td>
+            <td>BN000{{b.id}}</td>
+
+            {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->
+            <td><a href="/extend_booking"><input type="submit" class="btn btn-primary" value="O"></a></td>
+            {% endif %}
+            
+            {% if b.status == "upcoming" %} <!-- if booking is UPCOMING then show cancel-->
+            <td><a href="/cancel_booking"><input type="submit" class="btn btn-primary" value="x"></a></td>
+            {% endif %}
+
+          </tr>
+      {% endfor %}
+
+  </table>
+
   <!-- Map -->
 {% endblock %}
