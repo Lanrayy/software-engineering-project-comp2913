@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 import os
 import smtplib
 from flask_mail import Message
+import logging
+from datetime import datetime
 
 #Unregistered user exclusive pages
 @app.route('/')
@@ -19,13 +21,13 @@ def info():
     return render_template('info.html',
                             title='How it Works')
 
+global now
 
 #Login routes
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:   # if current user is logged in
         return redirect(url_for('index'))
-
     form = SignUpForm()
 
     # if form is submitted
@@ -35,6 +37,9 @@ def register():
         u = models.user(password = hashed_password, email = form.email.data, account_type = "customer", user_type = form.user_type.data, name = form.name.data)
         db.session.add(u)    # add user to db
         db.session.commit()     # commit user to db
+
+        now = str(datetime.now())
+        app.logger.info(u.email+" Created an account at "+ now)
         flash(f'Account Created!', 'success')
         return redirect(url_for('login'))   # redirect to login page
     else:
@@ -54,14 +59,23 @@ def login():
         u = models.user.query.filter_by(email = form.email.data).first()
 
         # check username and password
-        if u and bcrypt.check_password_hash(u.password, form.password.data):
-            login_user(u)
-            flash('Login Successful!', 'success')
-            if(u.account_type == "employee" or u.account_type == "manager"):
-                return redirect(url_for('admin_dashboard'))
+        if u:
+            if bcrypt.check_password_hash(u.password, form.password.data):
+                login_user(u)
+                flash('Login Successful!', 'success')
+                now = str(datetime.now())
+                app.logger.info(u.email+"logged in at "+ now)
+                if(u.account_type == "employee" or u.account_type == "manager"):
+                    return redirect(url_for('admin_dashboard'))
+                else:
+                    return redirect(url_for('user_dashboard'))
             else:
-                return redirect(url_for('user_dashboard'))
+                now = str(datetime.now())
+                app.logger.info(u.email + " unsuccesfull login at "+ now)
         else:
+            now = str(datetime.now())
+            app.logger.info("unsuccesfull login at " + now)
+
             flash(f'Login unsuccessful. Please check email and password', 'error')
 
     return render_template('login.html',
@@ -738,6 +752,8 @@ def add_scooter():
         u = models.scooter(availability = form.availability.data, collection_id = form.location_id.data)
         db.session.add(u)    # add scooter to db
         db.session.commit()     # commit scooter to db
+        now = str(datetime.now())
+        app.logger.info("Admin has added a scooter with ID: "+ u.id + "at "+ now)
     return render_template('add_scooter.html',
                             title='Add New Scooter', form=form)
 
@@ -759,6 +775,8 @@ def configure_scooter():
             scooter.collection_id = request.form.get("location_id")
             db.session.commit()
             # print(models.scooter.query.all())
+            now = str(datetime.now())
+            app.logger.info("Scooter configured:  "+ scooter.id +" " + scooter.availability + " "+ scooter.collection_id + " at " + now)
             flash(f'Scooter Details Updated', 'success')
         return redirect(url_for('view_scooters'))
     return render_template('configure_scooter.html',
@@ -787,13 +805,28 @@ def configure_costs():
 
         if dur:
             dur.price = form.price.data
+            now = str(datetime.now())
+            app.logger.info("Scooter costs configured:  "+ dur.id +" " +  dur.price + " at " + now)
+
             flash("Price updated")
         else:
+            app.logger.info("Scooter costs configuration failed at " + now)
             flash("Error price not updated")
 
         db.session.commit()     # commit scooter to db
     return render_template('configure_costs.html',
                             rec=rec, form=form)
+
+
+
+
+
+
+
+
+
+
+
 
 
 @app.route('/sales_metrics')
