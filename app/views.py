@@ -810,6 +810,8 @@ def sales_metrics():
     # get the current prices from the database
     pricings = models.pricing.query.all()
 
+    # get al
+
     # for each transaction in if it is within the last week count it to the correct metric
     # need to multiply by the cost of each
     for transaction in data:
