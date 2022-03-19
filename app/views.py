@@ -1008,25 +1008,43 @@ def sales_metrics():
 
     # Get all the bookings
     bookings = models.booking.query.all()
+    # # calculate booking metric for each day
+    # for booking in bookings:
+    #     if booking.status != "cancelled": # only adds booking that were not cancelled to the metrics
+    #         # checks what day the booking was started
+    #         if booking.initial_date_time.weekday() == 0 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Monday
+    #             monday_metrics += booking.cost
+    #         elif booking.initial_date_time.weekday() == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Tuesday
+    #             tuesday_metrics += booking.cost
+    #         elif booking.initial_date_time.weekday() == 2 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Wednesday
+    #             wednesday_metrics += booking.cost
+    #         elif booking.initial_date_time.weekday() == 3 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Thursday
+    #             thursday_metrics += booking.cost
+    #         elif booking.initial_date_time.weekday() == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Friday
+    #             friday_metrics += booking.cost
+    #         elif booking.initial_date_time.weekday() == 5 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Saturday
+    #             saturday_metrics += booking.cost
+    #         elif booking.initial_date_time.weekday() == 6 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Sunday
+    #             sunday_metrics += booking.cost
 
-    # calculate booking metric for each day
-    for booking in bookings:
-        if booking.status != "cancelled": # only adds booking that were not cancelled to the metrics
+    for transaction in transactions:
+        if transaction.booking.status != "cancelled": # only adds booking that were not cancelled to the metrics
+            transaction_date_time = transaction.booking.initial_date_time
             # checks what day the booking was started
-            if booking.initial_date_time.weekday() == 0 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Monday
-                monday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Tuesday
-                tuesday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 2 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Wednesday
-                wednesday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 3 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Thursday
-                thursday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Friday
-                friday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 5 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Saturday
-                saturday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 6 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Sunday
-                sunday_metrics += booking.cost
+            if transaction_date_time.weekday() == 0 and transaction_date_time > week_start and transaction_date_time < week_end: # Monday
+                monday_metrics += transaction.booking.cost
+            elif transaction_date_time.weekday() == 1 and transaction_date_time > week_start and transaction_date_time < week_end: # Tuesday
+                tuesday_metrics += transaction.booking.cost
+            elif transaction_date_time.weekday() == 2 and transaction_date_time > week_start and transaction_date_time < week_end: # Wednesday
+                wednesday_metrics += transaction.booking.cost
+            elif transaction_date_time.weekday() == 3 and transaction_date_time > week_start and transaction_date_time < week_end: # Thursday
+                thursday_metrics += transaction.booking.cost
+            elif transaction_date_time.weekday() == 4 and transaction_date_time > week_start and transaction_date_time < week_end: # Friday
+                friday_metrics += transaction.booking.cost
+            elif transaction_date_time.weekday() == 5 and transaction_date_time > week_start and transaction_date_time < week_end: # Saturday
+                saturday_metrics += transaction.booking.cost
+            elif transaction_date_time.weekday() == 6 and transaction_date_time > week_start and transaction_date_time < week_end: # Sunday
+                sunday_metrics += transaction.booking.cost
     
     # # Graph the daily metrics
     # plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
