@@ -211,6 +211,7 @@ def card():
                 flash("Booking Successful!")
 
                 return redirect("/booking2") #send to booking confirmation
+                
 
     return render_template('card.html',
                            title='Card',
