@@ -133,4 +133,4 @@ class transactions(db.Model):
     booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
 
     def __repr__(self):
-            return f'Transaction {self.id} < Hire period={self.hire_period}| Booking time={self.booking_time} >'
+            return f'Transaction {self.id} < Hire period={self.hire_period}| Booking time={self.booking_time} | user_id={self.user_id} | booking={self.booking_id} >'
