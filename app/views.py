@@ -116,13 +116,15 @@ def card():
                     booking.duration = booking.duration + hours
                     booking.cost = booking.cost + cost
                     booking.final_date_time = booking.final_date_time + timedelta(hours = hours)
+                    session['booking_id'] = booking.id
+                    db.session.commit()
 
-                    #add a new transaction, with the date for the transaction set as now
-                    new_transaction = models.transactions(hire_period = hours,
-                                                        booking_time = datetime.utcnow(),
-                                                        user_id = current_user.id)
+                    # add new transaction to the transaction table - used on the metrics page
+                    new_transaction = models.transactions(hire_period = session.get('extend_hours', None),
+                                                    booking_time = datetime.utcnow(),
+                                                    user_id = session.get('booking_user_id', None),
+                                                    booking_id = session.get('booking_id', None))
                     db.session.add(new_transaction)
-
                     db.session.commit()
 
                     #write the email message
@@ -153,10 +155,18 @@ def card():
                                              scooter_id = session.get('booking_scooter_id', None),
                                              collection_id = session.get('booking_collection_id', None))
                     db.session.add(booking)
-                    # add new transaction to the transaction table- used on the metrics page, no user id
+                    db.session.commit()
+
+                    # add new transaction to the transaction table - used on the metrics page
                     new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
-                                                        booking_time = datetime.utcnow())
+                                                    booking_time = datetime.utcnow(),
+                                                    user_id = session.get('booking_user_id', None),
+                                                    booking_id = session.get('booking_id', None))
                     db.session.add(new_transaction)
+                    session['booking_id'] = booking.id
+                    db.session.commit()
+
+
                     #set the specified email to recipient
                     recipients=[session.get('booking_email', None)]
                 else:
@@ -171,11 +181,17 @@ def card():
                                              scooter_id = session.get('booking_scooter_id', None),
                                              collection_id = session.get('booking_collection_id', None))
                     db.session.add(booking)
-                    # add new transaction to the transaction table- used on the metrics page, with user id
+                    session['booking_id'] = booking.id
+                    db.session.commit()
+
+                    # add new transaction to the transaction table - used on the metrics page
                     new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
-                                                        booking_time = datetime.utcnow(),
-                                                        user_id = session.get('booking_user_id', None))
+                                                    booking_time = datetime.utcnow(),
+                                                    user_id = session.get('booking_user_id', None),
+                                                    booking_id = booking.id)
                     db.session.add(new_transaction)
+
+
                     #set user to recipient
                     recipients=[current_user.email]
 
@@ -462,18 +478,19 @@ def booking1():
                                          collection_id = session.get('booking_collection_id', None))
                 db.session.add(booking)
 
-
-                # add new transaction to the transaction table- used on the metrics page
-                new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
-                                                    booking_time = datetime.utcnow(),
-                                                    user_id = session.get('booking_user_id', None))
-                db.session.add(new_transaction)
-
+                #save booking id
+                session['booking_id'] = booking.id
                 db.session.commit()
 
 
+                # add new transaction to the transaction table - used on the metrics page
+                new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
+                                                    booking_time = datetime.utcnow(),
+                                                    user_id = session.get('booking_user_id', None),
+                                                    booking_id = session.get('booking_id', None))
+                db.session.add(new_transaction)
 
-                session['booking_id'] = booking.id
+                db.session.commit()
 
                 msg = Message('Booking Confirmation',
                                 sender='scootersleeds@gmail.com',
@@ -760,10 +777,11 @@ def extend_booking():
             booking.cost = booking.cost + cost
             booking.final_date_time = booking.final_date_time + timedelta(hours = hours)
 
-            #add a new transaction, with the date for the transaction set as now
-            new_transaction = models.transactions(hire_period = hours,
-                                                booking_time = datetime.utcnow(),
-                                                user_id = current_user.id)
+            # add new transaction to the transaction table - used on the metrics page
+            new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
+                                                    booking_time = datetime.utcnow(),
+                                                    user_id = session.get('booking_user_id', None),
+                                                    booking_id = session.get('booking_id', None))
             db.session.add(new_transaction)
 
             db.session.commit()
@@ -942,12 +960,11 @@ def sales_metrics():
     # need to multiply by the cost of each
     for transaction in transactions:
         if transaction.hire_period == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end:
-            if(transaction.user.user_type == "default" or transaction.user.user_type == "senior" ):
+            if(transaction.user.user_type == "default" or transaction.user.user_type == "senior"):
                 one_hour_discounts += 1
                 flash("Working")
             else:
                 one_hour_normal += 1
-
         elif transaction.hire_period == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end:
             four_hour_metric += 1
         elif transaction.hire_period == 24 and transaction.booking_time > week_start and transaction.booking_time < week_end:
@@ -968,9 +985,9 @@ def sales_metrics():
 
     # Update the income amount
 
-    one_hour_metric = ((one_hour_discounts * one_hour_price) * 0.2) + (one_hour_normal * one_hour_price)
-    four_hour_metric *= four_hour_price
-    one_day_metric *= one_day_price
+    one_hour_metric = ((one_hour_discounts * one_hour_price) * 0.8) + (one_hour_normal * one_hour_price)
+    four_hour_metric = ((four_hour_discounts * four_hour_price) * 0.8) + (four_hour_normal * four_hour_price)
+    one_day_metric = ((one_day_discounts * one_day_price) * 0.8) + (one_day_normal * one_day_price)
     one_week_metric *= one_week_price
 
     # # Graph the hire period metrics
