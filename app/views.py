@@ -4,9 +4,9 @@ from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, Car
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
 import os
-import smtplib
-import matplotlib
-import matplotlib.pyplot as plt
+# import smtplib
+# import matplotlib
+# import matplotlib.pyplot as plt
 from flask_mail import Message
 
 #Unregistered user exclusive pages
@@ -921,25 +921,33 @@ def configure_costs():
 
 @app.route('/sales_metrics')
 def sales_metrics():
+    # define variables needed
     one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
+    one_hour_normal, four_hour_normal, one_day_normal, one_week_normal = 0, 0, 0, 0
+    one_hour_discounts, four_hour_discounts, one_day_discounts, one_week_discounts = 0, 0, 0, 0
+    
+    # calculate the date range needed
     date = datetime.utcnow()
     week_start = date + timedelta(-date.weekday(), weeks=0)
     week_end = date + timedelta(-date.weekday() + 6, weeks=0)
 
     # get all the transations
-    data = models.transactions.query.all()
+    transactions = models.transactions.query.all()
 
     # get the current prices from the database
     pricings = models.pricing.query.all()
 
-    # get al
-
     # for each transaction in if it is within the last week count it to the correct metric
     # need to multiply by the cost of each
-    for transaction in data:
+    for transaction in transactions:
         if transaction.hire_period == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end:
-            one_hour_metric += 1
+            if(transaction.user.user_type == "default" or transaction.user.user_type == "senior" ):
+                one_hour_discounts += 1
+                flash("Working")
+            else:
+                one_hour_normal += 1
+
         elif transaction.hire_period == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end:
             four_hour_metric += 1
         elif transaction.hire_period == 24 and transaction.booking_time > week_start and transaction.booking_time < week_end:
@@ -959,16 +967,17 @@ def sales_metrics():
             one_week_price = pricing.price
 
     # Update the income amount
-    one_hour_metric *= one_hour_price
+
+    one_hour_metric = ((one_hour_discounts * one_hour_price) * 0.2) + (one_hour_normal * one_hour_price)
     four_hour_metric *= four_hour_price
     one_day_metric *= one_day_price
     one_week_metric *= one_week_price
 
-    # Graph the hire period metrics
-    plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
-    plt.xlabel('Hire Period')
-    plt.ylabel('Revenue (£)')
-    plt.savefig('app/graphs/hireperiod.jpg')
+    # # Graph the hire period metrics
+    # plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
+    # plt.xlabel('Hire Period')
+    # plt.ylabel('Revenue (£)')
+    # plt.savefig('app/graphs/hireperiod.jpg')
 
     # Weekly income metrics
     monday_metrics = 0
@@ -1001,11 +1010,11 @@ def sales_metrics():
             elif booking.initial_date_time.weekday() == 6 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Sunday
                 sunday_metrics += booking.cost
     
-    # Graph the daily metrics
-    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
-    plt.xlabel('Day of Week')
-    plt.ylabel('Revenue (£)')
-    plt.savefig('app/graphs/daily.jpg')
+    # # Graph the daily metrics
+    # plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+    # plt.xlabel('Day of Week')
+    # plt.ylabel('Revenue (£)')
+    # plt.savefig('app/graphs/daily.jpg')
 
     return render_template('sales_metrics.html',
                             title='View Sales Metrics',
