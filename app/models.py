@@ -130,7 +130,7 @@ class transactions(db.Model):
     booking_time = db.Column(db.DateTime(), nullable=False) # start date and time
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'), nullable=False)
+    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
 
     def __repr__(self):
             return f'Transaction {self.id} < Hire period={self.hire_period}| Booking time={self.booking_time} >'
