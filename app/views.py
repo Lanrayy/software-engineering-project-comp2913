@@ -161,6 +161,7 @@ def card():
                                                         booking_id = session.get('booking_id', None)
                                                         )
                     db.session.add(new_transaction)
+                    db.session.commit()
                     #set the specified email to recipient
                     recipients=[session.get('booking_email', None)]
                 else:
@@ -175,14 +176,15 @@ def card():
                                              scooter_id = session.get('booking_scooter_id', None),
                                              collection_id = session.get('booking_collection_id', None))
                     db.session.add(booking)
-
+                    db.session.commit()
 
                     # add new transaction to the transaction table- used on the metrics page, with user id
                     new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                         booking_time = datetime.utcnow(),
                                                         user_id = session.get('booking_user_id', None),
-                                                        booking_id = session.get('booking_id'))
+                                                        booking_id = session.get('booking_id', None),)
                     db.session.add(new_transaction)
+
                     #set user to recipient
                     recipients=[current_user.email]
 
@@ -474,9 +476,8 @@ def booking1():
                 new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                     booking_time = datetime.utcnow(),
                                                     user_id = session.get('booking_user_id', None),
-                                                    booking_id = session.get('booking_id', None))
+                                                    booking_id = session.get('booking_user_id', None),)
                 db.session.add(new_transaction)
-
                 db.session.commit()
 
 
@@ -960,7 +961,7 @@ def sales_metrics():
     # need to multiply by the cost of each
     for transaction in transactions:
         if transaction.hire_period == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end:
-            if(transaction.user.user_type == "default" or transaction.user.user_type == "senior"):
+            if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"):
                 one_hour_discounts += 1
                 flash("Working")
             else:
