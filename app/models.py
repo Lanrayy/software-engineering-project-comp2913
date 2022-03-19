@@ -84,8 +84,11 @@ class booking(db.Model):
     scooter_id = db.Column(db.Integer, db.ForeignKey('scooter.id'), nullable=False)
     collection_id = db.Column(db.Integer, db.ForeignKey('collection_point.id'), nullable=False)
 
+    # relationships
+    transactions = db.relationship('transactions', backref='booking', lazy=True)
+
     def __repr__(self):
-            return f'Booking {self.id} < Durationd={self.duration}| Status={self.status}| Cost={self.cost}| Initial Date/Time={self.initial_date_time}| Final Date/Time={self.final_date_time}|Email={self.email}| User_id={self.user_id}| Scooter_id={self.scooter_id}| Collection_id={self.collection_id}>'
+            return f'Booking {self.id} < Duration={self.duration}| Status={self.status}| Cost={self.cost}| Initial Date/Time={self.initial_date_time}| Final Date/Time={self.final_date_time}|Email={self.email}| User_id={self.user_id}| Scooter_id={self.scooter_id}| Collection_id={self.collection_id}>'
 
 #Feedback Database
 class feedback(db.Model):
@@ -126,7 +129,8 @@ class transactions(db.Model):
     hire_period = db.Column(db.Integer, nullable=False) # store in hours (1, 4, 24, 168)
     booking_time = db.Column(db.DateTime(), nullable=False) # start date and time
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) # one-to-one relation
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'), nullable=False)
 
     def __repr__(self):
-            return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'
+            return f'Transaction {self.id} < Hire period={self.hire_period}| Booking time={self.booking_time} >'
