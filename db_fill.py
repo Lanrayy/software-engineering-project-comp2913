@@ -1,4 +1,4 @@
-from app import app, db, models
+from app import app, db, models, bcrypt
 
 #initialise locations
 location = models.collection_point(location = 'Trinity Centre', num_scooters = 0)
@@ -32,4 +32,11 @@ db.session.add(scooter)
 scooter = models.scooter(availability = 1, collection_id = 2)
 db.session.add(scooter)
 
+db.session.commit()
+
+#initialise user
+user = models.user(name ="Test", email="test@gmail.com", account_type="customer", user_type="default", password=bcrypt.generate_password_hash("test"))
+employee = models.user(name ="Employee", email="employee@gmail.com", account_type="employee", user_type="default", password=bcrypt.generate_password_hash("test"))
+db.session.add(user)
+db.session.add(employee)
 db.session.commit()
