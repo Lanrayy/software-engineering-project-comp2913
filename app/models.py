@@ -35,6 +35,7 @@ class user(UserMixin, db.Model):
 
     card = db.relationship('card_details', uselist=False, backref='user') #one-to-one relation
     booking = db.relationship('booking', backref='user', lazy=True)  #one-to-many relation
+    transactions = db.relationship('transactions', backref='user', lazy=True)
 
 
     def __repr__(self):
@@ -125,7 +126,7 @@ class transactions(db.Model):
     hire_period = db.Column(db.Integer, nullable=False) # store in hours (1, 4, 24, 168)
     booking_time = db.Column(db.DateTime(), nullable=False) # start date and time
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #problem
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) # one-to-one relation
 
     def __repr__(self):
             return f'Scooter {self.id} < Availability={self.availability}| Collection_id={self.collection_id} >'
