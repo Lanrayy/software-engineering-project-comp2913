@@ -22,6 +22,10 @@
       Select a Start Time and Date (yyyy-mm-dd hours:minutes)<br>
       {{ form.start_date }}
     </p>
+    {% if card_found %}
+      <strong>Saved Card Details:</strong>
+      <p>Name on Card: {{ data.name }} <br>Card No.:( {{ data.last_four}} ) <br>Expiry: {{ data.expiry_date.month }} / {{ data.expiry_date.year }}</p>
+    {% endif %}
     <p><input type="submit" value="Go to Payment"></p>
   </form>
 

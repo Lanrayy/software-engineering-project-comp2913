@@ -5,6 +5,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
 import os
 import smtplib
+import matplotlib
+import matplotlib.pyplot as plt
 from flask_mail import Message
 
 #Unregistered user exclusive pages
@@ -101,41 +103,42 @@ def card():
             booking = 0
 
             #check if we were booking or extending
-            if session.pop('extending') == "True":
-                #we are extending, make sure to redirect to profile and send an email about the Extension
-                booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
+            if session.get('extending') != None:
+                if session.pop('extending') == "True":
+                    #we are extending, make sure to redirect to profile and send an email about the Extension
+                    booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
 
-                #get our variables from the session
-                hours = session.get('extend_hours', None)
-                cost = session.get('extend_cost', None)
+                    #get our variables from the session
+                    hours = session.get('extend_hours', None)
+                    cost = session.get('extend_cost', None)
 
-                #extend the booking pointed to by the 'booking_id' in the session, and add to the cost
-                booking.duration = booking.duration + hours
-                booking.cost = booking.cost + cost
-                booking.final_date_time = booking.final_date_time + timedelta(hours = hours)
+                    #extend the booking pointed to by the 'booking_id' in the session, and add to the cost
+                    booking.duration = booking.duration + hours
+                    booking.cost = booking.cost + cost
+                    booking.final_date_time = booking.final_date_time + timedelta(hours = hours)
 
-                #add a new transaction, with the date for the transaction set as now
-                new_transaction = models.transactions(hire_period = hours,
-                                                    booking_time = datetime.utcnow(),
-                                                    user_id = current_user.id)
-                db.session.add(new_transaction)
+                    #add a new transaction, with the date for the transaction set as now
+                    new_transaction = models.transactions(hire_period = hours,
+                                                        booking_time = datetime.utcnow(),
+                                                        user_id = current_user.id)
+                    db.session.add(new_transaction)
 
-                db.session.commit()
+                    db.session.commit()
 
-                #write the email message
-                msg = Message('Booking Extention Confirmation',
-                                sender='scootersleeds@gmail.com',
-                                recipients=[current_user.email])
+                    #write the email message
+                    msg = Message('Booking Extension Confirmation',
+                                    sender='scootersleeds@gmail.com',
+                                    recipients=[current_user.email])
 
-                msg.body = (f'Thank You, your booking extention has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
-                '\nEnd Date and Time: ' + str(booking.final_date_time) +
-                '\nScooter ID: ' + str(booking.scooter_id) +
-                '\nReference Number: ' + str(booking.id))
-                mail.send(msg)
+                    msg.body = (f'Thank You, your booking extension has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+                    '\nEnd Date and Time: ' + str(booking.final_date_time) +
+                    '\nScooter ID: ' + str(booking.scooter_id) +
+                    '\nReference Number: ' + str(booking.id))
+                    mail.send(msg)
 
-                flash("Booking Extention Successful!")
+                    flash("Booking Extension Successful!")
 
-                return redirect("/profile")
+                    return redirect("/profile")
             else:
                 #not extending, so booking
                 # if admin is is making a booking, the booking_user_id = 0
@@ -154,6 +157,8 @@ def card():
                     new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                         booking_time = datetime.utcnow())
                     db.session.add(new_transaction)
+                    #set the specified email to recipient
+                    recipients=[session.get('booking_email', None)]
                 else:
                     #user is making the booking
                     booking = models.booking(duration = session.get('booking_duration', None),
@@ -171,12 +176,14 @@ def card():
                                                         booking_time = datetime.utcnow(),
                                                         user_id = session.get('booking_user_id', None))
                     db.session.add(new_transaction)
+                    #set user to recipient
+                    recipients=[current_user.email]
 
                 db.session.commit()
 
                 msg = Message('Booking Confirmation',
                                 sender='scootersleeds@gmail.com',
-                                recipients=[current_user.email])
+                                recipients=recipients)
 
                 msg.body = (f'Thank You, your booking has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
                 '\nEnd Date and Time: ' + str(booking.final_date_time) +
@@ -219,17 +226,34 @@ def pricing():
     return render_template('pricing.html',
                             title='Our Prices')
 
+@app.route('/delete/<int:id>', methods=['GET', 'POST'])
+def delete(id):
+    #to_complete is a variable to get the id passed by pressing the complete button
+    to_delete=models.cards.query.get_or_404(id)
+
+    try:
+        #change the status value of this id into complete and commit to the database
+        db.session.delete(to_delete)
+        db.session.commit()
+
+        return redirect('/profile')
+
+    except:
+        return 'there was an error'
+
+
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
 
     #filter the query into the bookings and card
-    cards = models.card_details.query.first()
+    #cards = models.card_details.query.filter_by(user_id = current_user.id)  #FOREIGN KEY
+    cards = models.card_details.query.all()
+    locations = models.collection_point.query.all()
 
-    #Doesn't delete cards
-    #if request.method == 'POST':
-    #    db.session.delete(cards)
-    #    db.session.commit()
-    #flask('Card deleted')
+    #Doesn't delete
+    if request.method == "POST":
+        flash("button pressed")
+        return redirect('profile')
 
     bookings =  models.booking.query.filter_by(email = current_user.email)
     collection_points = models.collection_point
@@ -241,7 +265,7 @@ def profile():
                             account_type=current_user.account_type,
                             cards = cards,
                             booking = bookings,
-                            collection_points=collection_points)
+                            location = locations)
 
 
 @app.route('/send_feedback', methods=('GET', 'POST'))
@@ -269,7 +293,7 @@ def locations():
 
 @app.route('/booking1', methods=['GET', 'POST'])
 def booking1():
-
+    #current user is a customer
     if not current_user.account_type == "employee" and not current_user.account_type == "manager":
 
         msg = Message('Booking Confirmation',
@@ -296,6 +320,14 @@ def booking1():
         #if the location doesn't actually have any scooters tied to it, initialse the scooter selectfield
         if len(form.scooter_id.choices) == 0:
             form.scooter_id.choices = [("0", "No Scooters Available")]
+
+        #check if the current user has card details or not
+        data = models.card_details.query.filter_by(user_id=current_user.id).first()
+
+        if data: # if the user already has card details saved
+            card_found = True
+        else:
+            card_found = False
 
         #as long as the submit button is pressed
         if form.is_submitted():
@@ -336,6 +368,32 @@ def booking1():
             else:
                 cost = 10.00
                 hours = 1
+
+             #if the user is a student or a senior apply the discount
+            if current_user.user_type == "senior" or current_user.user_type == "student":
+                flash("you are eligible for a student/senior discount")
+                cost = cost * (0.8)
+
+            else :
+                bookings =  models.booking.query.filter_by(email = current_user.email, status = "expired") # expired user booking
+                total_hours = 0 # total hours in the past week
+
+                #find the datetime a week ago
+                today_date = datetime.now()
+                days = timedelta(days = 7)
+                week_date = today_date - days
+
+                #check if they are a frequent user
+                for b in bookings :
+                    if (b.initial_date_time > week_date):
+                        total_hours += b.duration
+                        if (total_hours > 8):
+                            break
+
+                if (total_hours >= 8) :
+                    flash("you are eligible for a frequent user discount")
+                    cost = cost * (0.8)
+
 
             #check every booking made with this scooter
             #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
@@ -436,7 +494,9 @@ def booking1():
         #send the current user to the user version of the booking1 page
         return render_template('booking1_user.html',
                                 title='Choose a Location',
-                                form = form)
+                                form=form,
+                                data=data,
+                                card_found=card_found)
 
     #if the current user is an employee or manager
     elif current_user.account_type == "employee" or current_user.account_type == "manager":
@@ -497,6 +557,37 @@ def booking1():
             else:
                 cost = 10.00
                 hours = 1
+
+            #**************************************************************************
+            #**********************APPLY DISCOUNT**************************************
+            #**************************************************************************
+
+            #if the user is a student or a senior apply the discount
+            if current_user.user_type == "senior" or current_user.user_type == "student":
+                flash("you are eligible for a student/senior discount")
+                cost = cost * (0.8)
+
+            else :
+                bookings =  models.booking.query.filter_by(email = current_user.email, status = "expired") # expired user booking
+                total_hours = 0 # total hours in the past week
+
+                #find the datetime a week ago
+                today_date = datetime.now()
+                days = timedelta(days = 7)
+                week_date = today_date - days
+
+                for b in bookings :
+                    if (b.initial_date_time > week_date):
+                        total_hours += b.duration
+                        if (total_hours > 8):
+                            break
+
+                if (total_hours >= 8) :
+                    flash("you are eligible for a frequent user discount")
+                    cost = cost * (0.8)
+
+            #**************************************************************************
+            #**************************************************************************
 
             #check every booking made with this scooter
             #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
@@ -586,10 +677,42 @@ def booking2():
                             location=location)
 
 
-@app.route('/cancel_booking')
+#intermediary page for cancelling booking
+@app.route('/cancel_this_booking/<booking_id>')
+def cancel_this_booking(booking_id):
+    session['booking_id'] = booking_id
+
+    return redirect(url_for('cancel_booking'))
+
+
+@app.route('/cancel_booking', methods=('GET', 'POST'))
 def cancel_booking():
+
+    booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
+    collection_points = models.collection_point
+
+    #if the confirm cancellation button is pressed
+    if request.method == 'POST':
+        #delete the transaction only if it is an upcoming booking
+        #we do this by deleting the first transaction with that hire_period, and that user_id
+        #slight problem with this, because we don't store when a booking is made in the booking table, we can't tell which booking we're deleting
+        #right now we're deleting all bookings that appears with this duration and ID, reason is that delete only works with queries, not single row entities
+        # if booking.status == "upcoming":
+        #     models.transactions.query.filter_by(hire_period = booking.duration).filter_by(user_id = booking.id).delete()
+
+        #delete the actual booking
+        models.booking.query.filter_by(id = session.get('booking_id', None)).delete()
+
+        db.session.commit()
+
+        flash("Booking successfully cancelled!")
+
+        return redirect(url_for('profile'))
+
     return render_template('cancel_booking.html',
-                            title='Cancel Booking')
+                            title='Cancel Booking',
+                            booking=booking,
+                            collection_points=collection_points)
 
 
 #intermediary page for extending booking
@@ -646,17 +769,17 @@ def extend_booking():
             db.session.commit()
 
             #write the email message
-            msg = Message('Booking Extention Confirmation',
+            msg = Message('Booking Extension Confirmation',
                             sender='scootersleeds@gmail.com',
                             recipients=[current_user.email])
 
-            msg.body = (f'Thank You, your booking extention has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+            msg.body = (f'Thank You, your booking extension has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
             '\nEnd Date and Time: ' + str(booking.final_date_time) +
             '\nScooter ID: ' + str(booking.scooter_id) +
             '\nReference Number: ' + str(booking.id))
             mail.send(msg)
 
-            flash("Booking Extention Successful!")
+            flash("Booking Extension Successful!")
 
             return redirect(url_for('profile'))
         else:
@@ -798,7 +921,7 @@ def configure_costs():
 
 @app.route('/sales_metrics')
 def sales_metrics():
-    one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0 
+    one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     date = datetime.utcnow()
     week_start = date + timedelta(-date.weekday(), weeks=0)
@@ -834,12 +957,18 @@ def sales_metrics():
             one_day_price = pricing.price
         if pricing.duration == "1 Week":
             one_week_price = pricing.price
-    
+
     # Update the income amount
     one_hour_metric *= one_hour_price
     four_hour_metric *= four_hour_price
     one_day_metric *= one_day_price
     one_week_metric *= one_week_price
+
+    # Graph the hire period metrics
+    plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
+    plt.xlabel('Hire Period')
+    plt.ylabel('Revenue (£)')
+    plt.savefig('app/graphs/hireperiod.jpg')
 
     # Weekly income metrics
     monday_metrics = 0
@@ -871,6 +1000,12 @@ def sales_metrics():
                 saturday_metrics += booking.cost
             elif booking.initial_date_time.weekday() == 6 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Sunday
                 sunday_metrics += booking.cost
+    
+    # Graph the daily metrics
+    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+    plt.xlabel('Day of Week')
+    plt.ylabel('Revenue (£)')
+    plt.savefig('app/graphs/daily.jpg')
 
     return render_template('sales_metrics.html',
                             title='View Sales Metrics',

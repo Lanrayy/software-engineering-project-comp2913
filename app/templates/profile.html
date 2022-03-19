@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>
-    Hi,
+    Hiii,
     {{ name }}!!
   </h1>
 
@@ -29,26 +29,28 @@
 
 
   <h3>Card Details</h3>
-
-  <table>
-
-        <tr>
-          <th>Name on Card</th>
-          <th>Card Number</th>
-          <th>cvv</th>
-        </tr>
-
+  
+  {% if cards.name != NULL %}
+    <table>
           <tr>
-            <td>{{cards.name}}</td>
-            <td>{{cards.cardnumber}}</td>
-            <td>XXX</td> <!--ONly if a card exits-->
+            <th>Name on Card</th>
+            <th>Card Number</th>
+            <th>cvv</th>
           </tr>
 
-          <tr>
-            <td><input type="submit" class="btn btn-primary" method="POST" value="Delete card"></a></td>
-          </tr>
+            <tr>
+              <td>{{cards.name}}</td>
+              <td>XXXX XXXX XXXX {{cards.last_four}} </td>
+              <td>XXX</td> 
+            </tr>
 
-  </table>
+            <tr>
+                <td><a href="/delete/{{cards.id}}"><input type="submit" class="btn btn-primary method="POST"" value="Delete card"></a></td>
+            </tr>
+    </table>
+  {% endif %}
+
+  
 
   <br><br>
 
@@ -71,19 +73,31 @@
             <td>{{ b.initial_date_time }}</td>
             <td>{{b.duration}}</td>
             <td>SN{{b.scooter_id}}</td>
-            <td>{{collection_points.query.filter_by(id = b.collection_id).first().location}}</td>  <!-- show booking location-->
+            {% for loc in location%}
+              {% if b.collection_id == loc.id%}
+                <td> {{loc.location}} </td>  <!-- show booking location-->
+              {% endif %}
+            {% endfor %}
+
             <td>{{b.status}}</td>
             <td>BN000{{b.id}}</td>
 
-            <!-- if booking is ACTIVE then show extend-->
+            {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->
             <td>
               <a href="/extend_this_booking/{{ b.id }}">
-                <button type="button submit"  class="btn btn-success" name="extend_button">+</button>
+                <button type="button submit"  class="btn btn-success" name="extend_button">Extend</button>
               </a>
             </td>
-            <!-- if booking is UPCOMING then show cancel-->
-            <td><a href="/cancel_booking"><input type="submit" class="btn btn-primary" value="x"></a></td>
-
+            {% endif %}
+            
+            {% if b.status == "upcoming" %} <!-- if booking is UPCOMING then show cancel-->
+            <td>
+              <a href="/cancel_this_booking/{{ b.id }}">
+                <button type="button submit"  class="btn btn-danger" name="cancel_button">Cancel</button>
+              </a>
+            </td>
+            {% endif %}
+            
           </tr>
       {% endfor %}
 
