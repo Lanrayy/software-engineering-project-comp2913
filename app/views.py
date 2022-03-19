@@ -3,11 +3,31 @@ from app import app, db, bcrypt, models, login_manager, mail
 from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm, ConfigureScooterForm, FeedbackForm, EditFeedbackForm, PricesForm, ExtendBookingForm
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
+from sqlalchemy import or_
 import os
 import smtplib
 import matplotlib
 import matplotlib.pyplot as plt
 from flask_mail import Message
+
+#function for automatically checking if bookings have become moved from active to past or upcoming to active etc
+def organise_bookings():
+    #get all bookings
+    bookings = models.booking.query.filter(or_(models.booking.status == "active", models.booking.status == "upcoming"))
+
+    for booking in bookings:
+        #check for upcoming bookings that should become active
+        #check if the booking start has past BUT the end time has not
+        if booking.initial_date_time < datetime.utcnow() and datetime.utcnow() < booking.final_date_time:
+            booking.status = "active"
+        #check if the booking's final_date_time is already in the past, and thus should become a "past" booking
+        if booking.final_date_time < datetime.utcnow():
+            booking.status = "past"
+
+    #finalise changes
+    db.session.commit()
+    return 0
+
 
 #Unregistered user exclusive pages
 @app.route('/')
@@ -216,6 +236,8 @@ def logout():
 #User exclusive pages
 @app.route('/user_dashboard')
 def user_dashboard():
+    #clean up bookings table
+    organise_bookings()
     return render_template('user_dashboard.html',
                             name=current_user.name,
                             title='User Dashboard')
@@ -244,6 +266,8 @@ def delete(id):
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
+    #clean up bookings table
+    organise_bookings()
 
     #filter the query into the bookings and card
     #cards = models.card_details.query.filter_by(user_id = current_user.id)  #FOREIGN KEY
@@ -293,6 +317,8 @@ def locations():
 
 @app.route('/booking1', methods=['GET', 'POST'])
 def booking1():
+    #clean up bookings table
+    organise_bookings()
     #current user is a customer
     if not current_user.account_type == "employee" and not current_user.account_type == "manager":
 
@@ -701,7 +727,7 @@ def cancel_booking():
         #     models.transactions.query.filter_by(hire_period = booking.duration).filter_by(user_id = booking.id).delete()
 
         #delete the actual booking
-        models.booking.query.filter_by(id = session.get('booking_id', None)).delete()
+        models.booking.query.filter_by(id = session.get('booking_id', None)).first().status = "cancelled"
 
         db.session.commit()
 
@@ -800,6 +826,8 @@ def extend_booking():
 #Admin exclusive pages
 @app.route('/admin_dashboard')
 def admin_dashboard():
+    #clean up bookings table
+    organise_bookings()
     return render_template('admin_dashboard.html',
                             name=current_user.name,
                             title='Admin Dashboard')
@@ -998,7 +1026,7 @@ def sales_metrics():
                 saturday_metrics += booking.cost
             elif booking.initial_date_time.weekday() == 6 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Sunday
                 sunday_metrics += booking.cost
-    
+
     # Graph the daily metrics
     plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
     plt.xlabel('Day of Week')
