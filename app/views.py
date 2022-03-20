@@ -938,6 +938,8 @@ def configure_costs():
 
 @app.route('/sales_metrics')
 def sales_metrics():
+
+    one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     # calculate the date range needed
     date = datetime.utcnow()
     week_start = date + timedelta(-date.weekday(), weeks=0)
