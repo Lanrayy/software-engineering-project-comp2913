@@ -4,9 +4,9 @@ from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, Car
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
 import os
-# import smtplib
-# import matplotlib
-# import matplotlib.pyplot as plt
+import smtplib
+import matplotlib
+import matplotlib.pyplot as plt
 from flask_mail import Message
 
 #Unregistered user exclusive pages
@@ -948,9 +948,6 @@ def sales_metrics():
     # get all the transations
     transactions = models.transactions.query.all()
 
-    # get the current prices from the database
-    pricings = models.pricing.query.all()
-
     # for each transaction in if it is within the last week count it to the correct metric
     # need to multiply by the cost of each
     for transaction in transactions:
@@ -964,7 +961,7 @@ def sales_metrics():
             one_week_metric += transaction.transaction_cost
 
     # Calculate the metrics
-    # # Graph the hire period metrics
+    # Graph the hire period metrics
     # plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
     # plt.xlabel('Hire Period')
     # plt.ylabel('Revenue (£)')
@@ -993,6 +990,12 @@ def sales_metrics():
             elif booking.initial_date_time.weekday() == 6 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Sunday
                 sunday_metrics += booking.cost
 
+    # Graph the daily metrics
+    # plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+    # plt.xlabel('Day of Week')
+    # plt.ylabel('Revenue (£)')
+    # plt.savefig('app/graphs/daily.jpg')
+
     # discounted vs undiscounted transactions
     discounted_transactions, normal_transactions = 0, 0
     for transaction in transactions:
@@ -1001,11 +1004,11 @@ def sales_metrics():
         else:
             normal_transactions += 1
     
-    # # Graph the daily metrics
-    # plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
-    # plt.xlabel('Day of Week')
-    # plt.ylabel('Revenue (£)')
-    # plt.savefig('app/graphs/daily.jpg')
+    # Graph the discounted vs undiscounted transactions
+    # plt.bar([0,1], [discounted_transactions, normal_transactions], tick_label=['Discounted transactions', 'Normal transactions'])
+    # plt.xlabel('Type of transaction')
+    # plt.ylabel('Count')
+    # plt.savefig('app/graphs/transaction_type.jpg')
 
     return render_template('sales_metrics.html',
                             title='View Sales Metrics',
