@@ -1,13 +1,10 @@
 {% extends "base.html" %}
-{% block content %}
-  <h1>Configure Scooter Status and Availability</h1>
-  <h2>Change Scooter Details</h2>
-  
-
+{% block left_content %}
+<h3>Configure Scooter Availability</h3>
 
   <form action="" method="post" name="configurescootersform">
-    <h3>Scooter ID: {{ session['confg_sctr_id'] }}</h3>
-    <h3>Availability:  
+    <h4>Change Scooter Details for: {{ session['confg_sctr_id'] }}</h4>
+    <p>Availability:
     {{ form.csrf_token }}
 
       {{ form.availability }}
@@ -16,18 +13,18 @@
           <span>{{ error }}</span>
         {% endfor %}
       {% endif %}
-    </h3>
+    </p>
 
-    <h3>
+    <p>
       Location: {{ form.location_id }}
       {% if form.location_id.errors %}
         {% for error in form.location_id.error %}
           <span>{{ error }}</span>
         {% endfor %}
       {% endif %}
-    </h3>
+    </p>
     <!-- <h4>Choose a Period of Hire</h4> -->
-    
+
 
   <h4>
   </h4>
