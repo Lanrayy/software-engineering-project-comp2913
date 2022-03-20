@@ -36,3 +36,5 @@ admin.add_view(ModelView(models.scooter, db.session))
 admin.add_view(ModelView(models.transactions, db.session))
 
 
+import logging
+logging.basicConfig(filename='logs.log', level=logging.DEBUG,  format='%(levelname)s:%(name)s:%(asctime)s:%(message)s')
