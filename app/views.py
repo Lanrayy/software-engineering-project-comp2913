@@ -137,6 +137,7 @@ def card():
     if request.method == 'POST':
         #if the card details check out
         if form.validate_on_submit():
+            app.logger.info("Card form successfully submitted")
             if form.save_card_details.data: # if the user want to save the card details,  save information into database
                 hashed_card_num = bcrypt.generate_password_hash(form.card_number.data) # hash the card number
                 hashed_cvv = bcrypt.generate_password_hash(form.cvv.data)
@@ -150,6 +151,7 @@ def card():
                 db.session.add(p)
                 db.session.commit()
                 flash("Card details saved")
+                app.logger.info("Card details saved")
 
             #initialise booking
             booking = 0
@@ -174,8 +176,8 @@ def card():
                                                         booking_time = datetime.utcnow(),
                                                         user_id = current_user.id)
                     db.session.add(new_transaction)
-
                     db.session.commit()
+                    app.logger.info("New transaction added to transaction table")
 
                     #write the email message
                     msg = Message('Booking Extension Confirmation',
@@ -187,15 +189,18 @@ def card():
                     '\nScooter ID: ' + str(booking.scooter_id) +
                     '\nReference Number: ' + str(booking.id))
                     mail.send(msg)
+                    app.logger.info("Email sent to user successfully")
 
                     flash("Booking Extension Successful!")
+                    app.logger.info("Booking Extension Successful!")
 
                     return redirect("/profile")
             else:
-                #not extending, so booking
+                # not extending, so booking
                 # if admin is is making a booking, the booking_user_id = 0
                 if session.get('booking_user_id') == 0:
                     #admin is making the booking
+                    app.logger.info("Admin user is making a booking on behalf of a customer")
                     booking = models.booking(duration = session.get('booking_duration', None),
                                              status= session.get('booking_status', None),
                                              cost = session.get('booking_cost', None),
@@ -213,6 +218,7 @@ def card():
                     recipients=[session.get('booking_email', None)]
                 else:
                     #user is making the booking
+                    app.logger.info("Customer is making a booking")
                     booking = models.booking(duration = session.get('booking_duration', None),
                                              status= session.get('booking_status', None),
                                              cost = session.get('booking_cost', None),
@@ -228,6 +234,7 @@ def card():
                                                         booking_time = datetime.utcnow(),
                                                         user_id = session.get('booking_user_id', None))
                     db.session.add(new_transaction)
+                    app.logger.info("New transaction added to transaction table")
                     #set user to recipient
                     recipients=[current_user.email]
 
