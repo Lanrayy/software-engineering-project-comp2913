@@ -304,7 +304,7 @@ def pricing():
 @app.route('/delete/<int:id>', methods=['GET', 'POST'])
 def delete(id):
     #to_complete is a variable to get the id passed by pressing the complete button
-    to_delete=models.cards.query.get_or_404(id)
+    to_delete=models.card_details.query.get_or_404(id)
 
     try:
         #change the status value of this id into complete and commit to the database
@@ -323,8 +323,7 @@ def profile():
     organise_bookings()
 
     #filter the query into the bookings and card
-    #cards = models.card_details.query.filter_by(user_id = current_user.id)  #FOREIGN KEY
-    cards = models.card_details.query.all()
+    cards = models.card_details.query.filter_by(user_id = current_user.id).first()  #FOREIGN KEY
     locations = models.collection_point.query.all()
 
     #Doesn't delete
