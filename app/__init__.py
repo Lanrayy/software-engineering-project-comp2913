@@ -34,3 +34,5 @@ admin.add_view(ModelView(models.feedback, db.session))
 admin.add_view(ModelView(models.pricing, db.session))
 admin.add_view(ModelView(models.scooter, db.session))
 admin.add_view(ModelView(models.transactions, db.session))
+
+
