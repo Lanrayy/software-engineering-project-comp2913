@@ -3,9 +3,51 @@ from app import app, db, bcrypt, models, login_manager, mail
 from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm, ConfigureScooterForm, FeedbackForm, EditFeedbackForm, PricesForm, ExtendBookingForm
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, timedelta
+from sqlalchemy import or_
 import os
 import smtplib
+import matplotlib
+import matplotlib.pyplot as plt
 from flask_mail import Message
+import logging
+from datetime import datetime
+
+#function for automatically checking if bookings have become moved from active to past or upcoming to active etc
+def organise_bookings():
+    #get all bookings
+    bookings = models.booking.query.filter(or_(models.booking.status == "active", models.booking.status == "upcoming"))
+
+    for booking in bookings:
+        #check for upcoming bookings that should become active
+        #check if the booking start has past BUT the end time has not
+        if booking.initial_date_time < datetime.utcnow() and datetime.utcnow() < booking.final_date_time:
+            booking.status = "active"
+        #check if the booking's final_date_time is already in the past, and thus should become a "past" booking
+        if booking.final_date_time < datetime.utcnow():
+            booking.status = "past"
+
+    #finalise changes
+    db.session.commit()
+    return 0
+
+#function for automatically adding scooters to locations
+def organise_scooters():
+    #get all scooters
+    scooters = models.scooter.query.all()
+    #get all locations
+    locations = models.collection_point.query.all()
+    #initialise all locations num_scooters as 0
+    for location in locations:
+        location.num_scooters = 0
+    #for each location check how many scooters are assigned to it, then change num_scooters to match
+    for scooter in scooters:
+        #get the location that the scooter is assigned to
+        scooter_location = models.collection_point.query.filter_by(id = scooter.collection_id).first()
+        scooter_location.num_scooters = scooter_location.num_scooters + 1
+
+    #finalise changes
+    db.session.commit()
+    return 0
 
 #Unregistered user exclusive pages
 @app.route('/')
@@ -19,13 +61,13 @@ def info():
     return render_template('info.html',
                             title='How it Works')
 
+global now
 
 #Login routes
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:   # if current user is logged in
         return redirect(url_for('index'))
-
     form = SignUpForm()
 
     # if form is submitted
@@ -35,6 +77,9 @@ def register():
         u = models.user(password = hashed_password, email = form.email.data, account_type = "customer", user_type = form.user_type.data, name = form.name.data)
         db.session.add(u)    # add user to db
         db.session.commit()     # commit user to db
+
+        now = str(datetime.now())
+        app.logger.info(u.email+" Created an account at "+ now)
         flash(f'Account Created!', 'success')
         return redirect(url_for('login'))   # redirect to login page
     else:
@@ -54,14 +99,23 @@ def login():
         u = models.user.query.filter_by(email = form.email.data).first()
 
         # check username and password
-        if u and bcrypt.check_password_hash(u.password, form.password.data):
-            login_user(u)
-            flash('Login Successful!', 'success')
-            if(u.account_type == "employee" or u.account_type == "manager"):
-                return redirect(url_for('admin_dashboard'))
+        if u:
+            if bcrypt.check_password_hash(u.password, form.password.data):
+                login_user(u)
+                flash('Login Successful!', 'success')
+                now = str(datetime.now())
+                app.logger.info(u.email+"logged in at "+ now)
+                if(u.account_type == "employee" or u.account_type == "manager"):
+                    return redirect(url_for('admin_dashboard'))
+                else:
+                    return redirect(url_for('user_dashboard'))
             else:
-                return redirect(url_for('user_dashboard'))
+                now = str(datetime.now())
+                app.logger.info(u.email + " unsuccesfull login at "+ now)
         else:
+            now = str(datetime.now())
+            app.logger.info("unsuccesfull login at " + now)
+
             flash(f'Login unsuccessful. Please check email and password', 'error')
 
     return render_template('login.html',
@@ -72,6 +126,7 @@ def login():
 # card route - to be integrated with the bookings page
 @app.route('/card', methods=['GET', 'POST'])
 def card():
+    app.logger.info("card route request")
     form = CardForm()
     data = models.card_details.query.filter_by(user_id=current_user.id).all()
 
@@ -83,6 +138,7 @@ def card():
     if request.method == 'POST':
         #if the card details check out
         if form.validate_on_submit():
+            app.logger.info("Card form successfully submitted")
             if form.save_card_details.data: # if the user want to save the card details,  save information into database
                 hashed_card_num = bcrypt.generate_password_hash(form.card_number.data) # hash the card number
                 hashed_cvv = bcrypt.generate_password_hash(form.cvv.data)
@@ -96,6 +152,7 @@ def card():
                 db.session.add(p)
                 db.session.commit()
                 flash("Card details saved")
+                app.logger.info("card details saved")
 
             #initialise booking
             booking = 0
@@ -120,8 +177,8 @@ def card():
                                                         booking_time = datetime.utcnow(),
                                                         user_id = current_user.id)
                     db.session.add(new_transaction)
-
                     db.session.commit()
+                    app.logger.info("new transaction added to transactions table")
 
                     #write the email message
                     msg = Message('Booking Extension Confirmation',
@@ -133,15 +190,18 @@ def card():
                     '\nScooter ID: ' + str(booking.scooter_id) +
                     '\nReference Number: ' + str(booking.id))
                     mail.send(msg)
+                    app.logger.info("email sent to user successfully")
 
                     flash("Booking Extension Successful!")
+                    app.logger.info("booking extension successful!")
 
                     return redirect("/profile")
             else:
-                #not extending, so booking
+                # not extending, so booking
                 # if admin is is making a booking, the booking_user_id = 0
                 if session.get('booking_user_id') == 0:
                     #admin is making the booking
+                    app.logger.info("admin user is making a booking on behalf of a customer")
                     booking = models.booking(duration = session.get('booking_duration', None),
                                              status= session.get('booking_status', None),
                                              cost = session.get('booking_cost', None),
@@ -155,8 +215,11 @@ def card():
                     new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                         booking_time = datetime.utcnow())
                     db.session.add(new_transaction)
+                    #set the specified email to recipient
+                    recipients=[session.get('booking_email', None)]
                 else:
                     #user is making the booking
+                    app.logger.info("customer is making a booking")
                     booking = models.booking(duration = session.get('booking_duration', None),
                                              status= session.get('booking_status', None),
                                              cost = session.get('booking_cost', None),
@@ -172,12 +235,15 @@ def card():
                                                         booking_time = datetime.utcnow(),
                                                         user_id = session.get('booking_user_id', None))
                     db.session.add(new_transaction)
+                    app.logger.info("new transaction added to transaction table")
+                    #set user to recipient
+                    recipients=[current_user.email]
 
                 db.session.commit()
 
                 msg = Message('Booking Confirmation',
                                 sender='scootersleeds@gmail.com',
-                                recipients=[current_user.email])
+                                recipients=recipients)
 
                 msg.body = (f'Thank You, your booking has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
                 '\nEnd Date and Time: ' + str(booking.final_date_time) +
@@ -187,6 +253,7 @@ def card():
 
                 session['booking_id'] = booking.id
                 flash("Booking Successful!")
+                app.logger.info("booking successfully created")
 
                 return redirect("/booking2") #send to booking confirmation
 
@@ -210,6 +277,8 @@ def logout():
 #User exclusive pages
 @app.route('/user_dashboard')
 def user_dashboard():
+    #clean up bookings table
+    organise_bookings()
     return render_template('user_dashboard.html',
                             name=current_user.name,
                             title='User Dashboard')
@@ -220,17 +289,36 @@ def pricing():
     return render_template('pricing.html',
                             title='Our Prices')
 
+@app.route('/delete/<int:id>', methods=['GET', 'POST'])
+def delete(id):
+    #to_complete is a variable to get the id passed by pressing the complete button
+    to_delete=models.cards.query.get_or_404(id)
+
+    try:
+        #change the status value of this id into complete and commit to the database
+        db.session.delete(to_delete)
+        db.session.commit()
+
+        return redirect('/profile')
+
+    except:
+        return 'there was an error'
+
+
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
+    #clean up bookings table
+    organise_bookings()
 
     #filter the query into the bookings and card
-    cards = models.card_details.query.first()
+    #cards = models.card_details.query.filter_by(user_id = current_user.id)  #FOREIGN KEY
+    cards = models.card_details.query.all()
+    locations = models.collection_point.query.all()
 
-    #Doesn't delete cards
-    #if request.method == 'POST':
-    #    db.session.delete(cards)
-    #    db.session.commit()
-    #flask('Card deleted')
+    #Doesn't delete
+    if request.method == "POST":
+        flash("button pressed")
+        return redirect('profile')
 
     bookings =  models.booking.query.filter_by(email = current_user.email)
     collection_points = models.collection_point
@@ -242,7 +330,7 @@ def profile():
                             account_type=current_user.account_type,
                             cards = cards,
                             booking = bookings,
-                            collection_points=collection_points)
+                            location = locations)
 
 
 @app.route('/send_feedback', methods=('GET', 'POST'))
@@ -270,6 +358,8 @@ def locations():
 
 @app.route('/booking1', methods=['GET', 'POST'])
 def booking1():
+    #clean up bookings table
+    organise_bookings()
     #current user is a customer
     if not current_user.account_type == "employee" and not current_user.account_type == "manager":
 
@@ -345,6 +435,32 @@ def booking1():
             else:
                 cost = 10.00
                 hours = 1
+
+             #if the user is a student or a senior apply the discount
+            if current_user.user_type == "senior" or current_user.user_type == "student":
+                flash("you are eligible for a student/senior discount")
+                cost = cost * (0.8)
+
+            else :
+                bookings =  models.booking.query.filter_by(email = current_user.email, status = "expired") # expired user booking
+                total_hours = 0 # total hours in the past week
+
+                #find the datetime a week ago
+                today_date = datetime.now()
+                days = timedelta(days = 7)
+                week_date = today_date - days
+
+                #check if they are a frequent user
+                for b in bookings :
+                    if (b.initial_date_time > week_date):
+                        total_hours += b.duration
+                        if (total_hours > 8):
+                            break
+
+                if (total_hours >= 8) :
+                    flash("you are eligible for a frequent user discount")
+                    cost = cost * (0.8)
+
 
             #check every booking made with this scooter
             #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
@@ -509,6 +625,37 @@ def booking1():
                 cost = 10.00
                 hours = 1
 
+            #**************************************************************************
+            #**********************APPLY DISCOUNT**************************************
+            #**************************************************************************
+
+            #if the user is a student or a senior apply the discount
+            if current_user.user_type == "senior" or current_user.user_type == "student":
+                flash("you are eligible for a student/senior discount")
+                cost = cost * (0.8)
+
+            else :
+                bookings =  models.booking.query.filter_by(email = current_user.email, status = "expired") # expired user booking
+                total_hours = 0 # total hours in the past week
+
+                #find the datetime a week ago
+                today_date = datetime.now()
+                days = timedelta(days = 7)
+                week_date = today_date - days
+
+                for b in bookings :
+                    if (b.initial_date_time > week_date):
+                        total_hours += b.duration
+                        if (total_hours > 8):
+                            break
+
+                if (total_hours >= 8) :
+                    flash("you are eligible for a frequent user discount")
+                    cost = cost * (0.8)
+
+            #**************************************************************************
+            #**************************************************************************
+
             #check every booking made with this scooter
             #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
             #only check currently "upcoming" or "active" bookings
@@ -621,7 +768,7 @@ def cancel_booking():
         #     models.transactions.query.filter_by(hire_period = booking.duration).filter_by(user_id = booking.id).delete()
 
         #delete the actual booking
-        models.booking.query.filter_by(id = session.get('booking_id', None)).delete()
+        models.booking.query.filter_by(id = session.get('booking_id', None)).first().status = "cancelled"
 
         db.session.commit()
 
@@ -720,6 +867,8 @@ def extend_booking():
 #Admin exclusive pages
 @app.route('/admin_dashboard')
 def admin_dashboard():
+    #clean up bookings table
+    organise_bookings()
     return render_template('admin_dashboard.html',
                             name=current_user.name,
                             title='Admin Dashboard')
@@ -758,6 +907,8 @@ def edit_feedback(id):
 
 @app.route('/view_scooters', methods=['GET', 'POST'])
 def view_scooters():
+    #synchronise scooters and Locations
+    organise_scooters()
 
     rec = models.scooter.query.all() # retrieve all scooters
     form = ConfigureScooterForm()
@@ -781,6 +932,8 @@ def add_scooter():
         u = models.scooter(availability = form.availability.data, collection_id = form.location_id.data)
         db.session.add(u)    # add scooter to db
         db.session.commit()     # commit scooter to db
+        now = str(datetime.now())
+        app.logger.info("Admin has added a scooter with ID: "+ u.id + "at "+ now)
     return render_template('add_scooter.html',
                             title='Add New Scooter', form=form)
 
@@ -802,6 +955,8 @@ def configure_scooter():
             scooter.collection_id = request.form.get("location_id")
             db.session.commit()
             # print(models.scooter.query.all())
+            now = str(datetime.now())
+            app.logger.info("Scooter configured:  "+ scooter.id +" " + scooter.availability + " "+ scooter.collection_id + " at " + now)
             flash(f'Scooter Details Updated', 'success')
         return redirect(url_for('view_scooters'))
     return render_template('configure_scooter.html',
@@ -830,8 +985,12 @@ def configure_costs():
 
         if dur:
             dur.price = form.price.data
+            now = str(datetime.now())
+            app.logger.info("Scooter costs configured:  "+ dur.id +" " +  dur.price + " at " + now)
+
             flash("Price updated")
         else:
+            app.logger.info("Scooter costs configuration failed at " + now)
             flash("Error price not updated")
 
         db.session.commit()     # commit scooter to db
@@ -839,9 +998,22 @@ def configure_costs():
                             rec=rec, form=form)
 
 
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/sales_metrics')
 def sales_metrics():
-    one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0 
+    app.logger.info("sales metrics route request")
+
+    one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     date = datetime.utcnow()
     week_start = date + timedelta(-date.weekday(), weeks=-1)
@@ -875,12 +1047,18 @@ def sales_metrics():
             one_day_price = pricing.price
         if pricing.duration == "1 Week":
             one_week_price = pricing.price
-    
+
     # Update the income amount
     one_hour_metric *= one_hour_price
     four_hour_metric *= four_hour_price
     one_day_metric *= one_day_price
     one_week_metric *= one_week_price
+
+    # Graph the hire period metrics
+    plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
+    plt.xlabel('Hire Period')
+    plt.ylabel('Revenue (£)')
+    plt.savefig('app/graphs/hireperiod.jpg')
 
     # Weekly income metrics
     monday_metrics = 0
@@ -912,6 +1090,14 @@ def sales_metrics():
                 saturday_metrics += booking.cost
             elif booking.initial_date_time.weekday() == 6 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Sunday
                 sunday_metrics += booking.cost
+
+    # Graph the daily metrics
+    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+    plt.xlabel('Day of Week')
+    plt.ylabel('Revenue (£)')
+    plt.savefig('app/graphs/daily.jpg')
+
+    app.logger.info("sales metrics successfully created")
 
     return render_template('sales_metrics.html',
                             title='View Sales Metrics',
