@@ -160,7 +160,7 @@ def card():
                     new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                         booking_time = datetime.utcnow(),
                                                         transaction_cost = session.get('booking_cost', None),
-                                                        booking_id = session.get('booking_id', None),
+                                                        booking_id = booking.id,
                                                         )
                     db.session.add(new_transaction)
                     db.session.commit()
@@ -185,7 +185,7 @@ def card():
                                                         booking_time = datetime.utcnow(),
                                                         transaction_cost = session.get('booking_cost', None),
                                                         user_id = session.get('booking_user_id', None),
-                                                        booking_id = session.get('booking_id', None),)
+                                                        booking_id = booking.id)
                     db.session.add(new_transaction)
 
                     #set user to recipient
@@ -480,7 +480,7 @@ def booking1():
                                                     booking_time = datetime.utcnow(),
                                                     transaction_cost = session.get('booking_cost', None),
                                                     user_id = session.get('booking_user_id', None),
-                                                    booking_id = session.get('booking_user_id', None),)
+                                                    booking_id = session.get('booking_id', None),)
                 db.session.add(new_transaction)
                 db.session.commit()
 
@@ -645,14 +645,6 @@ def booking1():
             session['booking_email'] = form.email.data
             session['booking_scooter_id'] = int(form.scooter_id.data)
             session['booking_collection_id'] = int(form.location_id.data)
-
-            # add new transaction to the transaction table- used on the metrics page
-            new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
-                                                booking_time = datetime.utcnow(),
-                                                transaction_cost = session.get('booking_cost', None),
-                                                user_id = session.get('booking_user_id', None),
-                                                booking_id = session.get('booking_id', None))
-            db.session.add(new_transaction)
 
             db.session.commit()
 
@@ -946,12 +938,6 @@ def configure_costs():
 
 @app.route('/sales_metrics')
 def sales_metrics():
-    # define variables needed
-    one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
-    one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
-    one_hour_normal, four_hour_normal, one_day_normal, one_week_normal = 0, 0, 0, 0
-    one_hour_discounts, four_hour_discounts, one_day_discounts, one_week_discounts = 0, 0, 0, 0
-    
     # calculate the date range needed
     date = datetime.utcnow()
     week_start = date + timedelta(-date.weekday(), weeks=0)
@@ -967,49 +953,15 @@ def sales_metrics():
     # need to multiply by the cost of each
     for transaction in transactions:
         if transaction.hire_period == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end:
-            if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
-                one_hour_discounts += 1
-                flash("Working")
-            else:
-                one_hour_normal += 1
+            one_hour_metric += transaction.transaction_cost
         elif transaction.hire_period == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end:
-            if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
-                four_hour_discounts += 1
-                flash("Working")
-            else:
-                four_hour_normal += 1
-            four_hour_metric += 1
+            four_hour_metric += transaction.transaction_cost
         elif transaction.hire_period == 24 and transaction.booking_time > week_start and transaction.booking_time < week_end:
-            if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
-                one_day_discounts += 1
-                flash("Working")
-            else:
-                one_day_normal += 1
-            one_day_metric += 1
+            one_day_metric += transaction.transaction_cost
         elif transaction.hire_period == 168 and transaction.booking_time > week_start and transaction.booking_time < week_end:
-            if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
-                one_week_discounts += 1
-                flash("Working")
-            else:
-                one_week_normal += 1
-
-    # get all the current pricings for each hire period in the pricing table
-    for pricing in pricings:
-        if pricing.duration == "1 Hour":
-            one_hour_price = pricing.price
-        if pricing.duration == "4 Hours":
-            four_hour_price = pricing.price
-        if pricing.duration == "1 Day":
-            one_day_price = pricing.price
-        if pricing.duration == "1 Week":
-            one_week_price = pricing.price
+            one_week_metric += transaction.transaction_cost
 
     # Calculate the metrics
-    one_hour_metric = ((one_hour_discounts * one_hour_price) * 0.8) + (one_hour_normal * one_hour_price)
-    four_hour_metric = ((four_hour_discounts * four_hour_price) * 0.8) + (four_hour_normal * four_hour_price)
-    one_day_metric = ((one_day_discounts * one_day_price) * 0.8) + (one_day_normal * one_day_price)
-    one_week_metric *= one_week_price
-
     # # Graph the hire period metrics
     # plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
     # plt.xlabel('Hire Period')
@@ -1017,17 +969,10 @@ def sales_metrics():
     # plt.savefig('app/graphs/hireperiod.jpg')
 
     # Weekly income metrics
-    monday_metrics = 0
-    tuesday_metrics = 0
-    wednesday_metrics = 0
-    thursday_metrics = 0
-    friday_metrics = 0
-    saturday_metrics = 0
-    sunday_metrics = 0
+    monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics = 0, 0,0,0,0,0,0
 
-    # Get all the bookings
+    # Get all the bookings and calculate booking metric for each day
     bookings = models.booking.query.all()
-    # calculate booking metric for each day
     for booking in bookings:
         if booking.status != "cancelled": # only adds booking that were not cancelled to the metrics
             # checks what day the booking was started
@@ -1053,25 +998,6 @@ def sales_metrics():
             discounted_transactions += 1
         else:
             normal_transactions += 1
-
-    # for transaction in transactions:
-    #     if transaction.booking.status != "cancelled": # only adds booking that were not cancelled to the metrics
-    #         transaction_date_time = transaction.booking.initial_date_time
-    #         # checks what day the booking was started
-    #         if transaction_date_time.weekday() == 0 and transaction_date_time > week_start and transaction_date_time < week_end: # Monday
-    #             monday_metrics += transaction.booking.cost
-    #         elif transaction_date_time.weekday() == 1 and transaction_date_time > week_start and transaction_date_time < week_end: # Tuesday
-    #             tuesday_metrics += transaction.booking.cost
-    #         elif transaction_date_time.weekday() == 2 and transaction_date_time > week_start and transaction_date_time < week_end: # Wednesday
-    #             wednesday_metrics += transaction.booking.cost
-    #         elif transaction_date_time.weekday() == 3 and transaction_date_time > week_start and transaction_date_time < week_end: # Thursday
-    #             thursday_metrics += transaction.booking.cost
-    #         elif transaction_date_time.weekday() == 4 and transaction_date_time > week_start and transaction_date_time < week_end: # Friday
-    #             friday_metrics += transaction.booking.cost
-    #         elif transaction_date_time.weekday() == 5 and transaction_date_time > week_start and transaction_date_time < week_end: # Saturday
-    #             saturday_metrics += transaction.booking.cost
-    #         elif transaction_date_time.weekday() == 6 and transaction_date_time > week_start and transaction_date_time < week_end: # Sunday
-    #             sunday_metrics += transaction.booking.cost
     
     # # Graph the daily metrics
     # plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])

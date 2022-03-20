@@ -35,11 +35,11 @@ db.session.add(scooter)
 db.session.commit()
 
 #initialise user
-user = models.user(name ="Test", email="test@gmail.com", account_type="customer", user_type="default", password=bcrypt.generate_password_hash("test"))
+user = models.user(name ="Normal User", email="test@gmail.com", account_type="customer", user_type="default", password=bcrypt.generate_password_hash("test"))
 student = models.user(name ="Student", email="student@gmail.com", account_type="customer", user_type="student", password=bcrypt.generate_password_hash("test"))
 senior = models.user(name ="Senior", email="senior@gmail.com", account_type="customer", user_type="senior", password=bcrypt.generate_password_hash("test"))
 employee = models.user(name ="Employee", email="employee@gmail.com", account_type="employee", user_type="default", password=bcrypt.generate_password_hash("test"))
-manager = models.user(name ="Employee", email="employee@gmail.com", account_type="manager", user_type="default", password=bcrypt.generate_password_hash("test"))
+manager = models.user(name ="Manager", email="manager@gmail.com", account_type="manager", user_type="default", password=bcrypt.generate_password_hash("test"))
 db.session.add(user)
 db.session.add(employee)
 db.session.add(manager)
