@@ -176,7 +176,9 @@ def card():
                     #add a new transaction, with the date for the transaction set as now
                     new_transaction = models.transactions(hire_period = hours,
                                                         booking_time = datetime.utcnow(),
-                                                        user_id = current_user.id)
+                                                        transaction_cost = cost,
+                                                        user_id = current_user.id,
+                                                        booking_id = booking.id)
                     db.session.add(new_transaction)
                     db.session.commit()
                     app.logger.info("new transaction added to transactions table")
@@ -212,10 +214,15 @@ def card():
                                              scooter_id = session.get('booking_scooter_id', None),
                                              collection_id = session.get('booking_collection_id', None))
                     db.session.add(booking)
+
                     # add new transaction to the transaction table- used on the metrics page, no user id
                     new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
-                                                        booking_time = datetime.utcnow())
+                                                        booking_time = datetime.utcnow(),
+                                                        transaction_cost = session.get('booking_cost', None),
+                                                        booking_id = booking.id,
+                                                        )
                     db.session.add(new_transaction)
+                    db.session.commit()
                     #set the specified email to recipient
                     recipients=[session.get('booking_email', None)]
                 else:
@@ -231,10 +238,14 @@ def card():
                                              scooter_id = session.get('booking_scooter_id', None),
                                              collection_id = session.get('booking_collection_id', None))
                     db.session.add(booking)
+                    db.session.commit()
+
                     # add new transaction to the transaction table- used on the metrics page, with user id
                     new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                         booking_time = datetime.utcnow(),
-                                                        user_id = session.get('booking_user_id', None))
+                                                        transaction_cost = session.get('booking_cost', None),
+                                                        user_id = session.get('booking_user_id', None),
+                                                        booking_id = booking.id)
                     db.session.add(new_transaction)
                     app.logger.info("new transaction added to transaction table")
                     #set user to recipient
@@ -534,9 +545,10 @@ def booking1():
                 # add new transaction to the transaction table- used on the metrics page
                 new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                     booking_time = datetime.utcnow(),
-                                                    user_id = session.get('booking_user_id', None))
+                                                    transaction_cost = session.get('booking_cost', None),
+                                                    user_id = session.get('booking_user_id', None),
+                                                    booking_id = session.get('booking_id', None),)
                 db.session.add(new_transaction)
-
                 db.session.commit()
 
 
@@ -701,6 +713,8 @@ def booking1():
             session['booking_scooter_id'] = int(form.scooter_id.data)
             session['booking_collection_id'] = int(form.location_id.data)
 
+            db.session.commit()
+
             #send admin user to payment page
             return redirect("/card")
 
@@ -831,7 +845,9 @@ def extend_booking():
             #add a new transaction, with the date for the transaction set as now
             new_transaction = models.transactions(hire_period = hours,
                                                 booking_time = datetime.utcnow(),
-                                                user_id = current_user.id)
+                                                transaction_cost = cost,
+                                                user_id = current_user.id,
+                                                booking_id = booking.id)
             db.session.add(new_transaction)
 
             db.session.commit()
@@ -1016,64 +1032,38 @@ def sales_metrics():
 
     one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
+    # calculate the date range needed
     date = datetime.utcnow()
-    week_start = date + timedelta(-date.weekday(), weeks=-1)
-    week_end = date + timedelta(-date.weekday() + 6, weeks=-1)
+    week_start = date + timedelta(-date.weekday(), weeks=0)
+    week_end = date + timedelta(-date.weekday() + 6, weeks=0)
 
     # get all the transations
-    data = models.transactions.query.all()
-
-    # get the current prices from the database
-    pricings = models.pricing.query.all()
+    transactions = models.transactions.query.all()
 
     # for each transaction in if it is within the last week count it to the correct metric
     # need to multiply by the cost of each
-    for transaction in data:
+    for transaction in transactions:
         if transaction.hire_period == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end:
-            one_hour_metric += 1
+            one_hour_metric += transaction.transaction_cost
         elif transaction.hire_period == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end:
-            four_hour_metric += 1
+            four_hour_metric += transaction.transaction_cost
         elif transaction.hire_period == 24 and transaction.booking_time > week_start and transaction.booking_time < week_end:
-            one_day_metric += 1
+            one_day_metric += transaction.transaction_cost
         elif transaction.hire_period == 168 and transaction.booking_time > week_start and transaction.booking_time < week_end:
-            one_week_metric += 1
+            one_week_metric += transaction.transaction_cost
 
-    # get all the current pricings for each hire period in the pricing table
-    for pricing in pricings:
-        if pricing.duration == "1 Hour":
-            one_hour_price = pricing.price
-        if pricing.duration == "4 Hours":
-            four_hour_price = pricing.price
-        if pricing.duration == "1 Day":
-            one_day_price = pricing.price
-        if pricing.duration == "1 Week":
-            one_week_price = pricing.price
-
-    # Update the income amount
-    one_hour_metric *= one_hour_price
-    four_hour_metric *= four_hour_price
-    one_day_metric *= one_day_price
-    one_week_metric *= one_week_price
-
+    # Calculate the metrics
     # Graph the hire period metrics
-    plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
-    plt.xlabel('Hire Period')
-    plt.ylabel('Revenue (£)')
-    plt.savefig('app/graphs/hireperiod.jpg')
+    # plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
+    # plt.xlabel('Hire Period')
+    # plt.ylabel('Revenue (£)')
+    # plt.savefig('app/graphs/hireperiod.jpg')
 
     # Weekly income metrics
-    monday_metrics = 0
-    tuesday_metrics = 0
-    wednesday_metrics = 0
-    thursday_metrics = 0
-    friday_metrics = 0
-    saturday_metrics = 0
-    sunday_metrics = 0
+    monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics = 0, 0,0,0,0,0,0
 
-    # Get all the bookings
+    # Get all the bookings and calculate booking metric for each day
     bookings = models.booking.query.all()
-
-    # calculate booking metric for each day
     for booking in bookings:
         if booking.status != "cancelled": # only adds booking that were not cancelled to the metrics
             # checks what day the booking was started
@@ -1093,10 +1083,24 @@ def sales_metrics():
                 sunday_metrics += booking.cost
 
     # Graph the daily metrics
-    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
-    plt.xlabel('Day of Week')
-    plt.ylabel('Revenue (£)')
-    plt.savefig('app/graphs/daily.jpg')
+    # plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+    # plt.xlabel('Day of Week')
+    # plt.ylabel('Revenue (£)')
+    # plt.savefig('app/graphs/daily.jpg')
+
+    # discounted vs undiscounted transactions
+    discounted_transactions, normal_transactions = 0, 0
+    for transaction in transactions:
+        if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
+            discounted_transactions += 1
+        else:
+            normal_transactions += 1
+    
+    # Graph the discounted vs undiscounted transactions
+    # plt.bar([0,1], [discounted_transactions, normal_transactions], tick_label=['Discounted transactions', 'Normal transactions'])
+    # plt.xlabel('Type of transaction')
+    # plt.ylabel('Count')
+    # plt.savefig('app/graphs/transaction_type.jpg')
 
     app.logger.info("sales metrics successfully created")
 
@@ -1114,4 +1118,6 @@ def sales_metrics():
                             thursday_metrics = thursday_metrics,
                             friday_metrics = friday_metrics,
                             saturday_metrics = saturday_metrics,
-                            sunday_metrics = sunday_metrics)
+                            sunday_metrics = sunday_metrics,
+                            discounted_transactions = discounted_transactions,
+                            normal_transactions = normal_transactions)
