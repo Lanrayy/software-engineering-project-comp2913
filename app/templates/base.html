@@ -84,11 +84,12 @@
       <div class="row">
 
         <!-- left justified content -->
-        <div class="col c1">
+        <div class="col">
+          {% block left_content %}{% endblock %}
         </div>
 
         <!-- center justified content -->
-        <div class="col c2">
+        <div class="col">
           {% with messages = get_flashed_messages() %}
             {% if messages %}
               {% for message in messages %}
@@ -103,7 +104,8 @@
         </div>
 
         <!-- right justified content -->
-        <div class="col c3">
+        <div class="col">
+          {% block right_content %}{% endblock %}
         </div>
 
       </div>
