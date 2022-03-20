@@ -56,6 +56,7 @@
               <!-- Customer nav -->
               {% if not current_user.account_type == "employee" and not current_user.account_type == "manager" %}
               <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
+              <li class="nav-item"><a class="nav-link" href="/sales_metrics">Sales Metrics</a></li>
               <li class="nav-item"><a class="nav-link" href="/booking1">Make a Booking</a></li>
               <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
               <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
@@ -76,36 +77,22 @@
 
       </div>
     </nav>
+    
+    <div class="col c2">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-success">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
 
-    <!-- main page container -->
-    <div class="container-fluid min-vh-100">
-      <div class="row">
-
-        <!-- left justified content -->
-        <div class="col c1">
-        </div>
-
-        <!-- center justified content -->
-        <div class="col c2">
-          {% with messages = get_flashed_messages() %}
-            {% if messages %}
-              {% for message in messages %}
-                <div class="alert alert-success">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
-
-          {% block content %}{% endblock %}
-        </div>
-
-        <!-- right justified content -->
-        <div class="col c3">
-        </div>
-
-      </div>
+      {% block content %}{% endblock %}
     </div>
+
+
 
     <!-- Footer -->
     <footer class="text-center text-lg-start bg-light text-muted">

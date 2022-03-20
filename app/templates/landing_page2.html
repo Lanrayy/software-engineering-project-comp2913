@@ -1,5 +1,39 @@
 {% extends "base.html" %}
 {% block content %}
+
+    <!-- main page container -->
+    <div class="container-fluid min-vh-100">
+        <div class="row">
+  
+          <!-- left justified content -->
+          <div class="col c1">
+          </div>
+  
+          <!-- center justified content -->
+          <div class="col c2">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-success">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+  
+            {% block content %}{% endblock %}
+          </div>
+  
+          <!-- right justified content -->
+          <div class="col c3">
+          </div>
+  
+        </div>
+      </div>
+
+
+
+
   <div class="main-container">
     <div class="row1">
       <div class="row-1-column-1">

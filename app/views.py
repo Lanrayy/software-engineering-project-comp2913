@@ -10,7 +10,7 @@ from flask_mail import Message
 #Unregistered user exclusive pages
 @app.route('/')
 def index():
-    return render_template('landing_page.html',
+    return render_template('landing_page2.html',
                             title='Home')
 
 
