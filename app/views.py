@@ -637,37 +637,6 @@ def booking1():
                 cost = 10.00
                 hours = 1
 
-            #**************************************************************************
-            #**********************APPLY DISCOUNT**************************************
-            #**************************************************************************
-
-            #if the user is a student or a senior apply the discount
-            if current_user.user_type == "senior" or current_user.user_type == "student":
-                flash("you are eligible for a student/senior discount")
-                cost = cost * (0.8)
-
-            else :
-                bookings =  models.booking.query.filter_by(email = current_user.email, status = "expired") # expired user booking
-                total_hours = 0 # total hours in the past week
-
-                #find the datetime a week ago
-                today_date = datetime.now()
-                days = timedelta(days = 7)
-                week_date = today_date - days
-
-                for b in bookings :
-                    if (b.initial_date_time > week_date):
-                        total_hours += b.duration
-                        if (total_hours > 8):
-                            break
-
-                if (total_hours >= 8) :
-                    flash("you are eligible for a frequent user discount")
-                    cost = cost * (0.8)
-
-            #**************************************************************************
-            #**************************************************************************
-
             #check every booking made with this scooter
             #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
             #only check currently "upcoming" or "active" bookings
@@ -712,7 +681,13 @@ def booking1():
             session['booking_scooter_id'] = int(form.scooter_id.data)
             session['booking_collection_id'] = int(form.location_id.data)
 
-            db.session.commit()
+            #check if the booking should be currently active or upcoming
+            if session.get('booking_initial', None) < datetime.utcnow():
+                #if the start time is before now, it's currently active
+                session['booking_status'] = "active"
+            else:
+                #else it must be in the future
+                session['booking_status'] = "upcoming"
 
             #send admin user to payment page
             return redirect("/card")
@@ -1094,7 +1069,7 @@ def sales_metrics():
             discounted_transactions += 1
         else:
             normal_transactions += 1
-    
+
     # Graph the discounted vs undiscounted transactions
     # plt.bar([0,1], [discounted_transactions, normal_transactions], tick_label=['Discounted transactions', 'Normal transactions'])
     # plt.xlabel('Type of transaction')
