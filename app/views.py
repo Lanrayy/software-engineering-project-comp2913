@@ -120,7 +120,7 @@ def card():
                     #add a new transaction, with the date for the transaction set as now
                     new_transaction = models.transactions(hire_period = hours,
                                                         booking_time = datetime.utcnow(),
-                                                        booking_cost = cost,
+                                                        transaction_cost = cost,
                                                         user_id = current_user.id,
                                                         booking_id = booking.id)
                     db.session.add(new_transaction)
@@ -159,7 +159,7 @@ def card():
                     # add new transaction to the transaction table- used on the metrics page, no user id
                     new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                         booking_time = datetime.utcnow(),
-                                                        booking_cost = session.get('booking_cost', None),
+                                                        transaction_cost = session.get('booking_cost', None),
                                                         booking_id = session.get('booking_id', None),
                                                         )
                     db.session.add(new_transaction)
@@ -183,7 +183,7 @@ def card():
                     # add new transaction to the transaction table- used on the metrics page, with user id
                     new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                         booking_time = datetime.utcnow(),
-                                                        booking_cost = session.get('booking_cost', None),
+                                                        transaction_cost = session.get('booking_cost', None),
                                                         user_id = session.get('booking_user_id', None),
                                                         booking_id = session.get('booking_id', None),)
                     db.session.add(new_transaction)
@@ -478,6 +478,7 @@ def booking1():
                 # add new transaction to the transaction table- used on the metrics page
                 new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                     booking_time = datetime.utcnow(),
+                                                    transaction_cost = session.get('booking_cost', None),
                                                     user_id = session.get('booking_user_id', None),
                                                     booking_id = session.get('booking_user_id', None),)
                 db.session.add(new_transaction)
@@ -648,6 +649,7 @@ def booking1():
             # add new transaction to the transaction table- used on the metrics page
             new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                 booking_time = datetime.utcnow(),
+                                                transaction_cost = session.get('booking_cost', None),
                                                 user_id = session.get('booking_user_id', None),
                                                 booking_id = session.get('booking_id', None))
             db.session.add(new_transaction)
@@ -784,6 +786,7 @@ def extend_booking():
             #add a new transaction, with the date for the transaction set as now
             new_transaction = models.transactions(hire_period = hours,
                                                 booking_time = datetime.utcnow(),
+                                                transaction_cost = cost,
                                                 user_id = current_user.id,
                                                 booking_id = booking.id)
             db.session.add(new_transaction)
