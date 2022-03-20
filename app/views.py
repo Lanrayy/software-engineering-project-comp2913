@@ -30,6 +30,24 @@ def organise_bookings():
     db.session.commit()
     return 0
 
+#function for automatically adding scooters to locations
+def organise_scooters():
+    #get all scooters
+    scooters = models.scooter.query.all()
+    #get all locations
+    locations = models.collection_point.query.all()
+    #initialise all locations num_scooters as 0
+    for location in locations:
+        location.num_scooters = 0
+    #for each location check how many scooters are assigned to it, then change num_scooters to match
+    for scooter in scooters:
+        #get the location that the scooter is assigned to
+        scooter_location = models.collection_point.query.filter_by(id = scooter.collection_id).first()
+        scooter_location.num_scooters = scooter_location.num_scooters + 1
+
+    #finalise changes
+    db.session.commit()
+    return 0
 
 #Unregistered user exclusive pages
 @app.route('/')
@@ -880,6 +898,8 @@ def edit_feedback(id):
 
 @app.route('/view_scooters', methods=['GET', 'POST'])
 def view_scooters():
+    #synchronise scooters and Locations
+    organise_scooters()
 
     rec = models.scooter.query.all() # retrieve all scooters
     form = ConfigureScooterForm()
