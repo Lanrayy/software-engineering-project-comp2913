@@ -52,6 +52,7 @@ def organise_scooters():
 #Unregistered user exclusive pages
 @app.route('/')
 def index():
+    app.logger.info("landing page route request")
     return render_template('landing_page.html',
                             title='Home')
 
@@ -126,6 +127,7 @@ def login():
 # card route - to be integrated with the bookings page
 @app.route('/card', methods=['GET', 'POST'])
 def card():
+    app.logger.info("card route request")
     form = CardForm()
     data = models.card_details.query.filter_by(user_id=current_user.id).all()
 
@@ -137,6 +139,7 @@ def card():
     if request.method == 'POST':
         #if the card details check out
         if form.validate_on_submit():
+            app.logger.info("Card form successfully submitted")
             if form.save_card_details.data: # if the user want to save the card details,  save information into database
                 hashed_card_num = bcrypt.generate_password_hash(form.card_number.data) # hash the card number
                 hashed_cvv = bcrypt.generate_password_hash(form.cvv.data)
@@ -150,6 +153,7 @@ def card():
                 db.session.add(p)
                 db.session.commit()
                 flash("Card details saved")
+                app.logger.info("card details saved")
 
             #initialise booking
             booking = 0
@@ -174,8 +178,8 @@ def card():
                                                         booking_time = datetime.utcnow(),
                                                         user_id = current_user.id)
                     db.session.add(new_transaction)
-
                     db.session.commit()
+                    app.logger.info("new transaction added to transactions table")
 
                     #write the email message
                     msg = Message('Booking Extension Confirmation',
@@ -187,15 +191,18 @@ def card():
                     '\nScooter ID: ' + str(booking.scooter_id) +
                     '\nReference Number: ' + str(booking.id))
                     mail.send(msg)
+                    app.logger.info("email sent to user successfully")
 
                     flash("Booking Extension Successful!")
+                    app.logger.info("booking extension successful!")
 
                     return redirect("/profile")
             else:
-                #not extending, so booking
+                # not extending, so booking
                 # if admin is is making a booking, the booking_user_id = 0
                 if session.get('booking_user_id') == 0:
                     #admin is making the booking
+                    app.logger.info("admin user is making a booking on behalf of a customer")
                     booking = models.booking(duration = session.get('booking_duration', None),
                                              status= session.get('booking_status', None),
                                              cost = session.get('booking_cost', None),
@@ -213,6 +220,7 @@ def card():
                     recipients=[session.get('booking_email', None)]
                 else:
                     #user is making the booking
+                    app.logger.info("customer is making a booking")
                     booking = models.booking(duration = session.get('booking_duration', None),
                                              status= session.get('booking_status', None),
                                              cost = session.get('booking_cost', None),
@@ -228,6 +236,7 @@ def card():
                                                         booking_time = datetime.utcnow(),
                                                         user_id = session.get('booking_user_id', None))
                     db.session.add(new_transaction)
+                    app.logger.info("new transaction added to transaction table")
                     #set user to recipient
                     recipients=[current_user.email]
 
@@ -245,6 +254,7 @@ def card():
 
                 session['booking_id'] = booking.id
                 flash("Booking Successful!")
+                app.logger.info("booking successfully created")
 
                 return redirect("/booking2") #send to booking confirmation
 
@@ -1002,6 +1012,8 @@ def configure_costs():
 
 @app.route('/sales_metrics')
 def sales_metrics():
+    app.logger.info("sales metrics route request")
+
     one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     date = datetime.utcnow()
@@ -1085,6 +1097,8 @@ def sales_metrics():
     plt.xlabel('Day of Week')
     plt.ylabel('Revenue (£)')
     plt.savefig('app/graphs/daily.jpg')
+
+    app.logger.info("sales metrics successfully created")
 
     return render_template('sales_metrics.html',
                             title='View Sales Metrics',

@@ -23,7 +23,7 @@ migrate = Migrate(app, db)
 
 from app import views, models
 
-# admin
+# flask admin
 admin = Admin(app)
 
 admin.add_view(ModelView(models.user, db.session))
@@ -34,3 +34,7 @@ admin.add_view(ModelView(models.feedback, db.session))
 admin.add_view(ModelView(models.pricing, db.session))
 admin.add_view(ModelView(models.scooter, db.session))
 admin.add_view(ModelView(models.transactions, db.session))
+
+
+import logging
+logging.basicConfig(filename='logs.log', level=logging.DEBUG,  format='%(levelname)s:%(name)s:%(asctime)s:%(message)s')
