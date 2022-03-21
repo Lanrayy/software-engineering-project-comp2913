@@ -99,7 +99,6 @@ def redirectError(exception):
 @app.route('/')
 def index():
     logPage()
-    app.logger.info("landing page route request")
     return render_template('landing_page.html',
                             title='Home')
 
@@ -129,7 +128,7 @@ def register():
         db.session.commit()     # commit user to db
 
         now = str(datetime.now())
-        app.logger.info(u.email+" Created an account at "+ now)
+        logger.info(u.email+" Created an account at "+ now)
         flash(f'Account Created!', 'success')
         return redirect(url_for('login'))   # redirect to login page
     else:
@@ -154,18 +153,15 @@ def login():
             if bcrypt.check_password_hash(u.password, form.password.data):
                 login_user(u)
                 flash('Login Successful!', 'success')
-                now = str(datetime.now())
-                app.logger.info(u.email+"logged in at "+ now)
+                logger.info(u.email+" logged in")
                 if(u.account_type == "employee" or u.account_type == "manager"):
                     return redirect(url_for('admin_dashboard'))
                 else:
                     return redirect(url_for('user_dashboard'))
             else:
-                now = str(datetime.now())
-                app.logger.info(u.email + " unsuccesfull login at "+ now)
+                logger.info(u.email + " unsuccesful login")
         else:
-            now = str(datetime.now())
-            app.logger.info("unsuccesfull login at " + now)
+            logger.info("Unsuccesful login")
 
             flash(f'Login unsuccessful. Please check email and password', 'error')
 
@@ -180,7 +176,6 @@ def card():
     try:
 
         logPage()
-        app.logger.info("card route request")
         form = CardForm()
         data = models.card_details.query.filter_by(user_id=current_user.id).all()
 
@@ -192,7 +187,7 @@ def card():
         if request.method == 'POST':
             #if the card details check out
             if form.validate_on_submit():
-                app.logger.info("Card form successfully submitted")
+                logger.info("Card form successfully submitted")
                 if form.save_card_details.data: # if the user want to save the card details,  save information into database
                     hashed_card_num = bcrypt.generate_password_hash(form.card_number.data) # hash the card number
                     hashed_cvv = bcrypt.generate_password_hash(form.cvv.data)
@@ -206,7 +201,7 @@ def card():
                     db.session.add(p)
                     db.session.commit()
                     flash("Card details saved")
-                    app.logger.info("card details saved")
+                    logger.info("Card details saved")
 
                 #initialise booking
                 booking = 0
@@ -234,7 +229,7 @@ def card():
                                                             booking_id = booking.id)
                         db.session.add(new_transaction)
                         db.session.commit()
-                        app.logger.info("new transaction added to transactions table")
+                        logger.info("New transaction added to transactions table")
 
                         #write the email message
                         msg = Message('Booking Extension Confirmation',
@@ -246,10 +241,10 @@ def card():
                         '\nScooter ID: ' + str(booking.scooter_id) +
                         '\nReference Number: ' + str(booking.id))
                         mail.send(msg)
-                        app.logger.info("email sent to user successfully")
+                        logger.info("Email sent to user successfully")
 
                         flash("Booking Extension Successful!")
-                        app.logger.info("booking extension successful!")
+                        logger.info("Booking extension successful!")
 
                         return redirect("/profile")
                 else:
@@ -257,7 +252,7 @@ def card():
                     # if admin is is making a booking, the booking_user_id = 0
                     if session.get('booking_user_id') == 0:
                         #admin is making the booking
-                        app.logger.info("admin user is making a booking on behalf of a customer")
+                        logger.info("Admin user is making a booking on behalf of a customer")
                         booking = models.booking(duration = session.get('booking_duration', None),
                                                 status= session.get('booking_status', None),
                                                 cost = session.get('booking_cost', None),
@@ -280,7 +275,7 @@ def card():
                         recipients=[session.get('booking_email', None)]
                     else:
                         #user is making the booking
-                        app.logger.info("customer is making a booking")
+                        logger.info("Customer is making a booking")
                         booking = models.booking(duration = session.get('booking_duration', None),
                                                 status= session.get('booking_status', None),
                                                 cost = session.get('booking_cost', None),
@@ -300,7 +295,7 @@ def card():
                                                             user_id = session.get('booking_user_id', None),
                                                             booking_id = booking.id)
                         db.session.add(new_transaction)
-                        app.logger.info("new transaction added to transaction table")
+                        logger.info("New transaction added to transaction table")
                         #set user to recipient
                         recipients=[current_user.email]
 
@@ -318,7 +313,7 @@ def card():
 
                     session['booking_id'] = booking.id
                     flash("Booking Successful!")
-                    app.logger.info("booking successfully created")
+                    logger.info("Booking " + str(booking.id) + " successfully created")
 
                     return redirect("/booking2") #send to booking confirmation
 
@@ -381,7 +376,7 @@ def delete(id):
         #change the status value of this id into complete and commit to the database
         db.session.delete(to_delete)
         db.session.commit()
-
+        logger.info("Card removed")
         return redirect('/profile')
 
     except:
@@ -1127,7 +1122,7 @@ def add_scooter():
         db.session.add(u)    # add scooter to db
         db.session.commit()     # commit scooter to db
         now = str(datetime.now())
-        app.logger.info("Admin has added a scooter with ID: "+ u.id + "at "+ now)
+        logger.info("Admin has added a scooter with ID: "+ u.id + "at "+ now)
     return render_template('add_scooter.html',
                             title='Add New Scooter', form=form)
 
@@ -1151,7 +1146,7 @@ def configure_scooter():
             db.session.commit()
             # print(models.scooter.query.all())
             now = str(datetime.now())
-            app.logger.info("Scooter configured:  "+ scooter.id +" " + scooter.availability + " "+ scooter.collection_id + " at " + now)
+            logger.info("Scooter configured:  "+ scooter.id +" " + scooter.availability + " "+ scooter.collection_id + " at " + now)
             flash(f'Scooter Details Updated', 'success')
         return redirect(url_for('view_scooters'))
     return render_template('configure_scooter.html',
@@ -1182,11 +1177,11 @@ def configure_costs():
         if dur:
             dur.price = form.price.data
             now = str(datetime.now())
-            app.logger.info("Scooter costs configured:  "+ dur.id +" " +  dur.price + " at " + now)
+            logger.info("Scooter costs configured:  "+ dur.id +" " +  dur.price + " at " + now)
 
             flash("Price updated")
         else:
-            app.logger.info("Scooter costs configuration failed at " + now)
+            logger.info("Scooter costs configuration failed at " + now)
             flash("Error price not updated")
 
         db.session.commit()     # commit scooter to db
@@ -1197,7 +1192,7 @@ def configure_costs():
 @app.route('/sales_metrics')
 def sales_metrics():
     logPage()
-    app.logger.info("sales metrics route request")
+    logger.info("sales metrics route request")
 
     one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
@@ -1284,7 +1279,7 @@ def sales_metrics():
     plt.cla()
     plt.clf()
 
-    app.logger.info("sales metrics successfully created")
+    logger.info("sales metrics successfully created")
 
     return render_template('sales_metrics.html',
                             title='View Sales Metrics',
