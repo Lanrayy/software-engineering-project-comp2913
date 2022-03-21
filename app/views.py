@@ -342,6 +342,7 @@ def logout():
 @app.route('/user_dashboard')
 def user_dashboard():
     try:
+        logPage()
         #clean up bookings table
         organise_bookings()
         return render_template('user_dashboard.html',
