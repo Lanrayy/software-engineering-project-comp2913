@@ -49,6 +49,9 @@ def organise_scooters():
     db.session.commit()
     return 0
 
+
+matplotlib.use('agg') # Does not connect to GUI (Fixes error of crashing sales metrics page on reload)
+
 #Unregistered user exclusive pages
 @app.route('/')
 def index():
@@ -1028,10 +1031,15 @@ def sales_metrics():
 
     # Calculate the metrics
     # Graph the hire period metrics
-    # plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
-    # plt.xlabel('Hire Period')
-    # plt.ylabel('Revenue (£)')
-    # plt.savefig('app/graphs/hireperiod.jpg')
+
+    plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
+    plt.xlabel('Hire Period')
+    plt.ylabel('Revenue (£)')
+    plt.savefig('app/graphs/hireperiod.jpg')
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
 
     # Weekly income metrics
     monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics = 0, 0,0,0,0,0,0
@@ -1057,10 +1065,14 @@ def sales_metrics():
                 sunday_metrics += booking.cost
 
     # Graph the daily metrics
-    # plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
-    # plt.xlabel('Day of Week')
-    # plt.ylabel('Revenue (£)')
-    # plt.savefig('app/graphs/daily.jpg')
+    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+    plt.xlabel('Day of Week')
+    plt.ylabel('Revenue (£)')
+    plt.savefig('app/graphs/daily.jpg')
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
 
     # discounted vs undiscounted transactions
     discounted_transactions, normal_transactions = 0, 0
@@ -1071,10 +1083,14 @@ def sales_metrics():
             normal_transactions += 1
 
     # Graph the discounted vs undiscounted transactions
-    # plt.bar([0,1], [discounted_transactions, normal_transactions], tick_label=['Discounted transactions', 'Normal transactions'])
-    # plt.xlabel('Type of transaction')
-    # plt.ylabel('Count')
-    # plt.savefig('app/graphs/transaction_type.jpg')
+    plt.bar([0,1], [discounted_transactions, normal_transactions], tick_label=['Discounted transactions', 'Normal transactions'])
+    plt.xlabel('Type of transaction')
+    plt.ylabel('Count')
+    plt.savefig('app/graphs/transaction_type.jpg')
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
 
     app.logger.info("sales metrics successfully created")
 
