@@ -1,13 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Send Feedback</h1>
-  <p>Please provide feedback or describe the issue in the box below</p>
-  <!-- Feedback form -->
-  <form action="" method="post" name="feedbackform">
-    {{ form.csrf_token }}
-    {{ form.feedback(cols="45", rows="5") }}
-    <br>
-    <p><input type="submit" value="Submit"></p>
-  </form>
+<!-- blank margin space -->
+<br>
+
+<div class="row d-flex justify-content-center">
+  <div class="col-md-auto">
+    <!-- row for header -->
+    <div class="row p-3">
+      <h3 class="fw-normal text-nowrap">Send Feedback</h3>
+    </div>
+
+    <!-- row for displaying feedback details -->
+    <div class="row p-3 text-center">
+      <h5 class="fw-normal text-nowrap">Please provide feedback or describe the issue in the box below</h5>
+    </div>
+
+    <!-- row for table contents -->
+    <div class="row p-3">
+      <form action="" method="post" name="feedbackform">
+        {{ form.csrf_token }}
+        {{ form.feedback(cols="72", rows="5") }}
+      </form>
+    </div>
+
+    <!-- submit button -->
+    <div class="row pe-4 text-end">
+      <div class="col">
+        <button type="button submit" class="btn btn-success mt-3" value="Submit">Confirm Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
