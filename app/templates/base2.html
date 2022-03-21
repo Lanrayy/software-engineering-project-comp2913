@@ -78,19 +78,35 @@
       </div>
     </nav>
     
-    <div class="col c2">
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-success">
-              {{ message }}
-            </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-
-      {% block content %}{% endblock %}
-    </div>
+    <!-- main page container -->
+    <div class="container-fluid min-vh-100">
+        <div class="row">
+          <!-- left justified content -->
+          <div class="col">
+          </div>
+  
+          <!-- center justified content -->
+          <div class="col">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-success">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+  
+            
+          </div>
+  
+          <!-- right justified content -->
+          <div class="col">
+          </div>
+  
+        </div>
+        {% block content %}{% endblock %}
+      </div>
 
 
 

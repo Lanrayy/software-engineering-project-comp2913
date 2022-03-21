@@ -43,8 +43,8 @@ tr:nth-child(even) {
 
 .row-1-column-1 {
   /* border: 2px solid green; */
+  height: 100%;
   display: flex;
-  width: 50%;
   flex-direction: column;
   justify-content: center;
   align-content: center;
@@ -84,7 +84,7 @@ tr:nth-child(even) {
   align-items: center;
   
   /* border: 1px solid green; */
-  width: 30%;
+  height: 500px;
   flex-direction: column;
 }
 
@@ -145,7 +145,7 @@ iframe{
   font-size: 20px;
 }
 
-.main-image{
+/* .main-image{
   width: auto;
-  height: 500px;
-}
+  height: 300px;
+} */
