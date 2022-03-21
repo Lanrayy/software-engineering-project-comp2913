@@ -1,37 +1,60 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Cancel Your Booking</h1>
+<!-- blank margin space -->
+<br>
 
-  <h2>Booking Details</h2>
-  <table>
-    <tr>
-      <th>Date of Booking</th>
-      <th>Duration</th>
-      <th>Scooter ID</th>
-      <th>PickUp location</th>
-      <th>Status</th>
-      <th>Reference No.</th>
-    </tr>
+<div class="row d-flex justify-content-center">
+  <div class="col-md-auto">
+    <!-- row for header -->
+    <div class="row p-3 text-center">
+      <h3 class="fw-normal text-nowrap">Cancel Your Booking</h3>
+    </div>
 
-    <tr>
-        <td>{{ booking.initial_date_time }}</td>
-        <td>{{booking.duration}}</td>
-        <td>SN{{booking.scooter_id}}</td>
-        <td>{{collection_points.query.filter_by(id = booking.collection_id).first().location}}</td>  <!-- show booking location-->
-        <td>{{booking.status}}</td>
-        <td>BN000{{booking.id}}</td>
-    </tr>
-  </table>
+    <!-- row for booking details heading -->
+    <div class="row text-center">
+      <h5 class="fw-normal text-nowrap">Booking Details</h5>
+    </div>
 
-  <br>
+    <!-- row for table contents -->
+    <div class="row p-3">
+      <table>
+        <tr>
+          <th>Date of Booking</th>
+          <th>Duration</th>
+          <th>Scooter ID</th>
+          <th>PickUp location</th>
+          <th>Status</th>
+          <th>Reference No.</th>
+        </tr>
 
-  <h2>Are you sure you want to cancel your booking?</h2>
+        <tr>
+            <td class="align-middle text-center text-nowrap">{{ booking.initial_date_time }}</td>
+            <td class="align-middle text-center text-nowrap">{{booking.duration}}</td>
+            <td class="align-middle text-center text-nowrap">SN{{booking.scooter_id}}</td>
+            <td class="align-middle text-center text-nowrap">{{collection_points.query.filter_by(id = booking.collection_id).first().location}}</td>  <!-- show booking location-->
+            <td class="align-middle text-center text-nowrap">{{booking.status}}</td>
+            <td class="align-middle text-center text-nowrap">BN000{{booking.id}}</td>
+        </tr>
+      </table>
+    </div>
 
-  <div class="row">
+    <!-- row -->
+    <div class="row p-3 text-center">
+      <h5 class="fw-normal text-nowrap">Are you sure you want to cancel your booking?</h5>
+    </div>
 
-    <form action="" method="post" name="cancelbookingform">
-      <button type="button submit" class="btn btn-danger">Confirm Booking Cancellation</button>
-    </form>
+    <div class="row text-center pt-3">
+      <div class="col text-end">
+        <form action="" method="post" name="cancelbookingform">
+          <button type="button submit" class="btn btn-danger">Cancel Booking</button>
+        </form>
+      </div>
+
+      <div class="col text-start">
+        <a href="/profile"><button type="button submit" class="btn btn-primary">Back to Profile</button></a>
+      </div>
+    </div>
 
   </div>
+</div>
 {% endblock %}

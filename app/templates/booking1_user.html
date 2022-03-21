@@ -1,57 +1,86 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Make a Booking</h1>
+<!-- blank margin space -->
+<br>
 
-  <!-- Location ... No. Scooters Available -->
-  <form  method="post" name="bookingform">
-    {{ form.csrf_token }}
-    {{ form.hidden_tag() }}
-    <p>
-      Choose a Collection Point <br>
-      {{ form.location_id }}
-    </p>
-    <p>
-      Choose a Scooter <br>
-      {{ form.scooter_id }}
-    </p>
-    <p>
-      Select a Hire Period <br>
-      {{ form.hire_period }}
-    </p>
-    <p>
-      Select a Start Time and Date (yyyy-mm-dd hours:minutes)<br>
-      {{ form.start_date }}
-    </p>
-    {% if card_found %}
-      <strong>Saved Card Details:</strong>
-      <p>Name on Card: {{ data.name }} <br>Card No: XXXX XXXX XXXX {{ data.last_four}} <br>Expiry: {{ data.expiry_date.month }} / {{ data.expiry_date.year }}</p>
-    {% endif %}
-    <p><input type="submit" value="Go to Payment"></p>
-  </form>
+<div class="row d-flex justify-content-center">
+  <div class="col-md-auto">
+    <!-- row for header -->
+    <div class="row p-3">
+      <h3 class="fw-normal text-nowrap">Make a Booking</h3>
 
-  <script>
-    let location_select = document.getElementById('location_id');
-    let scooter_select = document.getElementById('scooter_id');
+      <!-- row for form contents -->
+      <div class="row p-3">
+        <form  method="post" name="bookingform">
+          {{ form.csrf_token }}
+          {{ form.hidden_tag() }}
 
-    location_select.onchange = function() {
-      location_id = location_select.value;
+          <div class="row pt-3 flex-nowrap">
+            <div class="col pe-4">
+              <p class="text-nowrap">
+                Choose a Collection Point <br>
+                {{ form.location_id }}
+              </p>
+              <p class="text-nowrap">
+                Choose a Scooter <br>
+                {{ form.scooter_id }}
+              </p>
+              <p class="text-nowrap">
+                Select a Hire Period <br>
+                {{ form.hire_period }}
+              </p>
+            </div>
 
-      fetch('booking1/' + location_id).then(function(response) {
-        response.json().then(function(data) {
-          let optionHTML = '';
-          let count = 0;
-          for(let scooter of data.scooters) {
-            optionHTML += '<option value = "' + scooter.id + '">' + "Scooter ID: " + scooter.id + '</option>';
-            count++;
-          }
+            <div class="col-7">
+              <img src="{{ url_for('static', filename='images/Scooter.png') }}" alt="Scooter" class="p-2 img-fluid">
+            </div>
+          </div>
 
-          if(count == 0) {
-            optionHTML = '<option value = "0">No Scooters Available</option>';
-          }
+          <div class="row pt-3">
+            <p class="text-nowrap">
+              Select a Start Time and Date (yyyy-mm-dd hours:minutes)<br>
+              {{ form.start_date }}
+            </p>
+            {% if card_found %}
+              <strong class="fw-normal text-nowrap">Saved Card Details:</strong>
+              <p>Name on Card: {{ data.name }} <br>Card No: XXXX XXXX XXXX {{ data.last_four}} <br>Expiry: {{ data.expiry_date.month }} / {{ data.expiry_date.year }}</p>
+            {% endif %}
+          </div>
 
-          scooter_select.innerHTML = optionHTML;
-        });
+          <div class="row text-center pt-3">
+            <div class="col">
+              <button type="button submit"  class="btn btn-success" name="payment_button">Go to Payment</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let location_select = document.getElementById('location_id');
+  let scooter_select = document.getElementById('scooter_id');
+
+  location_select.onchange = function() {
+    location_id = location_select.value;
+
+    fetch('booking1/' + location_id).then(function(response) {
+      response.json().then(function(data) {
+        let optionHTML = '';
+        let count = 0;
+        for(let scooter of data.scooters) {
+          optionHTML += '<option value = "' + scooter.id + '">' + "Scooter ID: " + scooter.id + '</option>';
+          count++;
+        }
+
+        if(count == 0) {
+          optionHTML = '<option value = "0">No Scooters Available</option>';
+        }
+
+        scooter_select.innerHTML = optionHTML;
       });
-    }
-  </script>
+    });
+  }
+</script>
 {% endblock %}

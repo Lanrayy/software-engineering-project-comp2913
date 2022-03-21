@@ -42,7 +42,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <!-- Global nav -->
-            <li class="nav-item"><a class="nav-link" href="/info">How it Works</a></li>
+            <li class="nav-item hover-overlay"><a class="nav-link" href="/info">How it Works</a></li>
 
 
             <!-- Unregistered nav -->
@@ -55,10 +55,11 @@
             {% if current_user.is_authenticated %}
               <!-- Customer nav -->
               {% if not current_user.account_type == "employee" and not current_user.account_type == "manager" %}
-                <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
-                <li class="nav-item"><a class="nav-link" href="/booking1">Make a Booking</a></li>
-                <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
-                <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+              <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
+              <li class="nav-item"><a class="nav-link" href="/booking1">Make a Booking</a></li>
+              <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+              <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+
               {% endif %}
 
               <!-- Admin nav -->

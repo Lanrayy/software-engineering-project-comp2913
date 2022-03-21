@@ -1,8 +1,8 @@
 .nav-brand{
   font-weight: bolder;
 }
-.navbar {
-
+.nav-link {
+  color: white !important;
 }
 table {
   font-family: arial, sans-serif;
