@@ -2,7 +2,19 @@
 {% block content %}
     <!-- first row -->
     <div class="row row1">
-        <div class="col">
+        <!-- m -->
+        <div style="padding: 0px">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-success">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+        </div>
+        <div class="col-5" >
             <div class="row-1-column-1">
                     <div>
                         <h1 class="title">Reimagine comfort</h1>
@@ -14,19 +26,24 @@
                     </div>
                     </div>
         </div>
-        <div class="col">
+        <div class="col-7">
             <div>
-                <img class="main-image img-fluid" src="{{url_for('static', filename='images/lady-scooter.jpg')}}" alt="Splash">
+                <img class="main-image img-fluid float-right" src="{{url_for('static', filename='images/happy-smiling-man.png')}}" alt="Main-image">
             </div>
         </div>
     </div>
+
+
+
+
+
     
  
     <!-- second row -->
     <div class="row row2">
-        <div>
+        <div class="row-info">
             <h2 class="row-title">How .sctr works</h2>
-            <p class="row-subtitle">Join </p>
+            <p class="row-subtitle">Create your account online and you'll immediately be able to from our fleet of scooters all over Leeds. </p>
         </div>
 
         <div class="col-2">
@@ -63,33 +80,28 @@
         <div class="row-2-call-to-action">
             <a href="/info"><button type="button" class="btn btn-primary custom-button custom-button2">Find out more</button></a>
         </div>
-        
-        
-
-
     </div>
         
     <!-- third row -->
-    <div class="row">
-        <div class="col-2"></div>
-        <div class="col">
-            <div class="row3">
+    <div class="row row3">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <div class="row3-content">
                     <div>
                         <h2 class="row-title">Where are we?</h2>
                     </div>
                     <div>
-                        <p class="row-subtitle">Whether you're running late to lectures or your window shopping in the city center. We've got you covered. </h5>
-                        <p class="row-subtitle">Use the map below to find our locations near you. </p>
+                        <p class="row-subtitle">Whether you're running late to lectures or your window shopping in the city center. We've got you covered. 
+                            <br> Use the map below to find our locations. </p>
+                        <p class="row-subtitle"> </p>
                     </div>
-            
                     <div class="map">
                         <!-- MAP HERE -->
                         <iframe src="https://www.google.com/maps/d/embed?mid=1KtDebi-rELyFWD2SYbJ_qJXrftcFUD9A&hl=en&ehbc=2E312F"></iframe>
                     </div>
-            
             </div>
         </div>
-        <div class="col-2"></div>
+        <div class="col-1"></div>
     </div>
     <br><br>
     <br><br>
