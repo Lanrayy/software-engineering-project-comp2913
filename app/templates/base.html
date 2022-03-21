@@ -75,38 +75,40 @@
             {% endif %}
           </ul>
         </div>
-
       </div>
     </nav>
 
     <!-- main page container -->
     <div class="container-fluid min-vh-100">
-      <div class="row">
-        <!-- left justified content -->
-        <div class="col">
+        <div class="row">
+  
+          <!-- left justified content -->
+          <div class="col">
+            {% block left_content %}{% endblock %}
+          </div>
+  
+          <!-- center justified content -->
+          <div class="col">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-success">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+  
+            {% block content %}{% endblock %}
+          </div>
+  
+          <!-- right justified content -->
+          <div class="col">
+            {% block right_content %}{% endblock %}
+          </div>
+  
         </div>
-
-        <!-- center justified content -->
-        <div class="col">
-          {% with messages = get_flashed_messages() %}
-            {% if messages %}
-              {% for message in messages %}
-                <div class="alert alert-success">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
-
-          {% block content %}{% endblock %}
-        </div>
-
-        <!-- right justified content -->
-        <div class="col">
-        </div>
-
       </div>
-    </div>
 
     <!-- Footer -->
     <footer class="text-center text-lg-start bg-light text-muted">
