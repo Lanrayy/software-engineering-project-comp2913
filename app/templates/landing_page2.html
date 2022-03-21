@@ -1,87 +1,96 @@
 {% extends "base2.html" %}
 {% block content %}
     <!-- first row -->
-        <div class="row row1">
-          <div class="col">
-                <div class="row-1-column-1">
-                        <div>
-                            <h1 class="title">Reimagine comfort</h1>
-                            <h5 class="row-1-subtitle">...as far your wheels can take you</h5>
-                        </div>
-                        <div class="call-to-action-buttons">
-                            <a href="/register"><button type="button" class="btn btn-primary custom-button">Sign Up</button></a>
-                            <a href="/login"><button type="button" class="btn btn-primary custom-button">Log In</button></a>
-                        </div>
-                      </div>
-          </div>
-          <div class="col">
-              <div>
-                    <img class="main-image img-fluid" src="{{url_for('static', filename='images/lady-scooter.jpg')}}" alt="Splash">
-              </div>
-          </div>
+    <div class="row row1">
+        <div class="col">
+            <div class="row-1-column-1">
+                    <div>
+                        <h1 class="title">Reimagine comfort</h1>
+                        <p class="row-1-subtitle">...as far your wheels can take you</p>
+                    </div>
+                    <div class="call-to-action-buttons">
+                        <a href="/register"><button type="button" class="btn btn-primary custom-button">Sign Up</button></a>
+                        <a href="/login"><button type="button" class="btn btn-primary custom-button">Log In</button></a>
+                    </div>
+                    </div>
+        </div>
+        <div class="col">
+            <div>
+                <img class="main-image img-fluid" src="{{url_for('static', filename='images/lady-scooter.jpg')}}" alt="Splash">
+            </div>
+        </div>
+    </div>
+    
+ 
+    <!-- second row -->
+    <div class="row row2">
+        <div>
+            <h2 class="row-title">How .sctr works</h2>
+            <p class="row-subtitle">Join </p>
         </div>
 
-        <!-- second row -->
-        <div class="row">
-            <div class="">
-                <h2 class="row-title">How .sctr works</h2>
-            </div>
-            <div class="col">
+        <div class="col-2">
+        </div>
+
+        <div class="col-8 row-2-content" >
                 <div class="row-2-column">
                         <div>
                             <img class="row-2-image" src="{{url_for('static', filename='images/booking-app.png')}}" alt="Splash">
                         </div>
-                        <h2>Join in minutes</h2>
-                        <h5 class="row-2-column-description"> Create an account online and you'll be ready to immediately start booking a .sctr</h5>
+                        <h4 class="row-2-column-title">Join in minutes</h4>
+                        <p class="row-2-column-description"> Create an account online and you'll be ready to immediately start booking a .sctr</p>
                 </div>
-
-            </div>
-            <div class="col">
                 <div class="row-2-column">
-            
                         <div>
                             <img class="row-2-image" src="{{url_for('static', filename='images/booking.png')}}" alt="Splash">
                         </div>
-                        <h2>Book a scooter</h2>
-                        <h5 class="row-2-column-description">Book a .sctr any time of the day and we'll make sure its ready for your trip.</h5>
+                        <h4 class="row-2-column-title">Book a scooter</h4>
+                        <p class="row-2-column-description">Book a .sctr any time of the day and we'll make sure its ready for your trip.</p>
                     
                 </div> 
-            </div>
-            <div class="col">
                 <div class="row-2-column">
     
                     <div>
-                        <img class="row-2-image" src="{{url_for('static', filename='images/range.png')}}" alt="Splash">
+                        <img class="row-2-image img-fluid" src="{{url_for('static', filename='images/range.png')}}" alt="Splash">
                     </div>
-                    <h2>Ride off into the sunset</h2>
-                    <h5 class="row-2-column-description">...just make sure you bring back your scooter before your hire period is over.</h5>
-        
+                    <h4 class="row-2-column-title">Ride off into the sunset</h4>
+                    <p class="row-2-column-description">...just make sure you bring back your scooter before your hire period is over.</h5>
                 </div>
-            </div>
+        </div>
+        <div class="col-2">
+        </div>
+        <!-- Find out more buttons -->
+        <div class="row-2-call-to-action">
+            <a href="/info"><button type="button" class="btn btn-primary custom-button custom-button2">Find out more</button></a>
         </div>
         
-        <!-- third row -->
-        <div>
-            <div class="col">
-                <div class="row3">
-                        <div>
-                            <h2 class="row-title">Where are we?</h2>
-                        </div>
-                        <div>
-                            <h5 class="row-subtitle">Whether you're running late to lectures or your window shopping in the city center. We've got you covered. </h5>
-                            <h5 class="row-subtitle">Use the map below to find our locations near you. </h5>
-                        </div>
-                
-                        <div class="map">
-                            <!-- MAP HERE -->
-                            <iframe src="https://www.google.com/maps/d/embed?mid=1KtDebi-rELyFWD2SYbJ_qJXrftcFUD9A&hl=en&ehbc=2E312F"></iframe>
-                        </div>
-                
-                </div>
+        
 
 
+    </div>
+        
+    <!-- third row -->
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col">
+            <div class="row3">
+                    <div>
+                        <h2 class="row-title">Where are we?</h2>
+                    </div>
+                    <div>
+                        <p class="row-subtitle">Whether you're running late to lectures or your window shopping in the city center. We've got you covered. </h5>
+                        <p class="row-subtitle">Use the map below to find our locations near you. </p>
+                    </div>
+            
+                    <div class="map">
+                        <!-- MAP HERE -->
+                        <iframe src="https://www.google.com/maps/d/embed?mid=1KtDebi-rELyFWD2SYbJ_qJXrftcFUD9A&hl=en&ehbc=2E312F"></iframe>
+                    </div>
+            
             </div>
         </div>
+        <div class="col-2"></div>
+    </div>
     <br><br>
     <br><br>
 
