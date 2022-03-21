@@ -9,6 +9,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 from flask_mail import Message
 
+
+matplotlib.use('agg') # Does not connect to GUI (Fixes error of crashing sales metrics page on reload)
+
 #Unregistered user exclusive pages
 @app.route('/')
 def index():
@@ -967,6 +970,10 @@ def sales_metrics():
     plt.xlabel('Hire Period')
     plt.ylabel('Revenue (£)')
     plt.savefig('app/graphs/hireperiod.jpg')
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
 
     # Weekly income metrics
     monday_metrics = 0
@@ -1004,6 +1011,10 @@ def sales_metrics():
     plt.xlabel('Day of Week')
     plt.ylabel('Revenue (£)')
     plt.savefig('app/graphs/daily.jpg')
+    plt.figure().clear()
+    plt.close()
+    plt.cla()
+    plt.clf()
 
     return render_template('sales_metrics.html',
                             title='View Sales Metrics',
