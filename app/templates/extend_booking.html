@@ -1,37 +1,77 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Extend Your Booking</h1>
+<!-- blank margin space -->
+<br>
 
-  <h2>Booking Details</h2>
-  <table>
-    <tr>
-      <th>Date of Booking</th>
-      <th>Duration</th>
-      <th>Scooter ID</th>
-      <th>PickUp location</th>
-      <th>Status</th>
-      <th>Reference No.</th>
-    </tr>
+<div class="row d-flex justify-content-center">
+  <div class="col-md-auto">
+    <!-- row for header -->
+    <div class="row p-3 text-center">
+      <h3 class="fw-normal text-nowrap">Extend Your Booking</h3>
+    </div>
 
-    <tr>
-        <td>{{ booking.initial_date_time }}</td>
-        <td>{{booking.duration}}</td>
-        <td>SN{{booking.scooter_id}}</td>
-        <td>{{collection_points.query.filter_by(id = booking.collection_id).first().location}}</td>  <!-- show booking location-->
-        <td>{{booking.status}}</td>
-        <td>BN000{{booking.id}}</td>
-    </tr>
-  </table>
+    <!-- row for booking details heading -->
+    <div class="row text-center">
+      <h5 class="fw-normal text-nowrap">Booking Details</h5>
+    </div>
 
-  <br>
+    <!-- row for table contents -->
+    <div class="row p-3">
+      <table>
+        <tr>
+          <th>Date of Booking</th>
+          <th>Duration</th>
+          <th>Scooter ID</th>
+          <th>PickUp location</th>
+          <th>Status</th>
+          <th>Reference No.</th>
+        </tr>
 
-  <h2>Choose a Period of Hire for Extention</h2>
-  <form action="" method="post" name="extendbookingform">
-    {{ form.csrf_token }}
-    {{ form.hidden_tag() }}
-    <p>
-      {{ form.hire_period }}
-    </p>
-    <button type="button submit" class="btn btn-success">Confirm Extension</button>
-  </form>
+        <tr>
+            <td class="align-middle text-center text-nowrap">{{ booking.initial_date_time }}</td>
+            <td class="align-middle text-center text-nowrap">{{booking.duration}}</td>
+            <td class="align-middle text-center text-nowrap">SN{{booking.scooter_id}}</td>
+            <td class="align-middle text-center text-nowrap">{{collection_points.query.filter_by(id = booking.collection_id).first().location}}</td>  <!-- show booking location-->
+            <td class="align-middle text-center text-nowrap">{{booking.status}}</td>
+            <td class="align-middle text-center text-nowrap">BN000{{booking.id}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- row -->
+    <div class="row p-3 text-center">
+
+    </div>
+
+    <!-- row for form contents -->
+    <div class="row p-3 text-center">
+      <div class="col text-end">
+        <h5 class="fw-normal text-nowrap">Choose a Period of Hire for Extention:</h5>
+      </div>
+
+      <div class="col text-start">
+        <form action="" method="post" name="extendbookingform">
+          {{ form.csrf_token }}
+          {{ form.hidden_tag() }}
+          <p>
+            {{ form.hire_period }}
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <div class="row text-center pt-3">
+      <div class="col text-end">
+        <a href="/profile"><button type="button submit" class="btn btn-danger">Cancel Extention</button></a>
+      </div>
+
+      <div class="col text-start">
+        <form action="" method="post" name="cancelbookingform">
+          <button type="button submit" class="btn btn-success">Extend Booking</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
 {% endblock %}

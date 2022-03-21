@@ -1,56 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
-  <h2>Booking Made, Happy to Help!</h2>
+<!-- blank margin space -->
+<br>
 
-  <h4>Booking Details</h4>
-  <div class="">
-    <h5>Date of Booking Start</h5>
-    <p>
-      {{ booking.initial_date_time }}
-    </p>
-  </div>
+<div class="row d-flex justify-content-center">
+  <div class="col-md-auto">
+    <!-- row for header -->
+    <div class="row p-3 text-center">
+      <h3 class="fw-normal text-nowrap">Booking Made, Happy to Help!</h3>
+    </div>
 
-  <div class="">
-    <h5>Date of Booking End</h5>
-    <p>
-      {{ booking.final_date_time }}
-    </p>
-  </div>
+    <!-- row for scooter details header -->
+    <div class="row p-3 text-center">
+      <h5 class="fw-normal text-nowrap">Booking Details</h5>
+    </div>
 
-  <div class="">
-    <h5>Hire period</h5>
-    <p>
-      {{ session.get('booking_period', None) }}
-    </p>
-  </div>
+    <!-- row for table contents -->
+    <div class="row p-3">
+      <table class="table">
+        <thead>
+          <th class="align-middle text-center text-nowrap">Booking Start Datetime</th>
+          <th class="align-middle text-center text-nowrap">Booking End Datetime</th>
+          <th class="align-middle text-center text-nowrap">Duration</th>
+          <th class="align-middle text-center text-nowrap">Scooter ID</th>
+          <th class="align-middle text-center text-nowrap">Pick Up Location</th>
+          <th class="align-middle text-center text-nowrap">Status</th>
+          <th class="align-middle text-center text-nowrap">Reference No.</th>
+        </thead>
 
-  <div class="">
-    <h5>Scooter ID</h5>
-    <p>
-      SN
-      {{ booking.scooter_id }}
-    </p>
+        <tr>
+            <td class="align-middle text-center text-nowrap">{{ booking.initial_date_time }}</td>
+            <td class="align-middle text-center text-nowrap">{{ booking.final_date_time }}</td>
+            <td class="align-middle text-center text-nowrap">{{booking.duration}}</td>
+            <td class="align-middle text-center text-nowrap">SN{{booking.scooter_id}}</td>
+            <td class="align-middle text-center text-nowrap">{{location}}</td>  <!-- show booking location-->
+            <td class="align-middle text-center text-nowrap">{{booking.status}}</td>
+            <td class="align-middle text-center text-nowrap">BN000{{booking.id}}</td>
+        </tr>
+      </table>
+    </div>
   </div>
-
-  <div class="">
-    <h5>Pick-Up Location</h5>
-    <p>
-      {{ location }}
-    </p>
-  </div>
-
-  <div class="">
-    <h5>Status</h5>
-    <p>
-      {{ booking.status }}
-    </p>
-  </div>
-
-  <div class="">
-    <h5>Reference No.</h5>
-    <p>
-      BN
-      {{ booking.id }}
-    </p>
-  </div>
+</div>
 {% endblock %}

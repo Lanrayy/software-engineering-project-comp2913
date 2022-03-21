@@ -1,25 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Feedback Reports</h1>
-  <h2>Report Details</h2>
+<!-- blank margin space -->
+<br>
 
-  <!-- Feedback goes here -->
-  <table id="feedback" class="table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Message</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for rec in recs %}
-        <tr>
-          <td><p>{{ rec.id }}</p></td>
-          <td><p>{{ rec.message }}</p></td>
-          <td><a href="/edit_feedback/{{rec.id}}"><button type="button">Edit</button></a></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="row d-flex justify-content-center">
+  <div class="col-md-auto">
+    <!-- row for header -->
+    <div class="row p-3">
+      <h3 class="fw-normal text-nowrap">Feedback Reports</h3>
+    </div>
+
+    <!-- row for displaying feedback details -->
+    <div class="row p-3 text-center">
+      <h5 class="fw-normal text-nowrap">Report Details</h5>
+    </div>
+
+    <!-- row for table contents -->
+    <div class="row p-3">
+      <table id="feedback" class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Message</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rec in recs %}
+            <tr>
+              <th scope="row" class="align-middle">{{rec.id}}</th>
+              <td class="align-middle">{{ rec.message }}</td>
+              <td class="align-middle"><a href="/edit_feedback/{{rec.id}}"><button type="button submit"  class="btn btn-success" name="edit_button"  value="{{ rec.id }}">Edit</button></a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 {% endblock %}

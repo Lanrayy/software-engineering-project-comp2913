@@ -1,68 +1,85 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>View Scooter Details and Availability</h1>
-  <h2>Scooter Details</h2>
-  <!-- Scooters go here -->
-  <form action="" method="post" name="configurescootersform">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">ID</th>
-          <th scope="col">Availability</th>
-          <th scope="col">Current Location</th>
-        </tr>
-      </thead>
-      {% for rec in rec %}
+<!-- blank margin space -->
+<br>
 
-      <tr>
-      <th scope="row">
-        {{rec.id}}
-      </th>
+<div class="row d-flex justify-content-center">
+  <div class="col-md-auto">
+    <!-- row for header -->
+    <div class="row p-3">
+      <h3 class="fw-normal text-nowrap">View Scooter Details and Availability</h3>
+    </div>
 
-      <td>
-        {% if rec.availability == 1 %}
-          <p>Available </p>
-        {% endif %}
+    <!-- row for scooter details header -->
+    <div class="row p-3 text-center">
+      <h5 class="fw-normal text-nowrap">Scooter Details</h5>
+    </div>
 
-        {% if rec.availability == 2 %}
-          <p>Unavailable </p>
-        {% endif %}
-      </td>
+    <!-- row for form contents -->
+    <div class="row p-3">
+      <form action="" method="post" name="configurescootersform">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Availability</th>
+              <th scope="col">Current Location</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          {% for rec in rec %}
 
-      <td>
-        {% if rec.collection_id == 1%}
-            <p>Trinity Centre</p>        
-        {% endif%}
+          <tr>
+            <th scope="row" class="align-middle">
+              {{rec.id}}
+            </th>
 
-        {% if rec.collection_id == 2%}
-          <p>Train Station</p>        
-        {% endif%}
+            <td class="align-middle">
+              {% if rec.availability == 1 %}
+                Available
+              {% endif %}
 
-        {% if rec.collection_id == 3%}
-          <p> Merrion Centre</p>        
-        {% endif%}
+              {% if rec.availability == 2 %}
+                Unavailable
+              {% endif %}
+            </td>
 
-        {% if rec.collection_id == 4%}
-          <p> LRI Hospital</p>        
-        {% endif%}
+            <td class="align-middle">
+              {% if rec.collection_id == 1%}
+                Trinity Centre
+              {% endif%}
 
-        {% if rec.collection_id == 5%}
-          <p> UoL Edge Sports Centre</p>        
-        {% endif%}      
-      </td>
+              {% if rec.collection_id == 2%}
+                Train Station
+              {% endif%}
 
-      <td>
-        <!-- <p type="hidden"> </p> -->
-        <button type="button submit"  class="btn btn-success" name="edit_button"  value="{{ rec.id }}">Edit</button>
-        <!-- <button type="button submit" class="btn btn-success">Submit</button> -->
+              {% if rec.collection_id == 3%}
+                Merrion Centre
+              {% endif%}
 
-      </td>
+              {% if rec.collection_id == 4%}
+                LRI Hospital
+              {% endif%}
 
-      </tr>
-      {% endfor %}
-    </table>
-  </form>
+              {% if rec.collection_id == 5%}
+                UoL Edge Sports Centre
+              {% endif%}
+            </td>
 
-  <!-- add new scooter button -->
-  <a href="/add_scooter"><button type="button" class="btn btn-primary">Add New Scooter</button></a>
+            <td>
+              <!-- <p type="hidden"> </p> -->
+              <button type="button submit"  class="btn btn-success" name="edit_button"  value="{{ rec.id }}">Edit</button>
+              <!-- <button type="button submit" class="btn btn-success">Submit</button> -->
+
+            </td>
+
+          </tr>
+          {% endfor %}
+        </table>
+      </form>
+
+      <a href="/add_scooter"><button type="button" class="btn btn-primary">Add New Scooter</button></a>
+    </div>
+  </div>
+</div>
 {% endblock %}

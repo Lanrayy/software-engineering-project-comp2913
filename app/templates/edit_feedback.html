@@ -1,27 +1,48 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Feedback Details</h1>
+<!-- blank margin space -->
+<br>
 
-  <form action="" method="post" name="editfeedbackform">
-    {{ form.csrf_token }}
-    <table id="feedback" class="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Message</th>
-          <th>Toggle Priority</th>
-          <th>Resolve</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><p>{{ rec.id }}</p></td>
-          <td><p>{{ rec.message }}</p></td>
-          <td><p>{{ form.priority }}</p></td>
-          <td><p>{{ form.resolve }}</p></td>
-        </tr>
-      </tbody>
-    </table>
-    <p><input type="submit" value="Submit"></p>
-  </form>
+<div class="row d-flex justify-content-center">
+  <div class="col-md-auto">
+    <!-- row for header -->
+    <div class="row p-3">
+      <h3 class="fw-normal text-nowrap">Feedback Details</h3>
+    </div>
+
+
+    <form action="" method="post" name="editfeedbackform">
+      {{ form.csrf_token }}
+      <!-- row for table contents -->
+      <div class="row p-3">
+        <table id="feedback" class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Message</th>
+              <th>Toggle Priority</th>
+              <th>Resolve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row" class="align-middle">{{ rec.id }}</th>
+              <td class="align-middle">{{ rec.message }}</td>
+              <td class="align-middle text-center">{{ form.priority }}</td>
+              <td class="align-middle text-center">{{ form.resolve }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- submit button -->
+      <div class="row text-center">
+        <div class="col">
+          <button type="button submit" class="btn btn-success mt-3" value="Submit">Confirm Changes</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
 {% endblock %}
