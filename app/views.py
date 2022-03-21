@@ -1,3 +1,4 @@
+from cmath import log
 from flask import render_template, flash, request, redirect, url_for, abort, make_response, session, jsonify
 from app import app, db, bcrypt, models, login_manager, mail
 from .forms import LoginForm, SignUpForm, AdminBookingForm, UserBookingForm, CardForm, AddScooterForm, ConfigureScooterForm, FeedbackForm, EditFeedbackForm, PricesForm, ExtendBookingForm
@@ -887,6 +888,8 @@ def cancel_booking():
                                 title='Cancel Booking',
                                 booking=booking,
                                 collection_points=collection_points)
+    except Exception as e:
+        redirectError(e)
 
 
 #intermediary page for extending booking
