@@ -53,12 +53,37 @@ def organise_scooters():
 
 matplotlib.use('agg') # Does not connect to GUI (Fixes error of crashing sales metrics page on reload)
 
+# obtain additional log info
+class LogFormatter(logging.Formatter):
+    def format(self, record):
+        # record.url = request.path
+        record.url = request.url 
+
+        record.address = socket.gethostbyname(socket.gethostname())
+        return super(LogFormatter, self).format(record)
+
+# create logger
+logger = logging.getLogger("logger")
+logger.setLevel(logging.INFO)
+# and a file handler for the logger to write to
+fh = logging.FileHandler('app.log')
+# fh = logging.F()
+fh.setLevel(logging.INFO)
+# formatter for layout in log file
+FORMAT = '%(asctime)s %(address)s %(url)-40s %(levelname)s %(message)s'
+formatter = LogFormatter(FORMAT)
+# connect formatter to handler
+fh.setFormatter(formatter) 
+# then add handler to the logger
+logger.addHandler(fh) 
+
 # prints to the log file each time a client visits a page
 def logPage():
-    try:
-        logger.info("(User " + str(current_user.id) + ")")
-    except:
+    if current_user.is_anonymous:
         logger.info("(Anonymous user)")
+    else:
+        logger.info("(User " + str(current_user.id) + ")")
+
 
 # redirect to the corresponding pages upon error
 def redirectError(exception):
@@ -68,29 +93,6 @@ def redirectError(exception):
         return redirect('/user_dashboard')
     except:
         return redirect('/')
-
-# obtain additional log info
-class LogFormatter(logging.Formatter):
-    def format(self, record):
-        # record.url = request.path
-        record.url = request.url 
-
-        record.address = socket.gethostbyname(socket.gethostname())
-
-
-# create logger
-logger = logging.getLogger("main_logger")
-logger.setLevel(logging.INFO)
-# and a file handler for the logger to write to
-fh = logging.FileHandler('app.log')
-fh.setLevel(logging.INFO)
-# formatter for layout in log file
-FORMAT = '%(asctime)s %(address)s %(url)-40s %(levelname)s %(message)s'
-formatter = LogFormatter(FORMAT)
-# connect formatter to handler
-fh.setFormatter(formatter) 
-# then add handler to the logger
-logger.addHandler(fh) 
 
 
 #Unregistered user exclusive pages
@@ -175,155 +177,163 @@ def login():
 # card route - to be integrated with the bookings page
 @app.route('/card', methods=['GET', 'POST'])
 def card():
-    logPage()
-    app.logger.info("card route request")
-    form = CardForm()
-    data = models.card_details.query.filter_by(user_id=current_user.id).all()
+    try:
 
-    if data: # if the user already has card details saved
-        card_found = True
-    else:
-        card_found = False
+        logPage()
+        app.logger.info("card route request")
+        form = CardForm()
+        data = models.card_details.query.filter_by(user_id=current_user.id).all()
 
-    if request.method == 'POST':
-        #if the card details check out
-        if form.validate_on_submit():
-            app.logger.info("Card form successfully submitted")
-            if form.save_card_details.data: # if the user want to save the card details,  save information into database
-                hashed_card_num = bcrypt.generate_password_hash(form.card_number.data) # hash the card number
-                hashed_cvv = bcrypt.generate_password_hash(form.cvv.data)
-                last_four = form.card_number.data[12:] # save the last four digits of the card number
-                p = models.card_details(name = form.name.data,
-                                        cardnumber = hashed_card_num,
-                                        last_four = last_four,
-                                        expiry_date = form.expiry.data,
-                                        cvv = hashed_cvv,
-                                        user_id = current_user.id)
-                db.session.add(p)
-                db.session.commit()
-                flash("Card details saved")
-                app.logger.info("card details saved")
+        if data: # if the user already has card details saved
+            card_found = True
+        else:
+            card_found = False
 
-            #initialise booking
-            booking = 0
-
-            #check if we were booking or extending
-            if session.get('extending') != None:
-                if session.pop('extending') == "True":
-                    #we are extending, make sure to redirect to profile and send an email about the Extension
-                    booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
-
-                    #get our variables from the session
-                    hours = session.get('extend_hours', None)
-                    cost = session.get('extend_cost', None)
-
-                    #extend the booking pointed to by the 'booking_id' in the session, and add to the cost
-                    booking.duration = booking.duration + hours
-                    booking.cost = booking.cost + cost
-                    booking.final_date_time = booking.final_date_time + timedelta(hours = hours)
-
-                    #add a new transaction, with the date for the transaction set as now
-                    new_transaction = models.transactions(hire_period = hours,
-                                                        booking_time = datetime.utcnow(),
-                                                        transaction_cost = cost,
-                                                        user_id = current_user.id,
-                                                        booking_id = booking.id)
-                    db.session.add(new_transaction)
+        if request.method == 'POST':
+            #if the card details check out
+            if form.validate_on_submit():
+                app.logger.info("Card form successfully submitted")
+                if form.save_card_details.data: # if the user want to save the card details,  save information into database
+                    hashed_card_num = bcrypt.generate_password_hash(form.card_number.data) # hash the card number
+                    hashed_cvv = bcrypt.generate_password_hash(form.cvv.data)
+                    last_four = form.card_number.data[12:] # save the last four digits of the card number
+                    p = models.card_details(name = form.name.data,
+                                            cardnumber = hashed_card_num,
+                                            last_four = last_four,
+                                            expiry_date = form.expiry.data,
+                                            cvv = hashed_cvv,
+                                            user_id = current_user.id)
+                    db.session.add(p)
                     db.session.commit()
-                    app.logger.info("new transaction added to transactions table")
+                    flash("Card details saved")
+                    app.logger.info("card details saved")
 
-                    #write the email message
-                    msg = Message('Booking Extension Confirmation',
+                #initialise booking
+                booking = 0
+
+                #check if we were booking or extending
+                if session.get('extending') != None:
+                    if session.pop('extending') == "True":
+                        #we are extending, make sure to redirect to profile and send an email about the Extension
+                        booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
+
+                        #get our variables from the session
+                        hours = session.get('extend_hours', None)
+                        cost = session.get('extend_cost', None)
+
+                        #extend the booking pointed to by the 'booking_id' in the session, and add to the cost
+                        booking.duration = booking.duration + hours
+                        booking.cost = booking.cost + cost
+                        booking.final_date_time = booking.final_date_time + timedelta(hours = hours)
+
+                        #add a new transaction, with the date for the transaction set as now
+                        new_transaction = models.transactions(hire_period = hours,
+                                                            booking_time = datetime.utcnow(),
+                                                            transaction_cost = cost,
+                                                            user_id = current_user.id,
+                                                            booking_id = booking.id)
+                        db.session.add(new_transaction)
+                        db.session.commit()
+                        app.logger.info("new transaction added to transactions table")
+
+                        #write the email message
+                        msg = Message('Booking Extension Confirmation',
+                                        sender='scootersleeds@gmail.com',
+                                        recipients=[current_user.email])
+
+                        msg.body = (f'Thank You, your booking extension has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+                        '\nEnd Date and Time: ' + str(booking.final_date_time) +
+                        '\nScooter ID: ' + str(booking.scooter_id) +
+                        '\nReference Number: ' + str(booking.id))
+                        mail.send(msg)
+                        app.logger.info("email sent to user successfully")
+
+                        flash("Booking Extension Successful!")
+                        app.logger.info("booking extension successful!")
+
+                        return redirect("/profile")
+                else:
+                    # not extending, so booking
+                    # if admin is is making a booking, the booking_user_id = 0
+                    if session.get('booking_user_id') == 0:
+                        #admin is making the booking
+                        app.logger.info("admin user is making a booking on behalf of a customer")
+                        booking = models.booking(duration = session.get('booking_duration', None),
+                                                status= session.get('booking_status', None),
+                                                cost = session.get('booking_cost', None),
+                                                initial_date_time = session.get('booking_initial', None),
+                                                final_date_time = session.get('booking_final', None),
+                                                email = session.get('booking_email', None),
+                                                scooter_id = session.get('booking_scooter_id', None),
+                                                collection_id = session.get('booking_collection_id', None))
+                        db.session.add(booking)
+
+                        # add new transaction to the transaction table- used on the metrics page, no user id
+                        new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
+                                                            booking_time = datetime.utcnow(),
+                                                            transaction_cost = session.get('booking_cost', None),
+                                                            booking_id = booking.id,
+                                                            )
+                        db.session.add(new_transaction)
+                        db.session.commit()
+                        #set the specified email to recipient
+                        recipients=[session.get('booking_email', None)]
+                    else:
+                        #user is making the booking
+                        app.logger.info("customer is making a booking")
+                        booking = models.booking(duration = session.get('booking_duration', None),
+                                                status= session.get('booking_status', None),
+                                                cost = session.get('booking_cost', None),
+                                                initial_date_time = session.get('booking_initial', None),
+                                                final_date_time = session.get('booking_final', None),
+                                                email = session.get('booking_email', None),
+                                                user_id = session.get('booking_user_id', None),
+                                                scooter_id = session.get('booking_scooter_id', None),
+                                                collection_id = session.get('booking_collection_id', None))
+                        db.session.add(booking)
+                        db.session.commit()
+
+                        # add new transaction to the transaction table- used on the metrics page, with user id
+                        new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
+                                                            booking_time = datetime.utcnow(),
+                                                            transaction_cost = session.get('booking_cost', None),
+                                                            user_id = session.get('booking_user_id', None),
+                                                            booking_id = booking.id)
+                        db.session.add(new_transaction)
+                        app.logger.info("new transaction added to transaction table")
+                        #set user to recipient
+                        recipients=[current_user.email]
+
+                    db.session.commit()
+
+                    msg = Message('Booking Confirmation',
                                     sender='scootersleeds@gmail.com',
-                                    recipients=[current_user.email])
+                                    recipients=recipients)
 
-                    msg.body = (f'Thank You, your booking extension has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
+                    msg.body = (f'Thank You, your booking has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
                     '\nEnd Date and Time: ' + str(booking.final_date_time) +
                     '\nScooter ID: ' + str(booking.scooter_id) +
                     '\nReference Number: ' + str(booking.id))
                     mail.send(msg)
-                    app.logger.info("email sent to user successfully")
 
-                    flash("Booking Extension Successful!")
-                    app.logger.info("booking extension successful!")
+                    session['booking_id'] = booking.id
+                    flash("Booking Successful!")
+                    app.logger.info("booking successfully created")
 
-                    return redirect("/profile")
-            else:
-                # not extending, so booking
-                # if admin is is making a booking, the booking_user_id = 0
-                if session.get('booking_user_id') == 0:
-                    #admin is making the booking
-                    app.logger.info("admin user is making a booking on behalf of a customer")
-                    booking = models.booking(duration = session.get('booking_duration', None),
-                                             status= session.get('booking_status', None),
-                                             cost = session.get('booking_cost', None),
-                                             initial_date_time = session.get('booking_initial', None),
-                                             final_date_time = session.get('booking_final', None),
-                                             email = session.get('booking_email', None),
-                                             scooter_id = session.get('booking_scooter_id', None),
-                                             collection_id = session.get('booking_collection_id', None))
-                    db.session.add(booking)
+                    return redirect("/booking2") #send to booking confirmation
 
-                    # add new transaction to the transaction table- used on the metrics page, no user id
-                    new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
-                                                        booking_time = datetime.utcnow(),
-                                                        transaction_cost = session.get('booking_cost', None),
-                                                        booking_id = booking.id,
-                                                        )
-                    db.session.add(new_transaction)
-                    db.session.commit()
-                    #set the specified email to recipient
-                    recipients=[session.get('booking_email', None)]
-                else:
-                    #user is making the booking
-                    app.logger.info("customer is making a booking")
-                    booking = models.booking(duration = session.get('booking_duration', None),
-                                             status= session.get('booking_status', None),
-                                             cost = session.get('booking_cost', None),
-                                             initial_date_time = session.get('booking_initial', None),
-                                             final_date_time = session.get('booking_final', None),
-                                             email = session.get('booking_email', None),
-                                             user_id = session.get('booking_user_id', None),
-                                             scooter_id = session.get('booking_scooter_id', None),
-                                             collection_id = session.get('booking_collection_id', None))
-                    db.session.add(booking)
-                    db.session.commit()
-
-                    # add new transaction to the transaction table- used on the metrics page, with user id
-                    new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
-                                                        booking_time = datetime.utcnow(),
-                                                        transaction_cost = session.get('booking_cost', None),
-                                                        user_id = session.get('booking_user_id', None),
-                                                        booking_id = booking.id)
-                    db.session.add(new_transaction)
-                    app.logger.info("new transaction added to transaction table")
-                    #set user to recipient
-                    recipients=[current_user.email]
-
-                db.session.commit()
-
-                msg = Message('Booking Confirmation',
-                                sender='scootersleeds@gmail.com',
-                                recipients=recipients)
-
-                msg.body = (f'Thank You, your booking has been confirmed. \nStart Date and Time: ' + str(booking.initial_date_time) +
-                '\nEnd Date and Time: ' + str(booking.final_date_time) +
-                '\nScooter ID: ' + str(booking.scooter_id) +
-                '\nReference Number: ' + str(booking.id))
-                mail.send(msg)
-
-                session['booking_id'] = booking.id
-                flash("Booking Successful!")
-                app.logger.info("booking successfully created")
-
-                return redirect("/booking2") #send to booking confirmation
-
-    return render_template('card.html',
-                           title='Card',
-                           form=form,
-                           data=data,
-                           card_found = card_found)
-
+        return render_template('card.html',
+                            title='Card',
+                            form=form,
+                            data=data,
+                            card_found = card_found)
+    except Exception as e:
+        logger.error(e)
+        if current_user.is_anonymous:
+            return redirect('/')
+            # str(current_user.id)
+        else:
+            return redirect('/user_dashboard')
 
 # only logout if user is logged in
 @app.route('/logout')
@@ -349,7 +359,12 @@ def user_dashboard():
                                 name=current_user.name,
                                 title='User Dashboard')
     except Exception as e:
-        redirectError(e)
+        logger.error(e)
+        if current_user.is_anonymous:
+            return redirect('/')
+            # str(current_user.id)
+        else:
+            return redirect('/user_dashboard')
 
 
 @app.route('/pricing')
@@ -376,6 +391,7 @@ def delete(id):
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     try:
+        logPage()
         #clean up bookings table
         organise_bookings()
 
@@ -400,7 +416,12 @@ def profile():
                                 booking = bookings,
                                 location = locations)
     except Exception as e:
-        redirectError(e)
+        logger.error(e)
+        if current_user.is_anonymous:
+            return redirect('/')
+            # str(current_user.id)
+        else:
+            return redirect('/user_dashboard')
 
 
 @app.route('/send_feedback', methods=('GET', 'POST'))
@@ -431,7 +452,7 @@ def locations():
 @app.route('/booking1', methods=['GET', 'POST'])
 def booking1():
     try:
-
+        logPage()
         #clean up bookings table
         organise_bookings()
         #current user is a customer
@@ -654,6 +675,8 @@ def booking1():
 
                     flash("Booking Successful!")
                     logger.info("(User " + str(current_user.id) + "): Booking " + str(booking.id) + " created")
+                    print("booking made")
+                    
                     return redirect("/booking2") #send to booking confirmation
                 else:
                     #user does not have existing
@@ -809,7 +832,12 @@ def booking1():
                                     title='Choose a Location',
                                     form = form)
     except Exception as e:
-        redirectError(e)
+        logger.error(e)
+        if current_user.is_anonymous:
+            return redirect('/')
+            # str(current_user.id)
+        else:
+            return redirect('/user_dashboard')
 
 @app.route('/booking1/<location_id>')
 def booking1_location(location_id):
@@ -828,7 +856,7 @@ def booking1_location(location_id):
 @app.route('/booking2')
 def booking2():
     try:
-
+        logPage()
         booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
 
         location = models.collection_point.query.filter_by(id = booking.collection_id).first().location
@@ -847,13 +875,17 @@ def booking2():
                                 booking=booking,
                                 location=location)
     except Exception as e:
-        redirectError(e)
+        logger.error(e)
+        if current_user.is_anonymous:
+            return redirect('/')
+            # str(current_user.id)
+        else:
+            return redirect('/user_dashboard')
 
 
 #intermediary page for cancelling booking
 @app.route('/cancel_this_booking/<booking_id>')
 def cancel_this_booking(booking_id):
-    logPage()
     session['booking_id'] = booking_id
 
     return redirect(url_for('cancel_booking'))
@@ -890,7 +922,12 @@ def cancel_booking():
                                 booking=booking,
                                 collection_points=collection_points)
     except Exception as e:
-        redirectError(e)
+        logger.error(e)
+        if current_user.is_anonymous:
+            return redirect('/')
+            # str(current_user.id)
+        else:
+            return redirect('/user_dashboard')
 
 
 #intermediary page for extending booking
@@ -994,7 +1031,12 @@ def extend_booking():
                                 form=form,
                                 collection_points=collection_points)
     except Exception as e:
-        redirectError(e)
+        logger.error(e)
+        if current_user.is_anonymous:
+            return redirect('/')
+            # str(current_user.id)
+        else:
+            return redirect('/user_dashboard')
 
 #Admin exclusive pages
 @app.route('/admin_dashboard')
@@ -1007,7 +1049,12 @@ def admin_dashboard():
                                 name=current_user.name,
                                 title='Admin Dashboard')
     except Exception as e:
-        redirectError(e)
+        logger.error(e)
+        if current_user.is_anonymous:
+            return redirect('/')
+            # str(current_user.id)
+        else:
+            return redirect('/user_dashboard')
 
 
 @app.route('/review_feedback', methods=('GET', 'POST'))
@@ -1022,7 +1069,12 @@ def review_feedback():
         return render_template('review_feedback.html',
                                 title='Review Customer Feedback', recs=recs)
     except Exception as e:
-        redirectError(e)
+        logger.error(e)
+        if current_user.is_anonymous:
+            return redirect('/')
+            # str(current_user.id)
+        else:
+            return redirect('/user_dashboard')
 
 @app.route('/edit_feedback/<id>', methods=('GET', 'POST'))
 def edit_feedback(id):
