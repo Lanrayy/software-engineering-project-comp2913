@@ -1,32 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
+
+
+<!-- HELLO, USER -->
+<div class="user_details">
   <h1>
     Hiii,
     {{ name }}!!
   </h1>
+</div>
 
   <br><br>
 
+<!-- USER DETAILS -->
   <body>
-  <h3>
-    User Details
-  </h3>
+  <div class="title_left">
+    <h3>
+      User Details
+    </h3>
+  </div>
 
-  <table>
-      <tr>
-        <th>Email</th>
-        <th>User Type</th>
-      </tr>
+  <div class="user_details_table">
+    <table>
+        <tr>
+          <th>Email</th>
+          <th>User Type</th>
+        </tr>
 
-      <tr>
-        <td>{{email}}</td>
-        <td>{{account_type}}</td>
-      </tr>
-
-  </table>
+        <tr>
+          <td>{{email}}</td>
+          <td>{{account_type}}</td>
+        </tr>
+    </table>
+  </div>
 
   <br><br>
 
+<!-- CARD DETAILS -->
 
   <h3>Card Details</h3>
   
@@ -51,7 +61,7 @@
   {% endif %}
 
   
-
+  <!-- BOOKING DETAILS -->
   <br><br>
 
   <h3>Booking History</h3>

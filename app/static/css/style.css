@@ -18,3 +18,29 @@ td, th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+.user_details{
+  margin-top: 50px;
+  text-align: center;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif'
+}
+
+.title_left{
+  text-align: left;
+  padding-left: 80px;
+}
+
+.user_details_table{
+  width: 50%;
+}
+
+.card_details_table{
+  width: 80%;
+}
+
+.booking_table{
+  width: 100%;
+}
+
+
+
