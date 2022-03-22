@@ -55,7 +55,7 @@ matplotlib.use('agg') # Does not connect to GUI (Fixes error of crashing sales m
 #Unregistered user exclusive pages
 @app.route('/')
 def index():
-    return render_template('landing_page2.html',
+    return render_template('landing_page.html',
                             title='Home')
 
 
