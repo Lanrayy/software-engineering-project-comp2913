@@ -56,9 +56,7 @@ matplotlib.use('agg') # Does not connect to GUI (Fixes error of crashing sales m
 # obtain additional log info
 class LogFormatter(logging.Formatter):
     def format(self, record):
-        # record.url = request.path
         record.url = request.url 
-
         record.address = socket.gethostbyname(socket.gethostname())
         return super(LogFormatter, self).format(record)
 
@@ -71,6 +69,7 @@ fh = logging.FileHandler('app.log')
 fh.setLevel(logging.INFO)
 # formatter for layout in log file
 FORMAT = '%(asctime)s %(address)s %(url)-40s %(levelname)s %(message)s'
+
 formatter = LogFormatter(FORMAT)
 # connect formatter to handler
 fh.setFormatter(formatter) 
@@ -962,8 +961,6 @@ def extend_booking():
                 cost = 10.00
                 hours = 1
 
-
-
             #check if user has saved card details
             exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
             if(exists):
@@ -1122,7 +1119,7 @@ def add_scooter():
         db.session.add(u)    # add scooter to db
         db.session.commit()     # commit scooter to db
         now = str(datetime.now())
-        logger.info("Admin has added a scooter with ID: "+ u.id + "at "+ now)
+        logger.info("Admin has added a scooter with ID: "+ str(u.id))
     return render_template('add_scooter.html',
                             title='Add New Scooter', form=form)
 
@@ -1145,9 +1142,8 @@ def configure_scooter():
             scooter.collection_id = request.form.get("location_id")
             db.session.commit()
             # print(models.scooter.query.all())
-            now = str(datetime.now())
-            logger.info("Scooter configured:  "+ scooter.id +" " + scooter.availability + " "+ scooter.collection_id + " at " + now)
             flash(f'Scooter Details Updated', 'success')
+            logger.info("Scooter " + str(scooter.id) + " configured - Availability: " + str(scooter.availability) + ", Location ID: " + str(scooter.collection_id))
         return redirect(url_for('view_scooters'))
     return render_template('configure_scooter.html',
                             title='Configure A Scooter', form=form)
@@ -1176,13 +1172,11 @@ def configure_costs():
 
         if dur:
             dur.price = form.price.data
-            now = str(datetime.now())
-            logger.info("Scooter costs configured:  "+ dur.id +" " +  dur.price + " at " + now)
-
             flash("Price updated")
+            logger.info("Scooter costs configured: " + str(dur.id) + " set to " +  str(dur.price))
         else:
-            logger.info("Scooter costs configuration failed at " + now)
             flash("Error price not updated")
+            logger.info("Scooter costs configuration failed")
 
         db.session.commit()     # commit scooter to db
     return render_template('configure_costs.html',
@@ -1192,7 +1186,6 @@ def configure_costs():
 @app.route('/sales_metrics')
 def sales_metrics():
     logPage()
-    logger.info("sales metrics route request")
 
     one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
@@ -1279,7 +1272,7 @@ def sales_metrics():
     plt.cla()
     plt.clf()
 
-    logger.info("sales metrics successfully created")
+    logger.info("Sales metrics successfully created")
 
     return render_template('sales_metrics.html',
                             title='View Sales Metrics',
