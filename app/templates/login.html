@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Login</h1>
+  <br>
+<h1>Login</h1>
+<br>
   <form action="" method="post" name="loginform">
       {{ form.hidden_tag() }}
+      
       <p>
         Email <br>
-        {{ form.email }}
+        {{ form.email(class="form-control form-control-lg") }}
         {% if form.email.errors %}
+      
         {% for error in form.email.errors %}
           <span>{{ error }}</span>
         {% endfor %}
@@ -14,7 +18,7 @@
       </p>
       <p>
         Password <br>
-        {{ form.password }}
+        {{ form.password(class="form-control form-control-lg") }}
         {% if form.password.errors %}
         {% for error in form.password.errors %}
           <span>{{ error }}</span>
@@ -25,6 +29,6 @@
         Remember details
         {{ form.remember }}
       </p>
-      <p><input type="submit" value="Login"></p>
+      <p><input type="submit" class="btn btn-success btn-block col-12" value="Login"></p>
   </form>
 {% endblock %}
