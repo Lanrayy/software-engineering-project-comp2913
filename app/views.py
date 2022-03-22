@@ -158,7 +158,9 @@ def login():
                 else:
                     return redirect(url_for('user_dashboard'))
             else:
-                logger.info(u.email + " unsuccesful login")
+                now = str(datetime.now())
+                app.logger.info(u.email + " unsuccesfull login at "+ now)
+                flash(f'Login unsuccessful. Please check email and password', 'error')
         else:
             logger.info("Unsuccesful login")
 
