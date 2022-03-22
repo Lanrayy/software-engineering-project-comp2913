@@ -1,3 +1,4 @@
+import email
 import os
 from time import time
 import unittest
@@ -66,8 +67,6 @@ class TestCase(unittest.TestCase):
         db.session.add(senior)
         db.session.commit()
     
-
-
     # Tests
 
     # Ensure landing page loads correctly
@@ -101,6 +100,17 @@ class TestCase(unittest.TestCase):
         self.assertTrue(b'Locations' in response.data)
 
     
+    def test_correct_registration(self):
+        tester = app.test_client(self)
+        response = tester.post('/register',
+                                data=dict(name="userX",
+                                email="userx@gmail.com",
+                                password1="password",
+                                password2="password",
+                                user_type="default"),
+                                follow_redirects=True)
+        self.assertIn(b'Account Created!', response.data)
+
 
     # Ensure login does not work with incorrect credentials
     def test_incorrect_login(self):
@@ -120,9 +130,9 @@ class TestCase(unittest.TestCase):
                                 follow_redirects=True)
         self.assertIn(b'Login Successful!', response.data)
     
-
+    # Ensure correct bookings are made
     def test_booking_is_made(self):
-        
+
         tester = app.test_client(self)
 
         # Log in first
@@ -131,6 +141,7 @@ class TestCase(unittest.TestCase):
                     password=("test")),
                     follow_redirects=True)
 
+        # Fill in booking form
         tester.post('/booking1',
                     data=dict(scooter_id= '1',
                     location_id='1',
@@ -138,14 +149,44 @@ class TestCase(unittest.TestCase):
                     start_date=datetime.utcnow() + timedelta(minutes=2)),
                     follow_redirects=True)
 
+        # Fill in card detaisl
         booking = tester.post('/card',
                     data=dict(card_number="1010101010101010",
                     name="test",
                     expiry="12-3000",
                     cvv="123"),
                     follow_redirects=True)
-                    
+
         self.assertIn(b'Booking Successful', booking.data)
+
+    # Ensure login does not work with incorrect credentials
+    def test_store_card_details(self):
+        tester = app.test_client(self)
+
+        # Log in first
+        tester.post('/login',
+                    data=dict(email="test@gmail.com",
+                    password=("test")),
+                    follow_redirects=True)
+
+        # Fill in booking form
+        tester.post('/booking1',
+                    data=dict(scooter_id= '2',
+                    location_id='1',
+                    hire_period='3',
+                    start_date=datetime.utcnow() + timedelta(minutes=2)),
+                    follow_redirects=True)
+
+        # Fill in card details
+        booking = tester.post('/card',
+                    data=dict(card_number="1010101010101010",
+                    name="test",
+                    expiry="12-3000",
+                    cvv="123",
+                    save_card_details=True),
+                    follow_redirects=True)
+
+        self.assertIn(b'Card details saved', booking.data)
 
     def test_feedback_is_submitted(self):
         tester = app.test_client(self)
