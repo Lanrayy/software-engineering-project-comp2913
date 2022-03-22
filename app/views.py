@@ -1161,7 +1161,7 @@ def configure_costs():
         if form.duration.data == "1":
             durationToCheck = "1 hour"
         if form.duration.data == "2":
-            durationToCheck = "4 hour"
+            durationToCheck = "4 hours"
         if form.duration.data == "3":
             durationToCheck = "1 day"
         if form.duration.data == "4":
