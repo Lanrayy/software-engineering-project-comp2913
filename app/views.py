@@ -116,6 +116,7 @@ def login():
             else:
                 now = str(datetime.now())
                 app.logger.info(u.email + " unsuccesfull login at "+ now)
+                flash(f'Login unsuccessful. Please check email and password', 'error')
         else:
             now = str(datetime.now())
             app.logger.info("unsuccesfull login at " + now)
