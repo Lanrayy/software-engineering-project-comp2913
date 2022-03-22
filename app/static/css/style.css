@@ -11,7 +11,8 @@ Lighter grey - #809599
 
 Fonts:
 Logo font - Alfa Slab
-*/
+Headings - Gills sans
+Paragraphs - Raleway - 18px
 
 
 /* GLOBAL STYLES*/
@@ -33,15 +34,8 @@ body{
   background-color: #fafafa;
 }
 
-
-/* .custom-button{
-  width: 250px;
-  height: 55px;
-  border-radius: 50px;
-  font-size: 20px;
-} */
-
-.custom-button{
+/* Blue Button */ 
+.custom-button{ 
   width: 250px;
   height: 55px;
   border-radius: 50px;
@@ -57,9 +51,17 @@ body{
 }
 
 .custom-button2{
-  background-color: #f46c63;
+  background-color: #0D6Efd;
   border: none;
 }
+
+.custom-button2:hover{
+  background-color: white;
+  border: 1px solid #f46c63;
+  color: #f46c63;
+
+}
+
 
 
 .navbar{
@@ -70,6 +72,7 @@ body{
 .nav-brand{
   font-weight: bolder;
 }
+
 .nav-link {
   color: white !important;
 }
@@ -90,7 +93,7 @@ tr:nth-child(even) {
 
 .nav-logo{
   width: 90px;
-  margin-left: 60px;
+  margin-left: 40px;
 }
 
 /* LANDING PAGE*/

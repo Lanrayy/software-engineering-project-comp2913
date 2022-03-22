@@ -25,18 +25,18 @@
 
         <!-- Unregistered logo -->
         {% if not current_user.is_authenticated %}
-          <a class="navbar-brand" href="/"><img class="nav-logo" src="{{url_for('static', filename='images/sctr-logo.png')}}" alt="Main logo"></a>
+          <a class="navbar-brand" href="/"><img class="nav-logo" src="{{url_for('static', filename='images/sctr-logo.png')}}" alt="Logo"></a>
         {% endif %}
 
         {% if current_user.is_authenticated %}
           <!-- Customer logo -->
           {% if not current_user.account_type == "employee" and not current_user.account_type == "manager" %}
-            <a class="navbar-brand" href="/user_dashboard">.sctr</a>
+            <a class="navbar-brand" href="/user_dashboard"><img class="nav-logo" src="{{url_for('static', filename='images/sctr-logo.png')}}" alt="Logo"></a>
           {% endif %}
 
           <!-- Admin logo -->
           {% if current_user.account_type == "employee" or current_user.account_type == "manager" %}
-            <a class="navbar-brand" href="/admin_dashboard">.sctr</a>
+            <a class="navbar-brand" href="/admin_dashboard"><img class="nav-logo" src="{{url_for('static', filename='images/sctr-logo.png')}}" alt="Main logo"></a>
           {% endif %}
         {% endif %}
 
