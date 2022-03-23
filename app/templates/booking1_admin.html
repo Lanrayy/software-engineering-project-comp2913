@@ -7,7 +7,7 @@
   <div class="col-md-auto">
     <!-- row for header -->
     <div class="row p-3">
-      <h3 class="fw-normal text-nowrap">Make a Booking</h3>
+      <h1 class="fw-normal text-nowrap">Make a Booking</h1>
 
       <!-- row for form contents -->
       <div class="row p-3">
@@ -19,38 +19,39 @@
             <div class="col pe-4">
               <p class="text-nowrap">
                 Choose a Collection Point <br>
-                {{ form.location_id }}
+                {{ form.location_id (style="width:400px; height:50px")}}
               </p>
               <p class="text-nowrap">
                 Choose a Scooter <br>
-                {{ form.scooter_id }}
+                {{ form.scooter_id (style="width:400px; height:50px")}}
               </p>
               <p class="text-nowrap">
                 Select a Hire Period <br>
-                {{ form.hire_period }}
+                {{ form.hire_period (style="width:400px; height:50px")}}
               </p>
+              <p class="text-nowrap">
+                  Select start date and time (yyyy-mm-dd hours:minutes)<br>
+                  {{ form.start_date (style="width:400px; height:50px")}}
+              </p>
+              <p class="text-nowrap">
+                Enter email address <br>
+                {{ form.email (style="width:400px; height:50px")}}
+              </p>
+              <div class="col">
+                <button type="button submit"  class="btn btn-success" name="payment_button">Go to Payment</button>
+              </div>
             </div>
 
-            <div class="col-7">
-              <img src="{{ url_for('static', filename='images/Scooter.png') }}" alt="Scooter" class="p-2 img-fluid">
-            </div>
+              <img src="{{ url_for('static', filename='images/Scooter.png') }}" alt="Scooter" style= "position:relative; left:200px; width:450px; height: 370px" class="p-2 img-fluid">
           </div>
 
           <div class="row pt-3">
-            <p class="text-nowrap">
-              Select a Start Time and Date (yyyy-mm-dd hours:minutes)<br>
-              {{ form.start_date }}
-            </p>
-            <p class="text-nowrap">
-              Please enter your email address <br>
-              {{ form.email }}
-            </p>
+
+
           </div>
 
           <div class="row text-center pt-3">
-            <div class="col">
-              <button type="button submit"  class="btn btn-success" name="payment_button">Go to Payment</button>
-            </div>
+
           </div>
         </form>
       </div>
