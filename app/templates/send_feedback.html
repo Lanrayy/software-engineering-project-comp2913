@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_sales.html" %}
 {% block content %}
 <!-- blank margin space -->
 <br>
@@ -7,26 +7,33 @@
   <div class="col-md-auto">
     <!-- row for header -->
     <div class="row p-3">
-      <h3 class="fw-normal text-nowrap">Send Feedback</h3>
+      <h3 class="fw-normal">Send Feedback</h3>
     </div>
 
     <!-- row for displaying feedback details -->
     <div class="row p-3 text-center">
-      <h5 class="fw-normal text-nowrap">Please provide feedback or describe the issue in the box below</h5>
+      <h5 class="fw-normal">Please provide feedback or describe the issue in the box below</h5>
     </div>
 
     <!-- row for table contents -->
     <div class="row p-3">
       <form action="" method="post" name="feedbackform">
         {{ form.csrf_token }}
-        {{ form.feedback(cols="72", rows="5") }}
+        <!-- <div class="border border-warning"> -->
+          {{ form.feedback(class="container-fluid", rows="5") }}
+
+        <!-- </div> -->
+        <!-- {{ form.feedback(cols="72", rows="5") }} -->
       </form>
     </div>
 
     <!-- submit button -->
-    <div class="row pe-4 text-end">
-      <div class="col">
-        <button type="button submit" class="btn btn-success mt-3" value="Submit">Confirm Changes</button>
+    <div class="row">
+      <div class="col-6">
+        <button type="button submit" class="btn btn-danger mt-3" value="Submit">Cancel</button>
+      </div>
+      <div class="col-6 text-end">
+        <button type="button submit" class="btn btn-success mt-3" value="Submit">Submit Feedback</button>
       </div>
     </div>
   </div>
