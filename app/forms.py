@@ -13,6 +13,9 @@ from wtforms import FloatField
 from wtforms import DateTimeField
 from app import models
 from wtforms.validators import InputRequired, EqualTo, Length, Email, Regexp, NumberRange
+from flask import flash
+from datetime import datetime, timedelta
+import calendar
 
 # sign up form
 class SignUpForm(FlaskForm):
@@ -59,6 +62,21 @@ class CardForm(FlaskForm):
     expiry = DateTimeField('expiry', format='%m-%Y', validators=[InputRequired()]) #changed to DateTimeField asking for month then year input
     cvv = StringField('cvv', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "cvv must be a number"), Length(min=3, max=3, message="cvv must be 3 characters")])
     save_card_details = BooleanField('save_card_details')
+
+    def validate_expiry(self, expiry): # cards expire on the last day of the month
+        expiry_invalid = False
+        today = datetime.utcnow()
+        
+        # get the last day of current month and the last day of the expiry month
+        last_day_of_current_month = today.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
+        last_day_of_card_month = expiry.data.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
+
+        if(last_day_of_card_month.date() < last_day_of_current_month.date()):
+            raise ValidationError('Expiry date is invalid! Card is expired!')
+
+            
+
+
 
 
 # admin booking form
