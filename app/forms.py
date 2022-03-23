@@ -73,10 +73,6 @@ class CardForm(FlaskForm):
         if(last_day_of_card_month.date() < last_day_of_current_month.date()):
             raise ValidationError('Expiry date is invalid! Card is expired!')
 
-            
-
-
-
 
 # admin booking form
 class AdminBookingForm(FlaskForm):
