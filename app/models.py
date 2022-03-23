@@ -129,8 +129,8 @@ class transactions(db.Model):
     hire_period = db.Column(db.Integer, nullable=False) # store in hours (1, 4, 24, 168)
     booking_time = db.Column(db.DateTime(), nullable=False) # start date and time
     transaction_cost = db.Column(db.Float, nullable=False) # stores the cost of the transaction
-    
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
 
     def __repr__(self):

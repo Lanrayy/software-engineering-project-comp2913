@@ -34,20 +34,20 @@
             <div class="col pe-4">
               <p class="text-nowrap">
                 Choose a Collection Point<br>
-                {{ form.location_id (style="width:400px; height:50px")}}
+                {{ form.location_id (style="width:400px; height:50px", class="form-control form-control-lg")}}
               </p>
               <p class="text-nowrap">
                 Choose a Scooter <br>
-                {{ form.scooter_id (style="width:400px; height:50px")}}
+                {{ form.scooter_id (style="width:400px; height:50px", class="form-control form-control-lg")}}
               </p>
               <p class="text-nowrap">
                 Select a Hire Period <br>
-                {{ form.hire_period (style="width:400px; height:50px") }}
+                {{ form.hire_period (style="width:400px; height:50px", class="form-control form-control-lg") }}
               </p>
 
             <p class="text-nowrap">
               Select start date and time (yyyy-mm-dd hours:minutes)<br>
-              {{ form.start_date (style="width:400px; height:50px;")}}
+              {{ form.start_date (style="width:400px; height:50px;", class="form-control form-control-lg")}}
             </p>
             {% if card_found %}
               <strong class="fw-normal text-nowrap"><b>Saved Card Details:</b></strong>

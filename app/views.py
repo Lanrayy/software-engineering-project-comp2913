@@ -263,15 +263,15 @@ def card():
                                                 scooter_id = session.get('booking_scooter_id', None),
                                                 collection_id = session.get('booking_collection_id', None))
                         db.session.add(booking)
+                        db.session.commit()
 
                         # add new transaction to the transaction table- used on the metrics page, no user id
                         new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
                                                             booking_time = datetime.utcnow(),
                                                             transaction_cost = session.get('booking_cost', None),
-                                                            booking_id = booking.id,
-                                                            )
+                                                            booking_id = booking.id)
                         db.session.add(new_transaction)
-                        db.session.commit()
+
                         #set the specified email to recipient
                         recipients=[session.get('booking_email', None)]
                     else:
@@ -328,8 +328,10 @@ def card():
         if current_user.is_anonymous:
             return redirect('/')
             # str(current_user.id)
+        elif current_user.account_type == "employee" or current_user.account_type == "manager":
+            return redirect('/admin_dashboard')
         else:
-            return redirect('/user_dashboard')
+            return redirect("/user_dashboard")
 
 # only logout if user is logged in
 @app.route('/logout')
@@ -359,8 +361,10 @@ def user_dashboard():
         if current_user.is_anonymous:
             return redirect('/')
             # str(current_user.id)
+        elif current_user.account_type == "employee" or current_user.account_type == "manager":
+            return redirect('/admin_dashboard')
         else:
-            return redirect('/user_dashboard')
+            return redirect("/user_dashboard")
 
 
 @app.route('/pricing')
@@ -416,8 +420,10 @@ def profile():
         if current_user.is_anonymous:
             return redirect('/')
             # str(current_user.id)
+        elif current_user.account_type == "employee" or current_user.account_type == "manager":
+            return redirect('/admin_dashboard')
         else:
-            return redirect('/user_dashboard')
+            return redirect("/user_dashboard")
 
 
 @app.route('/send_feedback', methods=('GET', 'POST'))
@@ -852,8 +858,10 @@ def booking1():
         if current_user.is_anonymous:
             return redirect('/')
             # str(current_user.id)
+        elif current_user.account_type == "employee" or current_user.account_type == "manager":
+            return redirect('/admin_dashboard')
         else:
-            return redirect('/user_dashboard')
+            return redirect("/user_dashboard")
 
 @app.route('/booking1/<location_id>')
 def booking1_location(location_id):
@@ -895,8 +903,10 @@ def booking2():
         if current_user.is_anonymous:
             return redirect('/')
             # str(current_user.id)
+        elif current_user.account_type == "employee" or current_user.account_type == "manager":
+            return redirect('/admin_dashboard')
         else:
-            return redirect('/user_dashboard')
+            return redirect("/user_dashboard")
 
 
 #intermediary page for cancelling booking
@@ -942,8 +952,10 @@ def cancel_booking():
         if current_user.is_anonymous:
             return redirect('/')
             # str(current_user.id)
+        elif current_user.account_type == "employee" or current_user.account_type == "manager":
+            return redirect('/admin_dashboard')
         else:
-            return redirect('/user_dashboard')
+            return redirect("/user_dashboard")
 
 
 #intermediary page for extending booking
@@ -1077,8 +1089,10 @@ def extend_booking():
         if current_user.is_anonymous:
             return redirect('/')
             # str(current_user.id)
+        elif current_user.account_type == "employee" or current_user.account_type == "manager":
+            return redirect('/admin_dashboard')
         else:
-            return redirect('/user_dashboard')
+            return redirect("/user_dashboard")
 
 #Admin exclusive pages
 @app.route('/admin_dashboard')
@@ -1095,8 +1109,10 @@ def admin_dashboard():
         if current_user.is_anonymous:
             return redirect('/')
             # str(current_user.id)
+        elif current_user.account_type == "employee" or current_user.account_type == "manager":
+            return redirect('/admin_dashboard')
         else:
-            return redirect('/user_dashboard')
+            return redirect("/user_dashboard")
 
 
 @app.route('/review_feedback', methods=('GET', 'POST'))
@@ -1115,8 +1131,10 @@ def review_feedback():
         if current_user.is_anonymous:
             return redirect('/')
             # str(current_user.id)
+        elif current_user.account_type == "employee" or current_user.account_type == "manager":
+            return redirect('/admin_dashboard')
         else:
-            return redirect('/user_dashboard')
+            return redirect("/user_dashboard")
 
 @app.route('/edit_feedback/<id>', methods=('GET', 'POST'))
 def edit_feedback(id):
@@ -1307,8 +1325,9 @@ def sales_metrics():
     # discounted vs undiscounted transactions
     discounted_transactions, normal_transactions = 0, 0
     for transaction in transactions:
-        if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
-            discounted_transactions += 1
+        if(transaction.user != None):
+            if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
+                discounted_transactions += 1
         else:
             normal_transactions += 1
 
