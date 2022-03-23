@@ -1,30 +1,57 @@
-{% extends "base.html" %}
+{% extends "base_sales.html" %}
 {% block content %}
-  <h1>Sales Metrics</h1>
+  <div class="row text-center mt-5">
+    <h1>Sales Metrics</h1>
+  </div>
 
-  <h2>Weekly income for hire lengths</h2>
-  <p>Week start: {{week_start.date()}}</p>
-  <p>Week end: {{week_end.date()}}</p>
-  <p>One hour metric: £{{one_hour_metric}}</p>
-  <p>Four hours metric: £{{four_hour_metric}}</p>
-  <p>24 hours metric: £{{one_day_metric}}</p>
-  <p>One week metric: £{{one_week_metric}}</p>
+  <div class="row">
+    <div class="col-12 col-sm-6 ps-5 pt-5">
+      <h2>Weekly income for hire lengths</h2>
+      <p>Week start: {{week_start.date()}}</p>
+      <p>Week end: {{week_end.date()}}</p>
+      <p>One hour metric: £{{one_hour_metric}}</p>
+      <p>Four hours metric: £{{four_hour_metric}}</p>
+      <p>24 hours metric: £{{one_day_metric}}</p>
+      <p>One week metric: £{{one_week_metric}}</p>
+    </div>
+    <div class="col-12 col-sm-6"> 
+      <img class="img-fluid" src="{{url_for('static', filename='images/graphs/hireperiod.jpg')}}" width="auto" />
+    </div>
+
+
+    <div class="col-12 col-sm-6"> 
+      <img class="img-fluid" src="{{url_for('static', filename='images/graphs/daily.jpg')}}" />
+    </div>
+    <div class="col-12 col-sm-6 pt-5">
+      <h2>Combined Daily Income</h2>
+      <p>Week start: {{week_start.date()}}</p>
+      <p>Week end: {{week_end.date()}}</p>
+      <p>Monday Metrics: £{{monday_metrics}}</p>
+      <p>Tuesday Metrics: £{{tuesday_metrics}}</p>
+      <p>Wednesday metric: £{{wednesday_metrics}}</p>
+      <p>Thursday metric: £{{thursday_metrics}}</p>
+      <p>Friday metric: £{{friday_metrics}}</p>
+      <p>Saturday metric: £{{saturday_metrics}}</p>
+      <p>Sunday metric: £{{sunday_metrics}}</p>
+    </div>
+
+    <div class="col-12 col-sm-6 ps-5 pt-5">
+      <h2>Popular transactions</h2>
+      <p>Discounted transactions: {{discounted_transactions}}</p>
+      <p>Normal transactions: {{normal_transactions}}</p>
+
+    </div>
+    <div class="col-12 col-sm-6">
+      <img class="img-fluid" src="{{url_for('static', filename='images/graphs/transaction_type.jpg')}}" />
+    </div>
+  </div>
+
+
+  
  
-  <h2>Combined Daily Income</h2>
-  <p>Week start: {{week_start.date()}}</p>
-  <p>Week end: {{week_end.date()}}</p>
-  <p>Monday Metrics: £{{monday_metrics}}</p>
-  <p>Tuesday Metrics: £{{tuesday_metrics}}</p>
-  <p>Wednesday metric: £{{wednesday_metrics}}</p>
-  <p>Thursday metric: £{{thursday_metrics}}</p>
-  <p>Friday metric: £{{friday_metrics}}</p>
-  <p>Saturday metric: £{{saturday_metrics}}</p>
-  <p>Sunday metric: £{{sunday_metrics}}</p>
 
   <!-- Weekly stats go here -->
 
-  <h2>Popular transactions</h2>
-  <p>Discounted transactions: {{discounted_transactions}}</p>
-  <p>Normal transactions: {{normal_transactions}}</p>
+
 
 {% endblock %}
