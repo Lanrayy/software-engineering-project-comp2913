@@ -1,4 +1,19 @@
 {% extends "base.html" %}
+{% block left_content %}
+<!-- For the table of prices -->
+<div class="container d-flex flex-column align-items-center" style="margin-top: 25%">
+  <div class="mt-5">
+    <h4 class="fw-normal text-center">Our Prices!</h4>
+  </div>
+  {% for hire_period in hire_periods %}
+    <div class="" style="width: 50%">
+      <h5 class="fw-normal text-nowrap">Hire Period: {{ hire_period.duration }}</h5>
+      <p>{{ hire_period.price }}</p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
 {% block content %}
 <!-- blank margin space -->
 <br>
