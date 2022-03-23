@@ -453,6 +453,8 @@ def booking1():
         logPage()
         #clean up bookings table
         organise_bookings()
+        #pass the prices to the webpage
+        hire_periods = models.pricing.query.all();
         #current user is a customer
         if not current_user.account_type == "employee" and not current_user.account_type == "manager":
 
@@ -497,7 +499,8 @@ def booking1():
                     logger.info("Booking not made: no available scooters at " + str(form.location_id.data))
                     return render_template('booking1_user.html',
                                             title='Choose a Location',
-                                            form = form)
+                                            form = form,
+                                            hire_periods = hire_periods)
 
                 #check that they actually put a start date
                 if form.start_date.data == None:
@@ -505,7 +508,8 @@ def booking1():
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     return render_template('booking1_user.html',
                                             title='Choose a Location',
-                                            form = form)
+                                            form = form,
+                                            hire_periods = hire_periods)
 
                 #check if the start date further in the past than now, with a grace period of 5 minutes
                 if form.start_date.data < datetime.utcnow() + timedelta(minutes = -5):
@@ -513,7 +517,8 @@ def booking1():
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     return render_template('booking1_user.html',
                                             title='Choose a Location',
-                                            form = form)
+                                            form = form,
+                                            hire_periods = hire_periods)
 
                 #convert the option selected in the SelectField into a cost and the number of hours
                 if form.hire_period.data == '1':
@@ -576,7 +581,8 @@ def booking1():
                                         str(form.start_date.data))
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
-                                                form = form)
+                                                form = form,
+                                                hire_periods = hire_periods)
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
                         flash("The projected end time falls within a pre-existing booking")
@@ -588,7 +594,8 @@ def booking1():
                                         str(form.start_date.data + timedelta(hours = hours)))
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
-                                                form = form)
+                                                form = form,
+                                                hire_periods = hire_periods)
                 #check upcoming bookings
                 for booking in current_upcoming_bookings:
                     #check that the selected start date doesn't fall during a booking
@@ -600,7 +607,8 @@ def booking1():
                                         str(form.start_date.data))
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
-                                                form = form)
+                                                form = form,
+                                                hire_periods = hire_periods)
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
                         flash("The projected end time falls within a pre-existing booking")
@@ -612,7 +620,8 @@ def booking1():
                                         str(form.start_date.data + timedelta(hours = hours)))
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
-                                                form = form)
+                                                form = form,
+                                                hire_periods = hire_periods)
 
                 #store the booking details as a session to be used on successful payment
                 session['booking_duration'] = hours
@@ -685,7 +694,8 @@ def booking1():
                                     title='Choose a Location',
                                     form=form,
                                     data=data,
-                                    card_found=card_found)
+                                    card_found=card_found,
+                                    hire_periods = hire_periods)
 
         #if the current user is an employee or manager
         elif current_user.account_type == "employee" or current_user.account_type == "manager":
@@ -715,7 +725,8 @@ def booking1():
                     logger.info("Booking not made: no available scooters at " + str(form.location_id.data))
                     return render_template('booking1_admin.html',
                                             title='Choose a Location',
-                                            form = form)
+                                            form = form,
+                                            hire_periods = hire_periods)
 
                 #check that they actually put a start date
                 if form.start_date.data == None:
@@ -723,7 +734,8 @@ def booking1():
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     return render_template('booking1_admin.html',
                                             title='Choose a Location',
-                                            form = form)
+                                            form = form,
+                                            hire_periods = hire_periods)
 
                 #check if the start date further in the past than now, with a grace period of 5 minutes
                 if form.start_date.data < datetime.utcnow() + timedelta(minutes = -5):
@@ -731,7 +743,8 @@ def booking1():
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     return render_template('booking1_admin.html',
                                             title='Choose a Location',
-                                            form = form)
+                                            form = form,
+                                            hire_periods = hire_periods)
 
                 #convert the option selected in the SelectField into a cost and the number of hours
                 if form.hire_period.data == '1':
@@ -766,7 +779,8 @@ def booking1():
                                         str(form.start_date.data))
                         return render_template('booking1_admin.html',
                                                 title='Choose a Location',
-                                                form = form)
+                                                form = form,
+                                                hire_periods = hire_periods)
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
                         flash("The projected end time falls within a pre-existing booking")
@@ -778,7 +792,8 @@ def booking1():
                                         str(form.start_date.data + timedelta(hours = hours)))
                         return render_template('booking1_admin.html',
                                                 title='Choose a Location',
-                                                form = form)
+                                                form = form,
+                                                hire_periods = hire_periods)
                 #check upcoming bookings
                 for booking in current_upcoming_bookings:
                     #check that the selected start date doesn't fall during a booking
@@ -790,7 +805,8 @@ def booking1():
                                         str(form.start_date.data))
                         return render_template('booking1_admin.html',
                                                 title='Choose a Location',
-                                                form = form)
+                                                form = form,
+                                                hire_periods = hire_periods)
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
                         flash("The projected end time falls within a pre-existing booking")
@@ -802,7 +818,8 @@ def booking1():
                                         str(form.start_date.data + timedelta(hours = hours)))
                         return render_template('booking1_admin.html',
                                                 title='Choose a Location',
-                                                form = form)
+                                                form = form,
+                                                hire_periods = hire_periods)
 
                 #store the booking details as a session to be used on successful payment
                 session['booking_duration'] = hours
@@ -828,7 +845,8 @@ def booking1():
             #send current_user to the admin version of the booking1 page
             return render_template('booking1_admin.html',
                                     title='Choose a Location',
-                                    form = form)
+                                    form = form,
+                                    hire_periods = hire_periods)
     except Exception as e:
         logger.error(e)
         if current_user.is_anonymous:

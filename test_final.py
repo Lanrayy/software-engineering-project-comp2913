@@ -66,7 +66,7 @@ class TestCase(unittest.TestCase):
         db.session.add(student)
         db.session.add(senior)
         db.session.commit()
-    
+
     # Tests
 
     # Ensure landing page loads correctly
@@ -99,7 +99,7 @@ class TestCase(unittest.TestCase):
         response = tester.get('/info', content_type='html/text')
         self.assertTrue(b'Locations' in response.data)
 
-    
+
     def test_correct_registration(self):
         tester = app.test_client(self)
         response = tester.post('/register',
@@ -120,7 +120,7 @@ class TestCase(unittest.TestCase):
                                 password=("notpassword")),
                                 follow_redirects=True)
         self.assertIn(b'Login unsuccessful', response.data)
-    
+
     # Ensure login works with correct credentials
     def test_correct_login(self):
         tester = app.test_client(self)
@@ -129,7 +129,7 @@ class TestCase(unittest.TestCase):
                                 password=("test")),
                                 follow_redirects=True)
         self.assertIn(b'Login Successful!', response.data)
-    
+
     # Ensure correct bookings are made
     def test_booking_is_made(self):
 
