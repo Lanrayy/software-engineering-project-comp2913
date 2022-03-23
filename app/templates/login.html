@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
   <br>
-<h1>Login</h1>
+<h1 class="fw-normal">Login</h1>
 <br>
   <form action="" method="post" name="loginform">
       {{ form.hidden_tag() }}
-      
+
       <p>
         Email <br>
         {{ form.email(class="form-control form-control-lg") }}
         {% if form.email.errors %}
-      
+
         {% for error in form.email.errors %}
           <span>{{ error }}</span>
         {% endfor %}

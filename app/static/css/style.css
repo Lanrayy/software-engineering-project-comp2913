@@ -1,4 +1,4 @@
-/* 
+/*
 Global styles:
 
 Colours:
@@ -41,8 +41,8 @@ body{
   font-weight: bolder;
 }
 
-/* Blue Button */ 
-.custom-button{ 
+/* Blue Button */
+.custom-button{
   width: 250px;
   height: 55px;
   border-radius: 50px;
@@ -57,8 +57,8 @@ body{
   color: #f46c63;
 }
 
-/* Peach Button */ 
-.custom-button2{ 
+/* Peach Button */
+.custom-button2{
   background-color: #f46c63;
   /* background-color: #0D6Efd; */
   border: none;
@@ -74,6 +74,21 @@ body{
   color: white !important;
 }
 
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  text-align: left;
+  padding: 20px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
 .nav-logo{
   width: 90px;
   margin-left: 40px;
@@ -81,51 +96,11 @@ body{
 
 
 
-
-/*TABLE*/
-
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%; 
-}
-
-table.center {
-  margin-left: auto; 
-  margin-right: auto;
-}
-
-td, th {
-  text-align: left;
-  padding: 20px;
-  padding-left: 80px;
-}
-
-/*
-tr:nth-child(even) {
-  background-color: #f46c63;
-}
-*/
-
-
-/* User Dashboard Page */
-
-.UD_row-1 {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-}
-
-.main_image_user_dashboard{
-  width: 600px;
-  height: 500px;
-  padding-left: 100px;
-}
-
-
+/* **********************************
+* LANDING PAGE  STYLES
+************************************/
 .flashed-message{
+  /* border: 1px solid red; */
   width: 100%;
   text-align: center;
 }
@@ -134,15 +109,15 @@ tr:nth-child(even) {
   text-align: center;
 }
 
-
-.UD_title {
+.title {
   text-align: center;
   font-size: 60px;
+  /* color: #f46c63; */
   color: white;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-.UD_subtitle{
+.row-1-subtitle{
   text-align: center;
   color: white;
   font-size: 30px;
@@ -154,7 +129,25 @@ tr:nth-child(even) {
   height: auto;
 }
 
-.UD_row1 {
+.row-info {
+  height: 80px;
+}
+
+.row-title{
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  font-size: 45px;
+  color: #f46c63;
+}
+
+.row-subtitle {
+  text-align: center;
+}
+
+.row1 {
   /* border: 1px solid red; */
   height: 600px;
   display: flex;
@@ -162,7 +155,7 @@ tr:nth-child(even) {
   background-color: #f46c63;
 }
 
-.UD_row2{
+.row-1-column-1 {
   /* border: 2px solid green; */
   height: 100%;
   display: flex;
@@ -178,28 +171,73 @@ tr:nth-child(even) {
   padding: 40px;
 }
 
-.user_details{
-  margin-top: 50px;
+
+/* ROW 2 */
+.row2{
+  /* border: 1px solid red; */
+  height: 600px;
+  margin-top: 40px;
+}
+
+.row-2-content{
+  display: flex;
+  justify-content: center;
+}
+
+.row-2-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* border: 1px solid green; */
+  height: 300px;
+  width: 400px;
+  margin: 0px 10px 0px 10px;
+
+}
+
+.row-2-image {
+  width: 130px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.row-2-column-description{
   text-align: center;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  width: 300px;
+  line-height: 1.4;
 }
 
-.title_left{
-  text-align: left;
+.row-2-call-to-action{
+  display: flex;
+  justify-content: center;
 }
 
-.user_details_table{
-  width: 50%; 
+.row-2-column-title{
+  /* color: #445a64; */
+  color: #f46c63;
+  margin-bottom: 4px;
 }
 
-.card_details_table{
-  width: 80%; 
+/* ROW 3 */
+.row3{
+  margin-top: 30px;
 }
 
-.booking_table{
-  width: 100%; 
+.row3-content {
+  display: flex;
+  justify-content: centre;
+  flex-direction: column;
+  width: 100%;
+  height: 500px;
 }
 
+.map{
+  display: flex;
+  justify-content: center;
+}
 
-
-
+iframe{
+  width: 90%;
+  height: 400px;
+}

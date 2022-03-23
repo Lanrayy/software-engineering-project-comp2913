@@ -56,7 +56,7 @@ matplotlib.use('agg') # Does not connect to GUI (Fixes error of crashing sales m
 # obtain additional log info
 class LogFormatter(logging.Formatter):
     def format(self, record):
-        record.url = request.url 
+        record.url = request.url
         record.address = socket.gethostbyname(socket.gethostname())
         return super(LogFormatter, self).format(record)
 
@@ -72,9 +72,9 @@ FORMAT = '%(asctime)s %(address)s %(url)-40s %(levelname)s %(message)s'
 
 formatter = LogFormatter(FORMAT)
 # connect formatter to handler
-fh.setFormatter(formatter) 
+fh.setFormatter(formatter)
 # then add handler to the logger
-logger.addHandler(fh) 
+logger.addHandler(fh)
 
 # prints to the log file each time a client visits a page
 def logPage():
@@ -336,7 +336,7 @@ def card():
 @login_required
 def logout():
     logPage()
-    current_user_id = current_user.id   
+    current_user_id = current_user.id
     logout_user()
     flash('Logout Successful!', 'info')
     logger.info("(User "+ str(current_user_id) + ") logged out")
@@ -430,7 +430,9 @@ def send_feedback():
         db.session.add(f)
         db.session.commit()
         flash(f'Feedback Submitted', 'success')
-        logger.info("(User " + str(current_user.id) + ") feedback sent")    
+        if current_user.is_authenticated:
+            logger.info("(User " + str(current_user.id) + ") feedback sent")
+
         return redirect(url_for('send_feedback'))
     return render_template('send_feedback.html',
                             title='Send Us Your Feedback',
@@ -568,7 +570,7 @@ def booking1():
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
                         flash("The scooter is unavailable for that start time")
-                        logger.info("Booking not made: Scooter " + 
+                        logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
                                         str(form.start_date.data))
@@ -578,11 +580,11 @@ def booking1():
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
                         flash("The projected end time falls within a pre-existing booking")
-                        logger.info("Booking not made: pre-existing booking for Scooter " + 
+                        logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
                                         str(form.start_date.data) +
-                                        " - " + 
+                                        " - " +
                                         str(form.start_date.data + timedelta(hours = hours)))
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
@@ -592,7 +594,7 @@ def booking1():
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
                         flash("The scooter is unavailable for that start time")
-                        logger.info("Booking not made: Scooter " + 
+                        logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
                                         str(form.start_date.data))
@@ -602,11 +604,11 @@ def booking1():
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
                         flash("The projected end time falls within a pre-existing booking")
-                        logger.info("Booking not made: pre-existing booking for Scooter " + 
+                        logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
                                         str(form.start_date.data) +
-                                        " - " + 
+                                        " - " +
                                         str(form.start_date.data + timedelta(hours = hours)))
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
@@ -672,7 +674,7 @@ def booking1():
                     flash("Booking Successful!")
                     logger.info("(User " + str(current_user.id) + "): Booking " + str(booking.id) + " created")
                     print("booking made")
-                    
+
                     return redirect("/booking2") #send to booking confirmation
                 else:
                     #user does not have existing
@@ -758,7 +760,7 @@ def booking1():
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
                         flash("The scooter is unavailable for that start time")
-                        logger.info("Booking not made: Scooter " + 
+                        logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
                                         str(form.start_date.data))
@@ -768,11 +770,11 @@ def booking1():
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
                         flash("The projected end time falls within a pre-existing booking")
-                        logger.info("Booking not made: pre-existing booking for Scooter " + 
+                        logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
                                         str(form.start_date.data) +
-                                        " - " + 
+                                        " - " +
                                         str(form.start_date.data + timedelta(hours = hours)))
                         return render_template('booking1_admin.html',
                                                 title='Choose a Location',
@@ -782,7 +784,7 @@ def booking1():
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
                         flash("The scooter is unavailable for that start time")
-                        logger.info("Booking not made: Scooter " + 
+                        logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
                                         str(form.start_date.data))
@@ -792,11 +794,11 @@ def booking1():
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
                         flash("The projected end time falls within a pre-existing booking")
-                        logger.info("Booking not made: pre-existing booking for Scooter " + 
+                        logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
                                         str(form.start_date.data) +
-                                        " - " + 
+                                        " - " +
                                         str(form.start_date.data + timedelta(hours = hours)))
                         return render_template('booking1_admin.html',
                                                 title='Choose a Location',
@@ -938,7 +940,7 @@ def extend_this_booking(booking_id):
 #extend booking page that takes info from the page in between profile and extend
 @app.route('/extend_booking', methods=('GET', 'POST'))
 def extend_booking():
-    try: 
+    try:
         logPage()
         form = ExtendBookingForm()
         booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
@@ -1033,10 +1035,10 @@ def extend_booking():
                     log_duration = "1 week"
                 else:
                     log_duration = "|" + str(form.hire_period.data) + "|"
-                logger.info("(User " + str(current_user.id) + 
-                                ") Booking " + 
-                                str(booking.id) + 
-                                " extended by " + 
+                logger.info("(User " + str(current_user.id) +
+                                ") Booking " +
+                                str(booking.id) +
+                                " extended by " +
                                 log_duration)
                 return redirect(url_for('profile'))
             else:
@@ -1141,7 +1143,7 @@ def view_scooters():
 
 @app.route('/add_scooter', methods=['GET','POST'])
 def add_scooter():
-    logPage()   
+    logPage()
     form = AddScooterForm()
 
     if form.validate_on_submit():
