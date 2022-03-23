@@ -54,6 +54,7 @@ class UserBookingForm(FlaskForm):
     #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
 
+
 # card form
 class CardForm(FlaskForm):
     card_number = StringField('card_number', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "Card Number must be a number"), Length(min=16, max=16, message="Card number must be 16 characters")])
@@ -84,9 +85,11 @@ class AdminBookingForm(FlaskForm):
     email = StringField('email', validators=[InputRequired(), Email()])
     #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
+
 # extend booking form
 class ExtendBookingForm(FlaskForm):
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
+
 
 # configure scooter form
 class ConfigureScooterForm(FlaskForm):
