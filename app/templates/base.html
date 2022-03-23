@@ -12,35 +12,26 @@
     <!-- Own CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-    <!-- Link for Raleway font Font weights: Thin: 100, Regular: 400, Bold: 700-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;400;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- Link for Alfa Slab One fontd-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Raleway:wght@100;400;700;800;900&display=swap" rel="stylesheet">
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-sm navbar-dark ">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
       <div class="container-fluid">
 
         <!-- Unregistered logo -->
         {% if not current_user.is_authenticated %}
-          <a class="navbar-brand" href="/"><img class="nav-logo" src="{{url_for('static', filename='images/sctr-logo.png')}}" alt="Logo"></a>
+          <a class="navbar-brand" href="/">.sctr</a>
         {% endif %}
 
         {% if current_user.is_authenticated %}
           <!-- Customer logo -->
           {% if not current_user.account_type == "employee" and not current_user.account_type == "manager" %}
-            <a class="navbar-brand" href="/user_dashboard"><img class="nav-logo" src="{{url_for('static', filename='images/sctr-logo.png')}}" alt="Logo"></a>
+            <a class="navbar-brand" href="/user_dashboard">.sctr</a>
           {% endif %}
 
           <!-- Admin logo -->
           {% if current_user.account_type == "employee" or current_user.account_type == "manager" %}
-            <a class="navbar-brand" href="/admin_dashboard"><img class="nav-logo" src="{{url_for('static', filename='images/sctr-logo.png')}}" alt="Main logo"></a>
+            <a class="navbar-brand" href="/admin_dashboard">.sctr</a>
           {% endif %}
         {% endif %}
 
@@ -84,40 +75,41 @@
             {% endif %}
           </ul>
         </div>
+
       </div>
     </nav>
 
     <!-- main page container -->
     <div class="container-fluid min-vh-100">
-        <div class="row">
-  
-          <!-- left justified content -->
-          <div class="col">
-            {% block left_content %}{% endblock %}
-          </div>
-  
-          <!-- center justified content -->
-          <div class="col">
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for message in messages %}
-                  <div class="alert alert-success">
-                    {{ message }}
-                  </div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
-  
-            {% block content %}{% endblock %}
-          </div>
-  
-          <!-- right justified content -->
-          <div class="col">
-            {% block right_content %}{% endblock %}
-          </div>
-  
+      <div class="row">
+
+        <!-- left justified content -->
+        <div class="col">
+          {% block left_content %}{% endblock %}
         </div>
+
+        <!-- center justified content -->
+        <div class="col">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-success">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
+          {% block content %}{% endblock %}
+        </div>
+
+        <!-- right justified content -->
+        <div class="col">
+          {% block right_content %}{% endblock %}
+        </div>
+
       </div>
+    </div>
 
     <!-- Footer -->
     <footer class="text-center text-lg-start bg-light text-muted">
