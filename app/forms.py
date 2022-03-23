@@ -64,7 +64,6 @@ class CardForm(FlaskForm):
     save_card_details = BooleanField('save_card_details')
 
     def validate_expiry(self, expiry): # cards expire on the last day of the month
-        expiry_invalid = False
         today = datetime.utcnow()
         
         # get the last day of current month and the last day of the expiry month
