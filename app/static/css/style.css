@@ -1,20 +1,205 @@
+/* 
+Global styles:
+
+Colours:
+Peach - #f46c63 (MAIN COLOUR)
+Dark peach - #A83C34
+Blue - #0D6Efd
+Grey - #445a64 - grey for text
+Lighter grey - #809599
+
+Fonts:
+Logo font - Alfa Slab
+Headings - Gills sans
+Paragraphs - Raleway - 18px
+*/
+
+/* GLOBAL STYLES*/
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: 700;
+}
+
+p{
+  /* font-family: 'Calibri'; */
+  font-family: Raleway, Arial, Helvetica, sans-serif;
+  color: #445a64;
+  font-size: 18px;
+}
+
+body{
+  background-color: #fafafa;
+}
+
+
+/* Nav Bar */
+.navbar{
+  background-color: #f46c63;
+}
+
 .nav-brand{
   font-weight: bolder;
 }
+
+/* Blue Button */ 
+.custom-button{ 
+  width: 250px;
+  height: 55px;
+  border-radius: 50px;
+  font-size: 20px;
+  margin-right: 20px;
+}
+
+.custom-button:hover{
+  background-color: #eeeeee;
+  /* border: 1px solid #A83C34; */
+  border: none;
+  color: #f46c63;
+}
+
+/* Peach Button */ 
+.custom-button2{ 
+  background-color: #f46c63;
+  /* background-color: #0D6Efd; */
+  border: none;
+}
+
+.custom-button2:hover{
+  background-color: white;
+  border: 1px solid #f46c63;
+  color: #f46c63;
+}
+
 .nav-link {
   color: white !important;
 }
+
+.nav-logo{
+  width: 90px;
+  margin-left: 40px;
+}
+
+
+
+
+/*TABLE*/
+
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
-  width: 100%;
+  width: 100%; 
+}
+
+table.center {
+  margin-left: auto; 
+  margin-right: auto;
 }
 
 td, th {
   text-align: left;
   padding: 20px;
+  padding-left: 80px;
 }
 
+/*
 tr:nth-child(even) {
-  background-color: #dddddd;
+  background-color: #f46c63;
 }
+*/
+
+
+/* User Dashboard Page */
+
+.UD_row-1 {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.main_image_user_dashboard{
+  width: 600px;
+  height: 500px;
+  padding-left: 100px;
+}
+
+
+.flashed-message{
+  width: 100%;
+  text-align: center;
+}
+
+.alert{
+  text-align: center;
+}
+
+
+.UD_title {
+  text-align: center;
+  font-size: 60px;
+  color: white;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.UD_subtitle{
+  text-align: center;
+  color: white;
+  font-size: 30px;
+  font-weight: 400;
+}
+
+.main-image{
+  width: 900px;
+  height: auto;
+}
+
+.UD_row1 {
+  /* border: 1px solid red; */
+  height: 600px;
+  display: flex;
+  flex-direction: row;
+  background-color: #f46c63;
+}
+
+.UD_row2{
+  /* border: 2px solid green; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.call-to-action-buttons {
+  display: flex;
+  /* border: 1px solid red; */
+  justify-content: center;
+  padding: 40px;
+}
+
+.user_details{
+  margin-top: 50px;
+  text-align: center;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.title_left{
+  text-align: left;
+}
+
+.user_details_table{
+  width: 50%; 
+}
+
+.card_details_table{
+  width: 80%; 
+}
+
+.booking_table{
+  width: 100%; 
+}
+
+
+
+

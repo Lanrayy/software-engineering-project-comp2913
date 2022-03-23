@@ -969,6 +969,34 @@ def extend_booking():
                 #has card details
                 #extend the booking pointed to by the 'booking_id' in the session, and add to the cost
                 booking.duration = booking.duration + hours
+
+                #Check if user is a discounted user when the booking is extended
+                #if the user is a student or a senior apply the discount
+                if current_user.user_type == "senior" or current_user.user_type == "student":
+                    flash("you are eligible for a student/senior discount")
+                    logger.info("(User " + str(current_user.id) + ") eligible for discount")
+                    cost = cost * (0.8)
+
+                else :
+                    bookings =  models.booking.query.filter_by(email = current_user.email, status = "expired") # expired user booking
+                    total_hours = 0 # total hours in the past week
+
+                    #find the datetime a week ago
+                    today_date = datetime.now()
+                    days = timedelta(days = 7)
+                    week_date = today_date - days
+
+                    #check if they are a frequent user
+                    for b in bookings :
+                        if (b.initial_date_time > week_date):
+                            total_hours += b.duration
+                            if (total_hours > 8):
+                                break
+
+                    if (total_hours >= 8) :
+                        logger.info("(User " + str(current_user.id) + ") eligible for discount")
+                        cost = cost * (0.8)
+
                 booking.cost = booking.cost + cost
                 booking.final_date_time = booking.final_date_time + timedelta(hours = hours)
 
