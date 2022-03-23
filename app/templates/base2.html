@@ -11,7 +11,7 @@
 
     <!-- Own CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
+    
     <!-- Link for Raleway font Font weights: Thin: 100, Regular: 400, Bold: 700-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,10 +21,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Raleway:wght@100;400;700;800;900&display=swap" rel="stylesheet">
+  
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-sm navbar-dark ">
+    <nav class="navbar navbar-expand-sm navbar-dark">
       <div class="container-fluid">
 
         <!-- Unregistered logo -->
@@ -51,20 +52,21 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <!-- Global nav -->
-            <li class="nav-item hover-overlay"><a class="nav-link" href="/info">How it Works</a></li>
+            <li class="nav-item"><a class="nav-link" href="/info">How it Works</a></li>
 
 
             <!-- Unregistered nav -->
             {% if not current_user.is_authenticated %}
-              <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
-              <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-              <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+            <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
+            <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
             {% endif %}
 
             {% if current_user.is_authenticated %}
               <!-- Customer nav -->
               {% if not current_user.account_type == "employee" and not current_user.account_type == "manager" %}
               <li class="nav-item"><a class="nav-link" href="/send_feedback">Send Feedback</a></li>
+              <li class="nav-item"><a class="nav-link" href="/sales_metrics">Sales Metrics</a></li>
               <li class="nav-item"><a class="nav-link" href="/booking1">Make a Booking</a></li>
               <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
               <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
@@ -73,51 +75,25 @@
 
               <!-- Admin nav -->
               {% if current_user.account_type == "employee" or current_user.account_type == "manager" %}
-                <li class="nav-item"><a class="nav-link" href="/booking1">Make a Booking</a></li>
-                <li class="nav-item"><a class="nav-link" href="/review_feedback">Review Feedback</a></li>
-                <li class="nav-item"><a class="nav-link" href="/view_scooters">View Scooters</a></li>
-                {% if current_user.account_type == "manager" %}
-                  <li class="nav-item"><a class="nav-link" href="/sales_metrics">Sales Metrics</a></li>
-                {% endif %}
-                <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+              <li class="nav-item"><a class="nav-link" href="/booking1">Make a Booking</a></li>
+              <li class="nav-item"><a class="nav-link" href="/review_feedback">Review Feedback</a></li>
+              <li class="nav-item"><a class="nav-link" href="/view_scooters">View Scooters</a></li>
+              <li class="nav-item"><a class="nav-link" href="/sales_metrics">Sales Metrics</a></li>
+              <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
               {% endif %}
             {% endif %}
           </ul>
         </div>
+
       </div>
     </nav>
-
+    
     <!-- main page container -->
     <div class="container-fluid min-vh-100">
-        <div class="row">
-  
-          <!-- left justified content -->
-          <div class="col">
-            {% block left_content %}{% endblock %}
-          </div>
-  
-          <!-- center justified content -->
-          <div class="col">
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for message in messages %}
-                  <div class="alert alert-success">
-                    {{ message }}
-                  </div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
-  
-            {% block content %}{% endblock %}
-          </div>
-  
-          <!-- right justified content -->
-          <div class="col">
-            {% block right_content %}{% endblock %}
-          </div>
-  
-        </div>
-      </div>
+        {% block content %}{% endblock %}
+    </div>
+
+
 
     <!-- Footer -->
     <footer class="text-center text-lg-start bg-light text-muted">
@@ -156,21 +132,17 @@
 
             <!-- Grid column -->
             <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                <a class="text-reset" href="/info">How it Works</a>
             </div>
-            <!-- Grid column -->
-
             <!-- Grid column -->
             <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                <a class="text-reset" href="/info">How it Works</a>
             </div>
-            <!-- Grid column -->
 
             <!-- Grid column -->
             <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-              <p>
                 <a class="text-reset" href="/info">How it Works</a>
-              </p>
             </div>
-            <!-- Grid column -->
           </div>
           <!-- Grid row -->
         </div>
