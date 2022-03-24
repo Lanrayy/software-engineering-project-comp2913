@@ -372,3 +372,29 @@ How It Works Page
   margin-top: 50px;
 }
 
+/***************************
+Admin Dashboard Page
+****************************/
+
+.AD_button {
+  width: 200px;
+  height: 200px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.AD_row2 {
+  margin-top: 30px;
+}
+
+.AD_row-2-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* border: 1px solid green; */
+  height: 200px;
+  width: 24%;
+  min-width: 200px;
+  margin: 0px 10px 0px 10px;
+}
