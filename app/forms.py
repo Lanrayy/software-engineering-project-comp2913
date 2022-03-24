@@ -66,7 +66,7 @@ class CardForm(FlaskForm):
 
     def validate_expiry(self, expiry): # cards expire on the last day of the month
         today = datetime.utcnow()
-        
+
         # get the last day of current month and the last day of the expiry month
         last_day_of_current_month = today.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
         last_day_of_card_month = expiry.data.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
@@ -132,7 +132,7 @@ class AddScooterForm(FlaskForm):
 
 # feedback form
 class FeedbackForm(FlaskForm):
-    feedback = TextAreaField('feedback')
+    feedback = TextAreaField('feedback', validators=[InputRequired()])
 
 # edit feedback form
 class EditFeedbackForm(FlaskForm):
