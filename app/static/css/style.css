@@ -22,9 +22,11 @@ h1, h2, h3, h4, h5, h6 {
 
 p{
   /* font-family: 'Calibri'; */
+  /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
   font-family: Raleway, Arial, Helvetica, sans-serif;
   color: #445a64;
   font-size: 18px;
+  /* font-weight: 100; */
 }
 
 body{
@@ -74,26 +76,35 @@ body{
   color: white !important;
 }
 
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-td, th {
-  text-align: left;
-  padding: 20px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-
 .nav-logo{
   width: 90px;
   margin-left: 40px;
 }
 
+/*TABLE STYLES*/
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%; 
+}
+
+table.center {
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+td, th {
+  text-align: left;
+  padding: 20px;
+  padding-left: 80px;
+}
+
+/*
+tr:nth-child(even) {
+  background-color: #f46c63;
+}
+*/
 
 
 /* **********************************
@@ -193,7 +204,6 @@ tr:nth-child(even) {
   height: 300px;
   width: 400px;
   margin: 0px 10px 0px 10px;
-
 }
 
 .row-2-image {
@@ -241,3 +251,87 @@ iframe{
   width: 90%;
   height: 400px;
 }
+
+
+/***************************
+User Dashboard Page 
+****************************/
+
+.UD_row-1 {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.main_image_user_dashboard{
+  width: 600px;
+  height: 500px;
+  padding-left: 100px;
+}
+
+.UD_title {
+  text-align: center;
+  font-size: 60px;
+  color: white;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.UD_subtitle{
+  text-align: center;
+  color: white;
+  font-size: 30px;
+  font-weight: 400;
+}
+
+.UD_row1 {
+  /* border: 1px solid red; */
+  height: 600px;
+  display: flex;
+  flex-direction: row;
+  background-color: #f46c63;
+}
+
+.UD_row2{
+  /* border: 2px solid green; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.call-to-action-buttons {
+  display: flex;
+  /* border: 1px solid red; */
+  justify-content: center;
+  padding: 40px;
+}
+
+.user_details{
+  margin-top: 50px;
+  text-align: center;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.title_left{
+  text-align: left;
+}
+
+.user_details_table{
+  width: 50%; 
+}
+
+.card_details_table{
+  width: 80%; 
+}
+
+.booking_table{
+  width: 100%; 
+}
+
+
+
+
+
