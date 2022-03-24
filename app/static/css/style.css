@@ -1,4 +1,4 @@
-/* 
+/*
 Global styles:
 
 Colours:
@@ -43,8 +43,8 @@ body{
   font-weight: bolder;
 }
 
-/* Blue Button */ 
-.custom-button{ 
+/* Blue Button */
+.custom-button{
   width: 250px;
   height: 55px;
   border-radius: 50px;
@@ -59,8 +59,8 @@ body{
   color: #f46c63;
 }
 
-/* Peach Button */ 
-.custom-button2{ 
+/* Peach Button */
+.custom-button2{
   background-color: #f46c63;
   /* background-color: #0D6Efd; */
   border: none;

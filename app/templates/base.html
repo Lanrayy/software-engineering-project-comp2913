@@ -12,19 +12,10 @@
     <!-- Own CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-    <!-- Link for Raleway font Font weights: Thin: 100, Regular: 400, Bold: 700-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;400;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- Link for Alfa Slab One fontd-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Raleway:wght@100;400;700;800;900&display=swap" rel="stylesheet">
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-sm navbar-dark ">
+    <nav class="navbar navbar-expand-sm navbar-dark">
       <div class="container-fluid">
 
         <!-- Unregistered logo -->
@@ -84,40 +75,41 @@
             {% endif %}
           </ul>
         </div>
+
       </div>
     </nav>
 
     <!-- main page container -->
     <div class="container-fluid min-vh-100">
-        <div class="row">
-  
-          <!-- left justified content -->
-          <div class="col">
-            {% block left_content %}{% endblock %}
-          </div>
-  
-          <!-- center justified content -->
-          <div class="col">
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for message in messages %}
-                  <div class="alert alert-success">
-                    {{ message }}
-                  </div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
-  
-            {% block content %}{% endblock %}
-          </div>
-  
-          <!-- right justified content -->
-          <div class="col">
-            {% block right_content %}{% endblock %}
-          </div>
-  
+      <div class="row">
+
+        <!-- left justified content -->
+        <div class="col">
+          {% block left_content %}{% endblock %}
         </div>
+
+        <!-- center justified content -->
+        <div class="col">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-success">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
+          {% block content %}{% endblock %}
+        </div>
+
+        <!-- right justified content -->
+        <div class="col">
+          {% block right_content %}{% endblock %}
+        </div>
+
       </div>
+    </div>
 
     <!-- Footer -->
     <footer class="text-center text-lg-start bg-light text-muted">

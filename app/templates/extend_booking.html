@@ -7,7 +7,10 @@
   <div class="col-md-auto">
     <!-- row for header -->
     <div class="row p-3 text-center">
-      <h3 class="fw-normal text-nowrap">Extend Your Booking</h3>
+      <h3 class="fw-normal text-nowrap">
+        Extend Your Booking
+        <img src="{{ url_for('static', filename='images/extend_icon.png') }}" alt="extend_icon" style="width:50px" class="img-fluid">
+      </h3>
     </div>
 
     <!-- row for booking details heading -->
@@ -44,17 +47,21 @@
     </div>
 
     <!-- row for form contents -->
-    <div class="row p-3 text-center">
-      <div class="col text-end">
-        <h5 class="fw-normal text-nowrap">Choose a Period of Hire for Extention:</h5>
+    <div class="flex-row p-3 d-flex justify-content-center align-items-center">
+      <div class="text-end">
+        <h5 class="fw-normal text-nowrap align-items-center"">Choose a Duration for Extention:</h5>
       </div>
 
-      <div class="col text-start">
+      <div class="align-self-center" style="width:5%">
+
+      </div>
+
+      <div class="text-start">
         <form action="" method="post" name="extendbookingform">
           {{ form.csrf_token }}
           {{ form.hidden_tag() }}
           <p>
-            {{ form.hire_period }}
+            {{ form.hire_period(class="form-control form-control-lg") }}
           </p>
         </form>
       </div>
@@ -66,7 +73,7 @@
       </div>
 
       <div class="col text-start">
-        <form action="" method="post" name="cancelbookingform">
+        <form action="" method="post" name="extendbookingform">
           <button type="button submit" class="btn btn-success">Extend Booking</button>
         </form>
       </div>

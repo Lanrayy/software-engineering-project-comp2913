@@ -1,35 +1,47 @@
 {% extends "base.html" %}
 {% block content %}
+
+<!-- HELLO, USER -->
+<div class="user_details">
   <h1>
     Hiii,
     {{ name }}!!
   </h1>
+</div>
 
   <br><br>
 
+<!-- USER DETAILS -->
   <body>
-  <h3>
-    User Details
-  </h3>
+  <div class="title_left">
+    <h3>
+      User Details
+    </h3>
+  </div>
 
-  <table>
-      <tr>
-        <th>Email</th>
-        <th>User Type</th>
-      </tr>
+  <div class="user_details_table">
+    <table>
+        <tr>
+          <th>Email</th>
+          <th>User Type</th>
+        </tr>
 
-      <tr>
-        <td>{{email}}</td>
-        <td>{{account_type}}</td>
-      </tr>
-
-  </table>
+        <tr>
+          <td>{{email}}</td>
+          <td>{{account_type}}</td>
+        </tr>
+    </table>
+  </div>
 
   <br><br>
 
+<!-- CARD DETAILS -->
 
-  <h3>Card Details</h3>
-  
+  <div class="title_left">
+    <h3>Card Details</h3>
+  </div> 
+
+  <div class="card_details_table">
   {% if cards.name != NULL %}
     <table>
           <tr>
@@ -45,19 +57,22 @@
             </tr>
 
             <tr>
-                <td><a href="/delete/{{cards.id}}"><input type="submit" class="btn btn-primary method="POST"" value="Delete card"></a></td>
+                <td><a href="/delete/{{cards.id}}"><input type="submit" class="btn btn-primary" method="POST" value="Delete card"></a></td>
             </tr>
     </table>
+  </div>
   {% endif %}
 
   
-
+  <!-- BOOKING DETAILS -->
   <br><br>
 
-  <h3>Booking History</h3>
+  <div class="title_left">
+    <h3>Booking History</h3>
+  </div>
 
+  <div class="booking_table"></div>
   <table>
-
       <tr>
         <th>Date of Booking</th>
         <th>Duration</th>
@@ -71,7 +86,7 @@
       {% for b in booking %}
         <tr>
             <td>{{ b.initial_date_time }}</td>
-            <td>{{b.duration}}</td>
+            <td>{{b.duration}} hour(s)</td>
             <td>SN{{b.scooter_id}}</td>
             {% for loc in location%}
               {% if b.collection_id == loc.id%}
@@ -100,8 +115,8 @@
             
           </tr>
       {% endfor %}
-
   </table>
+  </div>
   <br>
 
 

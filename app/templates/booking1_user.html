@@ -1,4 +1,19 @@
 {% extends "base.html" %}
+{% block left_content %}
+<!-- For the table of prices -->
+<div class="container d-flex flex-column align-items-center" style="margin-top: 25%">
+  <div class="mt-5">
+    <h4 class="fw-normal text-center">Our Prices!</h4>
+  </div>
+  {% for hire_period in hire_periods %}
+    <div class="" style="width: 50%">
+      <h5 class="fw-normal text-nowrap">Hire Period: {{ hire_period.duration }}</h5>
+      <p>{{ hire_period.price }}</p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
 {% block content %}
 <!-- blank margin space -->
 <br>
@@ -7,7 +22,7 @@
   <div class="col-md-auto">
     <!-- row for header -->
     <div class="row p-3">
-      <h3 class="fw-normal text-nowrap">Make a Booking</h3>
+      <h1 class="fw-normal text-nowrap">Make A Booking</h1>
 
       <!-- row for form contents -->
       <div class="row p-3">
@@ -18,39 +33,49 @@
           <div class="row pt-3 flex-nowrap">
             <div class="col pe-4">
               <p class="text-nowrap">
-                Choose a Collection Point <br>
-                {{ form.location_id }}
+                Choose a Collection Point<br>
+                {{ form.location_id (style="width:400px; height:50px", class="form-control form-control-lg")}}
               </p>
               <p class="text-nowrap">
                 Choose a Scooter <br>
-                {{ form.scooter_id }}
+                {{ form.scooter_id (style="width:400px; height:50px", class="form-control form-control-lg")}}
               </p>
               <p class="text-nowrap">
                 Select a Hire Period <br>
-                {{ form.hire_period }}
+                {{ form.hire_period (style="width:400px; height:50px", class="form-control form-control-lg") }}
               </p>
-            </div>
 
-            <div class="col-7">
-              <img src="{{ url_for('static', filename='images/Scooter.png') }}" alt="Scooter" class="p-2 img-fluid">
-            </div>
-          </div>
-
-          <div class="row pt-3">
             <p class="text-nowrap">
-              Select a Start Time and Date (yyyy-mm-dd hours:minutes)<br>
-              {{ form.start_date }}
+              Select start date and time (yyyy-mm-dd hours:minutes)<br>
+              {{ form.start_date (style="width:400px; height:50px;", class="form-control form-control-lg")}}
             </p>
             {% if card_found %}
-              <strong class="fw-normal text-nowrap">Saved Card Details:</strong>
-              <p>Name on Card: {{ data.name }} <br>Card No: XXXX XXXX XXXX {{ data.last_four}} <br>Expiry: {{ data.expiry_date.month }} / {{ data.expiry_date.year }}</p>
+              <strong class="fw-normal text-nowrap"><b>Saved Card Details:</b></strong>
+              <p>
+                 <pre style="font-family: Arial, sans-serif">Name on Card : {{ data.name }} </pre>
+                 <pre style="font-family: Arial, sans-serif">Card Number  : XXXX XXXX XXXX {{ data.last_four}} </pre>
+                 {%if data.expiry_date.month < 10 %}
+                 <pre style="font-family: Arial, sans-serif">Expiry Date     : 0{{ data.expiry_date.month }} / {{ data.expiry_date.year }} </pre>
+                 {% endif %}
+                 {%if data.expiry_date.month > 9 %}
+                 <pre style="font-family: Arial, sans-serif">Expiry Date     : {{ data.expiry_date.month }} / {{ data.expiry_date.year }} </pre>
+                 {% endif %}
+              </p>
             {% endif %}
+
+            <div class="col">
+              <button type="button submit" class="btn btn-success" name="payment_button">Go to Payment</button>
+            </div>
+            </div>
+
+              <img src="{{ url_for('static', filename='images/Scooter.png') }}" alt="Scooter" style= "position:relative; left:200px; width:450px; height: 370px"  class="p-2 img-fluid">
+
+
           </div>
 
+
           <div class="row text-center pt-3">
-            <div class="col">
-              <button type="button submit"  class="btn btn-success" name="payment_button">Go to Payment</button>
-            </div>
+
           </div>
         </form>
       </div>

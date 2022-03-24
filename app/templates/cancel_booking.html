@@ -7,7 +7,10 @@
   <div class="col-md-auto">
     <!-- row for header -->
     <div class="row p-3 text-center">
-      <h3 class="fw-normal text-nowrap">Cancel Your Booking</h3>
+      <h3 class="fw-normal text-nowrap">
+        Cancel Your Booking
+        <img src="{{ url_for('static', filename='images/cancel_icon.png') }}" alt="cancel_icon" style="width:50px" class="img-fluid">
+      </h3>
     </div>
 
     <!-- row for booking details heading -->
@@ -45,13 +48,13 @@
 
     <div class="row text-center pt-3">
       <div class="col text-end">
-        <form action="" method="post" name="cancelbookingform">
-          <button type="button submit" class="btn btn-danger">Cancel Booking</button>
-        </form>
+        <a href="/profile"><button type="button submit" class="btn btn-primary">Return to Profile</button></a>
       </div>
 
       <div class="col text-start">
-        <a href="/profile"><button type="button submit" class="btn btn-primary">Back to Profile</button></a>
+        <form action="" method="post" name="cancelbookingform">
+          <button type="button submit" class="btn btn-danger">Cancel Booking</button>
+        </form>
       </div>
     </div>
 

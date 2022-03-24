@@ -5,9 +5,10 @@ flask-login
 flask-mail
 flask-sqlalchemy
 flask-migrate
-flask-wooshalchemy
+flask-whooshalchemy
 flask-wtf
 flask-babel
+flask-bcrypt
 coverage
 email_validator
 matplotlib

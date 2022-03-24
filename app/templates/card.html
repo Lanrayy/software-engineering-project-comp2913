@@ -21,7 +21,7 @@
     {{ form.hidden_tag() }}
       <p>
         Name on card <br>
-        {{ form.name }}
+        {{ form.name(class="form-control form-control-lg") }}
         {% if form.name.errors %}
         {% for error in form.name.errors %}
           <span>{{ error }}</span>
@@ -30,7 +30,7 @@
       </p>
       <p>
         Card Number <br>
-        {{ form.card_number }}
+        {{ form.card_number(class="form-control form-control-lg") }}
         {% if form.card_number.errors %}
         {% for error in form.card_number.errors %}
           <span>{{ error }}</span>
@@ -39,7 +39,7 @@
       </p>
       <p>
         Expiry Date (mm-yyyy) <br>
-        {{ form.expiry }}
+        {{ form.expiry(class="form-control form-control-lg") }}
         {% if form.expiry.errors %}
         {% for error in form.expiry.errors %}
           <span>{{ error }}</span>
@@ -48,7 +48,7 @@
       </p>
       <p>
         cvv <br>
-        {{ form.cvv }}
+        {{ form.cvv(class="form-control form-control-lg") }}
         {% if form.cvv.errors %}
         {% for error in form.cvv.errors %}
           <span>{{ error }}</span>
@@ -61,7 +61,7 @@
           {{ form.save_card_details }}
         </p>
       {% endif %}
-      <p><input type="submit" value="Save"></p>
+      <p><input type="submit" class="btn btn-success btn-md btn-block col-12" value="Book Scooter"></p>
   </form>
   {% endif %}
 

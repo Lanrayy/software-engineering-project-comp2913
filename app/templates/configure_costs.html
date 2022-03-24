@@ -26,14 +26,14 @@
   </table>
   <form action="" method="post" name="configureCosts">
         {{ form.hidden_tag() }}
-  
+
         <p>
           Select Duration <br>
-          {{ form.duration }}
+          {{ form.duration(class="form-control form-control-lg") }}
         </p>
         <p>
           Select Price <br>
-          {{ form.price}}
+          {{ form.price(class="form-control form-control-lg") }}
         </p>
         <button type="button submit" class="btn btn-success">Change price</button>
     </form>

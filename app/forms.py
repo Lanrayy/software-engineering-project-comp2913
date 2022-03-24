@@ -13,6 +13,9 @@ from wtforms import FloatField
 from wtforms import DateTimeField
 from app import models
 from wtforms.validators import InputRequired, EqualTo, Length, Email, Regexp, NumberRange
+from flask import flash
+from datetime import datetime, timedelta
+import calendar
 
 # sign up form
 class SignUpForm(FlaskForm):
@@ -51,6 +54,7 @@ class UserBookingForm(FlaskForm):
     #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
 
+
 # card form
 class CardForm(FlaskForm):
     card_number = StringField('card_number', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "Card Number must be a number"), Length(min=16, max=16, message="Card number must be 16 characters")])
@@ -59,6 +63,16 @@ class CardForm(FlaskForm):
     expiry = DateTimeField('expiry', format='%m-%Y', validators=[InputRequired()]) #changed to DateTimeField asking for month then year input
     cvv = StringField('cvv', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "cvv must be a number"), Length(min=3, max=3, message="cvv must be 3 characters")])
     save_card_details = BooleanField('save_card_details')
+
+    def validate_expiry(self, expiry): # cards expire on the last day of the month
+        today = datetime.utcnow()
+        
+        # get the last day of current month and the last day of the expiry month
+        last_day_of_current_month = today.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
+        last_day_of_card_month = expiry.data.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
+
+        if(last_day_of_card_month.date() < last_day_of_current_month.date()):
+            raise ValidationError('Expiry date is invalid! Card is expired!')
 
 
 # admin booking form
@@ -71,9 +85,11 @@ class AdminBookingForm(FlaskForm):
     email = StringField('email', validators=[InputRequired(), Email()])
     #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
+
 # extend booking form
 class ExtendBookingForm(FlaskForm):
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
+
 
 # configure scooter form
 class ConfigureScooterForm(FlaskForm):
