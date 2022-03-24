@@ -1,52 +1,105 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 {% block content %}
-  <h1>How it Works</h1>
+    <!-- how works row -->
+    <div class="row row2">
+            <div class="row-info">
+                <h2 class="row-title">How .sctr Works</h2>
+                <p class="row-subtitle">Create your account online and you'll immediately be able to from our fleet of scooters all over Leeds. </p>
+            </div>
 
-  <p>lorem ipsum</p>
+            <div class="col-2">
+            </div>
 
-  <!-- Images of scooters -->
+            <div class="col-8 row-2-content" >
+                    <div class="row-2-column">
+                            <div>
+                                <img class="row-2-image" src="{{url_for('static', filename='images/booking-app.png')}}" alt="Splash">
+                            </div>
+                            <h4 class="row-2-column-title">Join in minutes</h4>
+                            <p class="row-2-column-description"> Create an account online and you'll be ready to immediately start booking a .sctr</p>
+                    </div>
+                    <div class="row-2-column">
+                            <div>
+                                <img class="row-2-image" src="{{url_for('static', filename='images/booking.png')}}" alt="Splash">
+                            </div>
+                            <h4 class="row-2-column-title">Book a scooter</h4>
+                            <p class="row-2-column-description">Book a .sctr any time of the day and we'll make sure its ready for your trip.</p>
 
-  <h1>Pricing</h1>
-  <div class="row">
+                    </div>
+                    <div class="row-2-column">
 
-    <div class="col align-items-center">
-      <h3>1 Hour</h3>
-      <p>£10</p>
+                        <div>
+                            <img class="row-2-image img-fluid" src="{{url_for('static', filename='images/range.png')}}" alt="Splash">
+                        </div>
+                        <h4 class="row-2-column-title">Ride off into the sunset</h4>
+                        <p class="row-2-column-description">...just make sure you bring back your scooter before your hire period is over.</p>
+                    </div>
+            </div>
+            <div class="col-2">
+            </div>
+        </div>
+
+    <!-- price row -->
+    <div class="row HW_row2">
+        <div class="row-title">
+            <h2 class="row-title">Pricing</h2>
+        </div>
+        {% for price in prices %}
+            <div class="HW_row-2-column">
+                <h4 class="row-2-column-title">{{ price.duration }}</h4>
+                <p class="row-2-column-subtitle">{{ "£%0.2f"|format(price.price|float) }}</p>
+            </div>
+        {% endfor %}
     </div>
 
-    <div class="col align-items-center">
-      <h3>4 Hours</h3>
-      <p>£39</p>
+    <!-- location row -->
+    <div class="row row3">
+        <div class="row-title">
+            <h2 class="row-title">Locations</h2>
+        </div>
+
+        <div class="HW_row-3-column">
+            <div>
+                <img class="HW_row-3-image img-fluid" src="{{ url_for('static', filename='images/trinity.jpg') }}" alt="Trinity">
+            </div>
+            <h4 class="row-2-column-title">Leeds Trinity Centre</h4>
+            <p class="row-2-column-description">27 Albion Street, Leeds LS1 5AT</p>
+        </div>
+
+        <div class="HW_row-3-column">
+            <div>
+                <img class="HW_row-3-image img-fluid" src="{{ url_for('static', filename='images/train_station.jpg') }}" alt="Train Station">
+            </div>
+            <h4 class="row-2-column-title">Leeds Train Station</h4>
+            <p class="row-2-column-description">Leeds Train Station, New Station St, Leeds LS1 4DY</p>
+        </div>
+
+        <div class="HW_row-3-column">
+            <div>
+                <img class="HW_row-3-image img-fluid" src="{{ url_for('static', filename='images/merrion.jpg') }}" alt="Merrion Centre">
+            </div>
+            <h4 class="row-2-column-title">Merrion Centre</h4>
+            <p class="row-2-column-description">Merrion Way, Leeds LS2 8NG</p>
+        </div>
+
+        <div class="HW_row-3-column">
+            <div>
+                <img class="HW_row-3-image img-fluid" src="{{ url_for('static', filename='images/LGI.jpg') }}" alt="Leeds General Infirmary">
+            </div>
+            <h4 class="row-2-column-title">Leeds General Infirmary</h4>
+            <p class="row-2-column-description">Great George St, Leeds LS1 3EX</p>
+        </div>
+
+        <div class="HW_row-3-column">
+            <div>
+                <img class="HW_row-3-image img-fluid" src="{{ url_for('static', filename='images/edge.jpg') }}" alt="The Edge">
+            </div>
+            <h4 class="row-2-column-title">The Edge</h4>
+            <p class="row-2-column-description">University of Leeds, Willow Terrace Road, Woodhouse, Leeds LS2 9JT</p>
+        </div>
     </div>
 
-    <div class="col align-items-center">
-      <h3>1 Day</h3>
-      <p>£109</p>
-    </div>
+    <br><br>
+    <br><br>
 
-    <div class="col align-items-center">
-      <h3>1 Week</h3>
-      <p>£399</p>
-    </div>
-
-  </div>
-
-  <br>
-
-  <h1>Locations</h1>
-
-  <h3>Trinity Centre</h3>
-  <p>27 Albion St, Leeds LS1 5AT</p>
-
-  <h3>LRI Hospital</h3>
-  <p></p>
-
-  <h3>Leeds Train Station</h3>
-  <p>New Station St, Leeds LS1 4DY</p>
-
-  <h3>Merrion Centre</h3>
-  <p>Merrion Way, Leeds LS2 8NG</p>
-
-  <h3>UoL Edge Sports Centre</h3>
-  <p>University of Leeds, Willow Terrace Road, Leeds LS2 9JT</p>
 {% endblock %}

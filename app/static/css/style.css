@@ -331,7 +331,70 @@ User Dashboard Page
   width: 100%; 
 }
 
+/***************************
+How It Works Page
+****************************/
 
+.HW_row2 {
+  margin-top: 30px;
+}
 
+.HW_row-2-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* border: 1px solid green; */
+  height: 200px;
+  width: 24%;
+  min-width: 200px;
+  margin: 0px 10px 0px 10px;
+}
 
+.HW_row-3-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* border: 1px solid green; */
+  height: 200px;
+  width: 20%;
+  min-width:323px;
+  /*margin: 0px 10px 0px 10px; */
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
 
+.HW_row-3-image {
+  width: 300px;
+  height: auto;
+  margin-bottom: 20px;
+  margin-top: 50px;
+}
+
+/***************************
+Admin Dashboard Page
+****************************/
+
+.AD_button {
+  width: 200px;
+  height: 200px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.AD_row2 {
+  margin-top: 30px;
+}
+
+.AD_row-2-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* border: 1px solid green; */
+  height: 200px;
+  width: 24%;
+  min-width: 200px;
+  margin: 0px 10px 0px 10px;
+}

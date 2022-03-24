@@ -104,9 +104,11 @@ def index():
 
 @app.route('/info')
 def info():
+    prices = models.pricing.query.all()
     logPage()
     return render_template('info.html',
-                            title='How it Works')
+                            title='How it Works',
+                            prices=prices)
 
 global now
 
@@ -1110,7 +1112,8 @@ def admin_dashboard():
         organise_bookings()
         return render_template('admin_dashboard.html',
                                 name=current_user.name,
-                                title='Admin Dashboard')
+                                title='Admin Dashboard',
+                                admin_type=current_user.account_type)
     except Exception as e:
         logger.error(e)
         if current_user.is_anonymous:
