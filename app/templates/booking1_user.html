@@ -2,7 +2,7 @@
 {% block left_content %}
 
 <div class="container d-flex flex-column align-items-left" style = "margin-left: 20%; margin-top: 10%">
-  
+
   <div class="mt-5" style = "margin-bottom: 4%">
     <h1 class = fw-normal text-nowrap>Our Prices!</h1>
   </div>
@@ -63,10 +63,10 @@
               <p>
                  <pre style="font-family: Raleway; font-size: 18px">Name on Card : {{ data.name }} </pre>
                  <pre style="font-family: Raleway; font-size: 18px">Card Number  : XXXX XXXX XXXX {{ data.last_four}} </pre>
-                 {%if data.expiry_date.month < 10 %}
+                 {% if data.expiry_date.month < 10 %}
                  <pre style="font-family: Raleway; font-size: 18px">Expiry Date     : 0{{ data.expiry_date.month }} / {{ data.expiry_date.year }} </pre>
                  {% endif %}
-                 {%if data.expiry_date.month > 9 %}
+                 {% if data.expiry_date.month > 9 %}
                  <pre style="font-family: Raleway; font-size: 18px">Expiry Date     : {{ data.expiry_date.month }} / {{ data.expiry_date.year }} </pre>
                  {% endif %}
               </p>
