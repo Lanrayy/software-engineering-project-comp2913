@@ -28,7 +28,10 @@ def organise_bookings():
             booking.status = "past"
 
     #finalise changes
-    db.session.commit()
+    try:
+        db.session.commit()
+    except:
+        db.session.rollback()
     return 0
 
 #function for automatically adding scooters to locations
@@ -47,7 +50,10 @@ def organise_scooters():
         scooter_location.num_scooters = scooter_location.num_scooters + 1
 
     #finalise changes
-    db.session.commit()
+    try:
+        db.session.commit()
+    except:
+        db.session.rollback()
     return 0
 
 
@@ -126,7 +132,10 @@ def register():
         hashed_password= bcrypt.generate_password_hash(form.password1.data)
         u = models.user(password = hashed_password, email = form.email.data, account_type = "customer", user_type = form.user_type.data, name = form.name.data)
         db.session.add(u)    # add user to db
-        db.session.commit()     # commit user to db
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()     # commit user to db
 
         now = str(datetime.now())
         logger.info(u.email+" Created an account at "+ now)
@@ -202,7 +211,10 @@ def card():
                                             cvv = hashed_cvv,
                                             user_id = current_user.id)
                     db.session.add(p)
-                    db.session.commit()
+                    try:
+                        db.session.commit()
+                    except:
+                        db.session.rollback()
                     flash("Card details saved")
                     logger.info("Card details saved")
 
@@ -231,7 +243,10 @@ def card():
                                                             user_id = current_user.id,
                                                             booking_id = booking.id)
                         db.session.add(new_transaction)
-                        db.session.commit()
+                        try:
+                            db.session.commit()
+                        except:
+                            db.session.rollback()
                         logger.info("New transaction added to transactions table")
 
                         #write the email message
@@ -265,7 +280,10 @@ def card():
                                                 scooter_id = session.get('booking_scooter_id', None),
                                                 collection_id = session.get('booking_collection_id', None))
                         db.session.add(booking)
-                        db.session.commit()
+                        try:
+                            db.session.commit()
+                        except:
+                            db.session.rollback()
 
                         # add new transaction to the transaction table- used on the metrics page, no user id
                         new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
@@ -289,7 +307,10 @@ def card():
                                                 scooter_id = session.get('booking_scooter_id', None),
                                                 collection_id = session.get('booking_collection_id', None))
                         db.session.add(booking)
-                        db.session.commit()
+                        try:
+                            db.session.commit()
+                        except:
+                            db.session.rollback()
 
                         # add new transaction to the transaction table- used on the metrics page, with user id
                         new_transaction = models.transactions(hire_period = session.get('booking_duration', None),
@@ -302,7 +323,10 @@ def card():
                         #set user to recipient
                         recipients=[current_user.email]
 
-                    db.session.commit()
+                    try:
+                        db.session.commit()
+                    except:
+                        db.session.rollback()
 
                     msg = Message('Booking Confirmation',
                                     sender='scootersleeds@gmail.com',
@@ -389,7 +413,10 @@ def delete(id):
     try:
         #change the status value of this id into complete and commit to the database
         db.session.delete(to_delete)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
         logger.info("Card removed")
         return redirect('/profile')
 
@@ -443,7 +470,10 @@ def send_feedback():
     if request.method == 'POST':
         f = models.feedback(message=form.feedback.data, priority=0, resolved=0)
         db.session.add(f)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
         flash(f'Feedback Submitted', 'success')
         if current_user.is_authenticated:
             logger.info("(User " + str(current_user.id) + ") feedback sent")
@@ -517,13 +547,17 @@ def booking1():
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
                                                 form = form,
-                                                 hire_periods = hire_periods, data = data, card_found=True)
+                                                 hire_periods = hire_periods,
+                                                 data = data,
+                                                 card_found=True)
 
                     else:
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
                                                 form = form,
-                                                hire_periods = hire_periods)
+                                                hire_periods = hire_periods,
+                                                card_found=False)
+
                 #check that they actually put a start date
                 if form.start_date.data == None:
                     flash("Please enter a valid date")
@@ -533,12 +567,15 @@ def booking1():
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
                                                 form = form,
-                                                hire_periods = hire_periods, data = data, card_found=True)
+                                                hire_periods = hire_periods,
+                                                data = data,
+                                                card_found=True)
                     else:
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
                                                 form = form,
-                                                hire_periods = hire_periods)
+                                                hire_periods = hire_periods,
+                                                card_found=False)
 
                 #check if the start date further in the past than now, with a grace period of 5 minutes
                 if form.start_date.data < datetime.utcnow() + timedelta(minutes = -5):
@@ -549,13 +586,16 @@ def booking1():
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
                                                 form = form,
-                                                hire_periods = hire_periods, data = data, card_found=True)
+                                                hire_periods = hire_periods,
+                                                data = data,
+                                                card_found=True)
 
                     else:
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
                                                 form = form,
-                                                hire_periods = hire_periods)
+                                                hire_periods = hire_periods,
+                                                card_found=False)
                 #convert the option selected in the SelectField into a cost and the number of hours
                 if form.hire_period.data == '1':
                     cost = models.pricing.query.filter_by(id = 1).first().price
@@ -620,13 +660,16 @@ def booking1():
                             return render_template('booking1_user.html',
                                                     title='Choose a Location',
                                                     form = form,
-                                                    hire_periods = hire_periods, data = data, card_found=True)
+                                                    hire_periods = hire_periods,
+                                                    data = data,
+                                                    card_found=True)
 
                         else:
                             return render_template('booking1_user.html',
                                                     title='Choose a Location',
                                                     form = form,
-                                                    hire_periods = hire_periods)
+                                                    hire_periods = hire_periods,
+                                                    card_found=False)
 
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
@@ -637,10 +680,47 @@ def booking1():
                                         str(form.start_date.data) +
                                         " - " +
                                         str(form.start_date.data + timedelta(hours = hours)))
-                        return render_template('booking1_user.html',
-                                                title='Choose a Location',
-                                                form = form,
-                                                hire_periods = hire_periods)
+                        exists = models.card_details.query.filter_by(user_id = current_user.id).first()
+                        if(exists):
+                            return render_template('booking1_user.html',
+                                                    title='Choose a Location',
+                                                    form = form,
+                                                    hire_periods = hire_periods,
+                                                    data = data,
+                                                    card_found=True)
+
+                        else:
+                            return render_template('booking1_user.html',
+                                                    title='Choose a Location',
+                                                    form = form,
+                                                    hire_periods = hire_periods,
+                                                    card_found=False)
+
+                    #check that the current booking doesn't completely overlap a booking
+                    #if the start time for a booking is during the current booking attempt
+                    if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
+                        flash("The current booking conflicts with an existing booking")
+                        logger.info("Booking not made: pre-existing booking for Scooter " +
+                                        str(form.scooter_id.data) +
+                                        " within range " +
+                                        str(form.start_date.data) +
+                                        " - " +
+                                        str(form.start_date.data + timedelta(hours = hours)))
+                        exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
+                        if(exists):
+                            return render_template('booking1_user.html',
+                                                    title='Choose a Location',
+                                                    form = form,
+                                                    hire_periods = hire_periods,
+                                                    data = data,
+                                                    card_found=True)
+
+                        else:
+                            return render_template('booking1_user.html',
+                                                    title='Choose a Location',
+                                                    form = form,
+                                                    hire_periods = hire_periods,
+                                                    card_found=False)
                 #check upcoming bookings
                 for booking in current_upcoming_bookings:
                     #check that the selected start date doesn't fall during a booking
@@ -650,19 +730,21 @@ def booking1():
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
                                         str(form.start_date.data))
-
-
+                        exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
                         if(exists):
                             return render_template('booking1_user.html',
                                                     title='Choose a Location',
                                                     form = form,
-                                                    hire_periods = hire_periods, data = data, card_found=True)
+                                                    hire_periods = hire_periods,
+                                                    data = data,
+                                                    card_found=True)
 
                         else:
                             return render_template('booking1_user.html',
                                                     title='Choose a Location',
                                                     form = form,
-                                                    hire_periods = hire_periods)
+                                                    hire_periods = hire_periods,
+                                                    card_found=False)
 
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
@@ -673,11 +755,47 @@ def booking1():
                                         str(form.start_date.data) +
                                         " - " +
                                         str(form.start_date.data + timedelta(hours = hours)))
-                        return render_template('booking1_user.html',
-                                                title='Choose a Location',
-                                                form = form,
-                                                hire_periods = hire_periods, 
-                                                card_found=card_found)
+                        exists = models.card_details.query.filter_by(user_id = current_user.id).first()
+                        if(exists):
+                            return render_template('booking1_user.html',
+                                                    title='Choose a Location',
+                                                    form = form,
+                                                    hire_periods = hire_periods,
+                                                    data = data,
+                                                    card_found=True)
+
+                        else:
+                            return render_template('booking1_user.html',
+                                                    title='Choose a Location',
+                                                    form = form,
+                                                    hire_periods = hire_periods,
+                                                    card_found=False)
+
+                    #check that the current booking doesn't completely overlap a booking
+                    #if the start time for a booking is during the current booking attempt
+                    if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
+                        flash("The current booking conflicts with an existing booking")
+                        logger.info("Booking not made: pre-existing booking for Scooter " +
+                                        str(form.scooter_id.data) +
+                                        " within range " +
+                                        str(form.start_date.data) +
+                                        " - " +
+                                        str(form.start_date.data + timedelta(hours = hours)))
+                        exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
+                        if(exists):
+                            return render_template('booking1_user.html',
+                                                    title='Choose a Location',
+                                                    form = form,
+                                                    hire_periods = hire_periods,
+                                                    data = data,
+                                                    card_found=True)
+
+                        else:
+                            return render_template('booking1_user.html',
+                                                    title='Choose a Location',
+                                                    form = form,
+                                                    hire_periods = hire_periods,
+                                                    card_found=False)
 
                 #store the booking details as a session to be used on successful payment
                 session['booking_duration'] = hours
@@ -720,7 +838,10 @@ def booking1():
                                                         user_id = session.get('booking_user_id', None),
                                                         booking_id = session.get('booking_id', None),)
                     db.session.add(new_transaction)
-                    db.session.commit()
+                    try:
+                        db.session.commit()
+                    except:
+                        db.session.rollback()
 
 
 
@@ -738,7 +859,6 @@ def booking1():
 
                     flash("Booking Successful!")
                     logger.info("(User " + str(current_user.id) + "): Booking " + str(booking.id) + " created")
-                    print("booking made")
 
                     return redirect("/booking2") #send to booking confirmation
                 else:
@@ -850,6 +970,21 @@ def booking1():
                                                 title='Choose a Location',
                                                 form = form,
                                                 hire_periods = hire_periods)
+
+                    #check that the current booking doesn't completely overlap a booking
+                    #if the start time for a booking is during the current booking attempt
+                    if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
+                        flash("The current booking conflicts with an existing booking")
+                        logger.info("Booking not made: pre-existing booking for Scooter " +
+                                        str(form.scooter_id.data) +
+                                        " within range " +
+                                        str(form.start_date.data) +
+                                        " - " +
+                                        str(form.start_date.data + timedelta(hours = hours)))
+                        return render_template('booking1_admin.html',
+                                                title='Choose a Location',
+                                                form = form,
+                                                hire_periods = hire_periods)
                 #check upcoming bookings
                 for booking in current_upcoming_bookings:
                     #check that the selected start date doesn't fall during a booking
@@ -866,6 +1001,21 @@ def booking1():
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
                         flash("The projected end time falls within a pre-existing booking")
+                        logger.info("Booking not made: pre-existing booking for Scooter " +
+                                        str(form.scooter_id.data) +
+                                        " within range " +
+                                        str(form.start_date.data) +
+                                        " - " +
+                                        str(form.start_date.data + timedelta(hours = hours)))
+                        return render_template('booking1_admin.html',
+                                                title='Choose a Location',
+                                                form = form,
+                                                hire_periods = hire_periods)
+
+                    #check that the current booking doesn't completely overlap a booking
+                    #if the start time for a booking is during the current booking attempt
+                    if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
+                        flash("The current booking conflicts with an existing booking")
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -987,7 +1137,10 @@ def cancel_booking():
             #delete the actual booking
             models.booking.query.filter_by(id = session.get('booking_id', None)).first().status = "cancelled"
 
-            db.session.commit()
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback()
 
             flash("Booking successfully cancelled!")
             logger.info("Booking " + str(session.get('booking_id')) + " cancelled")
@@ -1090,7 +1243,10 @@ def extend_booking():
                                                     booking_id = booking.id)
                 db.session.add(new_transaction)
 
-                db.session.commit()
+                try:
+                    db.session.commit()
+                except:
+                    db.session.rollback()
 
                 #write the email message
                 msg = Message('Booking Extension Confirmation',
@@ -1202,7 +1358,10 @@ def edit_feedback(id):
         if form.resolve.data:
             f.resolved = (f.resolved + 1) % 2 # Toggles resolved (1 goes to 0, 0 goes to 1)
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
         return redirect(url_for('review_feedback'))
 
     return render_template('edit_feedback.html', rec=rec, form=form)
@@ -1236,7 +1395,10 @@ def add_scooter():
     if form.validate_on_submit():
         u = models.scooter(availability = form.availability.data, collection_id = form.location_id.data)
         db.session.add(u)    # add scooter to db
-        db.session.commit()     # commit scooter to db
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()     # commit scooter to db
         now = str(datetime.now())
         logger.info("Admin has added a scooter with ID: "+ str(u.id))
     return render_template('add_scooter.html',
@@ -1259,7 +1421,10 @@ def configure_scooter():
         if request.form.get("cancel") is None:
             scooter.availability = request.form.get("availability")
             scooter.collection_id = request.form.get("location_id")
-            db.session.commit()
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback()
             # print(models.scooter.query.all())
             flash(f'Scooter Details Updated', 'success')
             logger.info("Scooter " + str(scooter.id) + " configured - Availability: " + str(scooter.availability) + ", Location ID: " + str(scooter.collection_id))
@@ -1296,7 +1461,10 @@ def configure_costs():
             flash("Error price not updated")
             logger.info("Scooter costs configuration failed")
 
-        db.session.commit()     # commit scooter to db
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()     # commit scooter to db
     else:
         flash("Invalid form data")
         logger.info("Scooter costs configuration failed")
