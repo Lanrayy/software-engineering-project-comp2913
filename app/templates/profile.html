@@ -1,48 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
 
+  <br><br>
+
 <!-- HELLO, USER -->
-<div class="user_details">
-  <h1>
-    Hiii,
-    {{ name }}!!
-  </h1>
-</div>
+  <div class="title_left">
+    <h1>
+      Hiii,
+      {{ name }}!!
+    </h1>
+  </div>
 
   <br><br>
 
 <!-- USER DETAILS -->
   <body>
-  <div class="title_left">
     <h3>
       User Details
     </h3>
-  </div>
+    
+    <div class="user_details_table">
+      <table>
+          <tr>
+            <th>Email</th>
+            <th>User Type</th>
+          </tr>
 
-  <div class="user_details_table">
-    <table>
-        <tr>
-          <th>Email</th>
-          <th>User Type</th>
-        </tr>
-
-        <tr>
-          <td>{{email}}</td>
-          <td>{{account_type}}</td>
-        </tr>
-    </table>
-  </div>
+          <tr>
+            <td>{{email}}</td>
+            <td>{{account_type}}</td>
+          </tr>
+      </table>
+    </div>
 
   <br><br>
 
 <!-- CARD DETAILS -->
 
-  <div class="title_left">
-    <h3>Card Details</h3>
-  </div> 
+  <h3>Card Details</h3>
 
-  <div class="card_details_table">
   {% if cards.name != NULL %}
+  <div class="card_details_table">
     <table>
           <tr>
             <th>Name on Card</th>
@@ -67,11 +65,8 @@
   <!-- BOOKING DETAILS -->
   <br><br>
 
-  <div class="title_left">
-    <h3>Booking History</h3>
-  </div>
+  <h3>Booking History</h3>
 
-  <div class="booking_table"></div>
   <table>
       <tr>
         <th>Date of Booking</th>
@@ -115,12 +110,14 @@
             
           </tr>
       {% endfor %}
+          
   </table>
-  </div>
-  <br>
 
+  <br><br>
 
   <a href="/send_feedback"><input type="submit" class="btn btn-primary" value="Submit Feedback"></a></td>
+
+  <br><br><br><br>
 
 </body>
 
