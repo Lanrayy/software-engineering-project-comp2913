@@ -512,29 +512,50 @@ def booking1():
                 if form.scooter_id.data == "0":
                     flash("Please choose a location with available scooters")
                     logger.info("Booking not made: no available scooters at " + str(form.location_id.data))
-                    return render_template('booking1_user.html',
-                                            title='Choose a Location',
-                                            form = form,
-                                            hire_periods = hire_periods)
+                    exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
+                    if(exists):
+                        return render_template('booking1_user.html',
+                                                title='Choose a Location',
+                                                form = form,
+                                                 hire_periods = hire_periods, data = data, card_found=True)
 
+                    else:
+                        return render_template('booking1_user.html',
+                                                title='Choose a Location',
+                                                form = form,
+                                                hire_periods = hire_periods)
                 #check that they actually put a start date
                 if form.start_date.data == None:
                     flash("Please enter a valid date")
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
-                    return render_template('booking1_user.html',
-                                            title='Choose a Location',
-                                            form = form,
-                                            hire_periods = hire_periods)
+                    exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
+                    if(exists):
+                        return render_template('booking1_user.html',
+                                                title='Choose a Location',
+                                                form = form,
+                                                hire_periods = hire_periods, data = data, card_found=True)
+                    else:
+                        return render_template('booking1_user.html',
+                                                title='Choose a Location',
+                                                form = form,
+                                                hire_periods = hire_periods)
 
                 #check if the start date further in the past than now, with a grace period of 5 minutes
                 if form.start_date.data < datetime.utcnow() + timedelta(minutes = -5):
                     flash("The start date can't be in the past")
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
-                    return render_template('booking1_user.html',
-                                            title='Choose a Location',
-                                            form = form,
-                                            hire_periods = hire_periods)
+                    exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
+                    if(exists):
+                        return render_template('booking1_user.html',
+                                                title='Choose a Location',
+                                                form = form,
+                                                hire_periods = hire_periods, data = data, card_found=True)
 
+                    else:
+                        return render_template('booking1_user.html',
+                                                title='Choose a Location',
+                                                form = form,
+                                                hire_periods = hire_periods)
                 #convert the option selected in the SelectField into a cost and the number of hours
                 if form.hire_period.data == '1':
                     cost = models.pricing.query.filter_by(id = 1).first().price
@@ -594,10 +615,19 @@ def booking1():
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
                                         str(form.start_date.data))
-                        return render_template('booking1_user.html',
-                                                title='Choose a Location',
-                                                form = form,
-                                                hire_periods = hire_periods)
+                        exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
+                        if(exists):
+                            return render_template('booking1_user.html',
+                                                    title='Choose a Location',
+                                                    form = form,
+                                                    hire_periods = hire_periods, data = data, card_found=True)
+
+                        else:
+                            return render_template('booking1_user.html',
+                                                    title='Choose a Location',
+                                                    form = form,
+                                                    hire_periods = hire_periods)
+
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
                         flash("The projected end time falls within a pre-existing booking")
@@ -620,10 +650,20 @@ def booking1():
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
                                         str(form.start_date.data))
-                        return render_template('booking1_user.html',
-                                                title='Choose a Location',
-                                                form = form,
-                                                hire_periods = hire_periods)
+
+
+                        if(exists):
+                            return render_template('booking1_user.html',
+                                                    title='Choose a Location',
+                                                    form = form,
+                                                    hire_periods = hire_periods, data = data, card_found=True)
+
+                        else:
+                            return render_template('booking1_user.html',
+                                                    title='Choose a Location',
+                                                    form = form,
+                                                    hire_periods = hire_periods)
+
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
                         flash("The projected end time falls within a pre-existing booking")
@@ -636,7 +676,8 @@ def booking1():
                         return render_template('booking1_user.html',
                                                 title='Choose a Location',
                                                 form = form,
-                                                hire_periods = hire_periods)
+                                                hire_periods = hire_periods, 
+                                                card_found=card_found)
 
                 #store the booking details as a session to be used on successful payment
                 session['booking_duration'] = hours
@@ -1237,17 +1278,16 @@ def configure_costs():
         #assign corresponding db value based on the SelectForm value.
 
         if form.duration.data == "1":
-            durationToCheck = "1 hour"
+            durationToCheck = "1 Hour"
         if form.duration.data == "2":
-            durationToCheck = "4 hours"
+            durationToCheck = "4 Hours"
         if form.duration.data == "3":
-            durationToCheck = "1 day"
+            durationToCheck = "1 Day"
         if form.duration.data == "4":
-            durationToCheck = "1 week"
+            durationToCheck = "1 Week"
 
         #find record and change price.
         dur = models.pricing.query.filter_by(duration = durationToCheck).first()
-
         if dur:
             dur.price = form.price.data
             flash("Price updated")
@@ -1257,6 +1297,9 @@ def configure_costs():
             logger.info("Scooter costs configuration failed")
 
         db.session.commit()     # commit scooter to db
+    else:
+        flash("Invalid form data")
+        logger.info("Scooter costs configuration failed")
     return render_template('configure_costs.html',
                             rec=rec, form=form)
 
