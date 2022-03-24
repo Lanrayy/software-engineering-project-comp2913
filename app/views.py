@@ -353,8 +353,15 @@ def user_dashboard():
         logPage()
         #clean up bookings table
         organise_bookings()
+
+        #filter the query into the bookings and locations
+        locations = models.collection_point.query.all()
+        bookings =  models.booking.query.filter_by(email = current_user.email, status = "upcoming")
+
         return render_template('user_dashboard.html',
                                 name=current_user.name,
+                                booking = bookings,
+                                location = locations,
                                 title='User Dashboard')
     except Exception as e:
         logger.error(e)
