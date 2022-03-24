@@ -331,7 +331,42 @@ User Dashboard Page
   width: 100%; 
 }
 
+/***************************
+How It Works Page
+****************************/
 
+.HW_row2 {
+  margin-top: 30px;
+}
 
+.HW_row-2-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* border: 1px solid green; */
+  height: 200px;
+  width: 370px;
+  margin: 0px 10px 0px 10px;
+}
 
+.HW_row-3-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* border: 1px solid green; */
+  height: 200px;
+  width: 323px;
+  /*margin: 0px 10px 0px 10px; */
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+
+.HW_row-3-image {
+  width: 300px;
+  height: auto;
+  margin-bottom: 20px;
+  margin-top: 50px;
+}
 

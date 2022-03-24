@@ -104,9 +104,11 @@ def index():
 
 @app.route('/info')
 def info():
+    prices = models.pricing.query.all()
     logPage()
     return render_template('info.html',
-                            title='How it Works')
+                            title='How it Works',
+                            prices=prices)
 
 global now
 
