@@ -36,18 +36,6 @@
     <!-- second row -->
     <div class="row UD_row1">
       <!-- m -->
-      <div style="padding: 0px">
-          {% with messages = get_flashed_messages() %}
-            {% if messages %}
-              {% for message in messages %}
-                <div class="alert alert-success">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
-      </div>
-
       <div class="col-7">
         <div>
           <img class="main_image_user_dashboard" src="{{url_for('static', filename='images/booking-app.png')}}" alt="Splash">
@@ -110,6 +98,8 @@
       {% endfor %}
 
   </table>
+
+  <br><br><br><br>
 
 {% endblock %}
 
