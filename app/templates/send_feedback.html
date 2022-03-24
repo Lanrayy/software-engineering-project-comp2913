@@ -22,6 +22,11 @@
 
           <!-- <div class="border border-warning"> -->
             {{ form.feedback(class="container-fluid form-control form-control-lg", rows="5") }}
+            {% if form.feedback.errors %}
+              {% for error in form.feedback.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            {% endif %}
 
           <!-- </div> -->
           <!-- {{ form.feedback(cols="72", rows="5") }} -->
