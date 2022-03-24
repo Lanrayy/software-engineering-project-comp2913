@@ -1233,7 +1233,7 @@ def configure_costs():
     rec = models.pricing.query.all()
     form = PricesForm()
 
-    if request.method == 'POST':
+    if form.validate_on_submit():
         #assign corresponding db value based on the SelectForm value.
 
         if form.duration.data == "1":
@@ -1247,17 +1247,18 @@ def configure_costs():
 
         #find record and change price.
         dur = models.pricing.query.filter_by(duration = durationToCheck).first()
-        print(dur)
         if dur:
             dur.price = form.price.data
             flash("Price updated")
             logger.info("Scooter costs configured: " + str(dur.id) + " set to " +  str(dur.price))
         else:
             flash("Error price not updated")
-            print(form.errors)
             logger.info("Scooter costs configuration failed")
 
         db.session.commit()     # commit scooter to db
+    else:
+        flash("Invalid form data")
+        logger.info("Scooter costs configuration failed")
     return render_template('configure_costs.html',
                             rec=rec, form=form)
 
