@@ -1,4 +1,4 @@
-{% extends "base_sales.html" %}
+{% extends "base2.html" %}
 {% block content %}
   <div class="row text-center mt-5">
     <h1>Sales Metrics</h1>
@@ -15,12 +15,12 @@
       <p>One week metric: £{{one_week_metric}}</p>
     </div>
     <div class="col-12 col-sm-6"> 
-      <img class="img-fluid" src="{{url_for('static', filename='graphs/hireperiod.jpg')}}" width="auto" />
+      <img class="img-fluid border" src="{{url_for('static', filename='graphs/hireperiod.jpg')}}" width="auto" />
     </div>
 
 
     <div class="col-12 col-sm-6 d-none d-sm-block"> 
-      <img class="img-fluid" src="{{url_for('static', filename='graphs/daily.jpg')}}" />
+      <img class="img-fluid border" src="{{url_for('static', filename='graphs/daily.jpg')}}" />
     </div>
     <div class="col-12 col-sm-6 ps-5 pt-5">
       <h2>Combined Daily Income</h2>
@@ -36,7 +36,7 @@
     </div>
 
     <div class="col-12 col-sm-6 d-block d-sm-none"> 
-      <img class="img-fluid" src="{{url_for('static', filename='graphs/daily.jpg')}}" />
+      <img class="img-fluid border" src="{{url_for('static', filename='graphs/daily.jpg')}}" />
     </div>
 
     <div class="col-12 col-sm-6 ps-5 pt-5">
@@ -45,8 +45,8 @@
       <p>Normal transactions: {{normal_transactions}}</p>
 
     </div>
-    <div class="col-12 col-sm-6">
-      <img class="img-fluid" src="{{url_for('static', filename='graphs/transaction_type.jpg')}}" />
+    <div class="col-12 col-sm-6 mb-3">
+      <img class="img-fluid border" src="{{url_for('static', filename='graphs/transaction_type.jpg')}}" />
     </div>
   </div>
 
