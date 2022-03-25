@@ -23,13 +23,13 @@ pricing = models.pricing(duration = "1 Week", price = 399.00)
 db.session.add(pricing)
 
 #initialise scooters
-scooter = models.scooter(id = 1, availability = 1, collection_id = 1)
+scooter = models.scooter(id = 100, availability = 1, collection_id = 1)
 db.session.add(scooter)
-scooter = models.scooter(id = 2, availability = 1, collection_id = 1)
+scooter = models.scooter(id = 101, availability = 1, collection_id = 1)
 db.session.add(scooter)
-scooter = models.scooter(id = 3, availability = 1, collection_id = 1)
+scooter = models.scooter(id = 102, availability = 1, collection_id = 1)
 db.session.add(scooter)
-scooter = models.scooter(id = 4, availability = 1, collection_id = 1)
+scooter = models.scooter(id = 103, availability = 1, collection_id = 1)
 db.session.add(scooter)
 
 scooter = models.scooter(id = 104, availability = 1, collection_id = 2)
