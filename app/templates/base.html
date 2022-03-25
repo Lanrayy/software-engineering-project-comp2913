@@ -94,6 +94,15 @@
 
     <!-- main page container -->
     <div class="container-fluid min-vh-100">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-success">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
       <div class="row flex-nowrap">
 
         <!-- left justified content -->
@@ -103,16 +112,6 @@
 
         <!-- center justified content -->
         <div class="col">
-          {% with messages = get_flashed_messages() %}
-            {% if messages %}
-              {% for message in messages %}
-                <div class="alert alert-success">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
-
           {% block content %}{% endblock %}
         </div>
 
