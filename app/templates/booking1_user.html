@@ -4,7 +4,7 @@
 <div class="container d-flex flex-column align-items-left" style = "margin-left: 20%; margin-top: 10%">
 
   <div class="mt-5" style = "margin-bottom: 4%">
-    <h1 class = fw-normal text-nowrap>Our Prices!</h1>
+    <h1 class = "fw-normal text-nowrap">Our Prices!</h1>
   </div>
 
   {% for hire_period in hire_periods %}
@@ -31,7 +31,9 @@
   <div class="col-md-auto">
     <!-- row for header -->
     <div class="row p-3">
-      <h1 class="fw-normal text-nowrap">Make A Booking</h1>
+      <div class="row">
+        <h1 class="fw-normal text-nowrap">Make A Booking</h1>
+      </div>
 
       <!-- row for form contents -->
       <div class="row p-3">
@@ -85,8 +87,6 @@
 
             </div>
 
-              <img src="{{ url_for('static', filename='images/Scooter.png') }}" alt="Scooter" style= "position:relative; left:200px; width:450px; height: 370px"  class="p-2 img-fluid">
-
 
           </div>
 
@@ -125,4 +125,10 @@
     });
   }
 </script>
+{% endblock %}
+
+{% block right_content %}
+<div class="row">
+  <img src="{{ url_for('static', filename='images/booking.png') }}" alt="Make a Booking" style= "position:relative; right:10%; width:200px; height: 200px; min-width:200px"  class="p-2">
+</div>
 {% endblock %}

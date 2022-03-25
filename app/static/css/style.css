@@ -86,11 +86,11 @@ body{
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
-  width: 100%; 
+  width: 100%;
 }
 
 table.center {
-  margin-left: auto; 
+  margin-left: auto;
   margin-right: auto;
 }
 
@@ -254,7 +254,7 @@ iframe{
 
 
 /***************************
-User Dashboard Page 
+User Dashboard Page
 ****************************/
 
 .UD_row-1 {
@@ -320,15 +320,15 @@ User Dashboard Page
 }
 
 .user_details_table{
-  width: 50%; 
+  width: 50%;
 }
 
 .card_details_table{
-  width: 80%; 
+  width: 80%;
 }
 
 .booking_table{
-  width: 100%; 
+  width: 100%;
 }
 
 /***************************
