@@ -179,14 +179,13 @@ tr:nth-child(even) {
   display: flex;
   /* border: 1px solid red; */
   justify-content: center;
-  padding: 40px;
+  padding: 50px;
 }
 
 
 /* ROW 2 */
 .row2{
   /* border: 1px solid red; */
-  height: 600px;
   margin-top: 40px;
 }
 
@@ -378,7 +377,7 @@ Admin Dashboard Page
 
 .AD_button {
   width: 200px;
-  height: 200px;
+  height: 100px;
   margin-left: 20px;
   margin-right: 20px;
 }
@@ -393,8 +392,8 @@ Admin Dashboard Page
   align-items: center;
   flex-direction: column;
   /* border: 1px solid green; */
-  height: 200px;
-  width: 24%;
+  height: 100px;
+  width: 25%;
   min-width: 200px;
-  margin: 0px 10px 0px 10px;
+  margin: 10px 10px 10px 10px;
 }
