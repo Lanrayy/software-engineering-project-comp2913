@@ -1197,6 +1197,9 @@ def extend_booking():
             else:
                 cost = 10.00
                 hours = 1
+            print(form.hire_period.data)
+            print(cost)
+            print(hours)
 
             #check every booking made with this scooter
             #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings

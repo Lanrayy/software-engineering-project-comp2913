@@ -47,37 +47,35 @@
     </div>
 
     <!-- row for form contents -->
-    <div class="flex-row p-3 d-flex justify-content-center align-items-center">
-      <div class="text-end">
-        <h5 class="fw-normal text-nowrap align-items-center"">Choose a Duration for Extention:</h5>
-      </div>
+    <form action="" method="post" name="extendbookingform">
+      {{ form.csrf_token }}
+      {{ form.hidden_tag() }}
+      <div class="flex-row p-3 d-flex justify-content-center align-items-center">
+        <div class="text-end">
+          <h5 class="fw-normal text-nowrap align-items-center"">Choose a Duration for Extention:</h5>
+        </div>
 
-      <div class="align-self-center" style="width:5%">
+        <div class="align-self-center" style="width:5%">
 
-      </div>
+        </div>
 
-      <div class="text-start">
-        <form action="" method="post" name="extendbookingform">
-          {{ form.csrf_token }}
-          {{ form.hidden_tag() }}
+        <div class="text-start">
           <p>
             {{ form.hire_period(class="form-control form-control-lg") }}
           </p>
-        </form>
-      </div>
-    </div>
-
-    <div class="row text-center pt-3">
-      <div class="col text-end">
-        <a href="/profile"><button type="button submit" class="btn btn-danger">Cancel Extention</button></a>
+        </div>
       </div>
 
-      <div class="col text-start">
-        <form action="" method="post" name="extendbookingform">
-          <button type="button submit" class="btn btn-success">Extend Booking</button>
-        </form>
+      <div class="row text-center pt-3">
+        <div class="col text-end">
+          <a href="/profile"><button type="button submit" class="btn btn-danger">Cancel Extention</button></a>
+        </div>
+
+        <div class="col text-start">
+            <button type="button submit" class="btn btn-success">Extend Booking</button>
+        </div>
       </div>
-    </div>
+    </form>
 
   </div>
 </div>
