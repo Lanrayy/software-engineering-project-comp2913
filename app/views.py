@@ -25,7 +25,7 @@ def organise_bookings():
             booking.status = "active"
         #check if the booking's final_date_time is already in the past, and thus should become a "past" booking
         if booking.final_date_time < datetime.utcnow():
-            booking.status = "past"
+            booking.status = "expired"
 
     #finalise changes
     try:
