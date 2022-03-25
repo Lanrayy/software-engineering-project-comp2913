@@ -78,10 +78,10 @@
                 <li class="nav-item"><a class="nav-link" href="/admin_dashboard">Admin Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" href="/booking1">Make a Booking</a></li>
                 <li class="nav-item"><a class="nav-link" href="/review_feedback">Review Feedback</a></li>
-                <li class="nav-item"><a class="nav-link" href="/view_scooters">View Scooters</a></li>
-                <li class="nav-item"><a class="nav-link" href="/configure_costs">Configure Costs</a></li>
                 {% if current_user.account_type == "manager" %}
                   <li class="nav-item"><a class="nav-link" href="/sales_metrics">Sales Metrics</a></li>
+                  <li class="nav-item"><a class="nav-link" href="/view_scooters">View Scooters</a></li>
+                  <li class="nav-item"><a class="nav-link" href="/configure_costs">Configure Costs</a></li>
                 {% endif %}
                 <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
               {% endif %}
@@ -94,6 +94,16 @@
 
     <!-- main page container -->
     <div class="container-fluid min-vh-100">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-success">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
       <div class="row flex-nowrap">
 
         <!-- left justified content -->
@@ -103,16 +113,6 @@
 
         <!-- center justified content -->
         <div class="col">
-          {% with messages = get_flashed_messages() %}
-            {% if messages %}
-              {% for message in messages %}
-                <div class="alert alert-success">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
-
           {% block content %}{% endblock %}
         </div>
 
