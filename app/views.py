@@ -1466,8 +1466,9 @@ def configure_costs():
         except:
             db.session.rollback()     # commit scooter to db
     else:
-        flash("Invalid form data")
-        logger.info("Scooter costs configuration failed")
+        if form.price.data != None:
+            flash("Invalid form data")
+            logger.info("Scooter costs configuration failed")
     return render_template('configure_costs.html',
                             rec=rec, form=form)
 
