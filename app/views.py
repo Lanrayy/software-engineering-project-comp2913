@@ -1180,7 +1180,7 @@ def extend_booking():
         collection_points = models.collection_point
 
         #when the form is submitted
-        if form.validate_on_submit():
+        if form.is_submitted():
             #convert the option selected in the SelectField into a cost and the number of hours
             if form.hire_period.data == '1':
                 cost = models.pricing.query.filter_by(id = 1).first().price
@@ -1197,6 +1197,40 @@ def extend_booking():
             else:
                 cost = 10.00
                 hours = 1
+
+            #check every booking made with this scooter
+            #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
+            #only check currently "upcoming" or "active" bookings
+            current_active_bookings = models.booking.query.filter_by(scooter_id = booking.scooter_id, status = "active")
+            current_upcoming_bookings = models.booking.query.filter_by(scooter_id = booking.scooter_id, status = "upcoming")
+            #check active bookings
+            for bookingA in current_active_bookings:
+                #as long as the new final date time after extention has run past any other booking's start time it fails
+                if booking.final_date_time + timedelta(hours = hours) >= bookingA.initial_date_time and booking.id != bookingA.id:
+                    flash("The extention would conflict with and existing booking")
+                    logger.info("Extention not made: Scooter " +
+                                    str(booking.scooter_id) +
+                                    " unavailable to extend till " +
+                                    str(booking.final_date_time + timedelta(hours = hours)))
+                    return render_template('extend_booking.html',
+                                            title='Extend Booking',
+                                            booking=booking,
+                                            form=form,
+                                            collection_points=collection_points)
+            #check upcoming bookings
+            for bookingU in current_upcoming_bookings:
+                #as long as the new final date time after extention has run past any other booking's start time it fails
+                if booking.final_date_time + timedelta(hours = hours) >= bookingU.initial_date_time and booking.id != bookingU.id:
+                    flash("The extention would conflict with and existing booking")
+                    logger.info("Extention not made: Scooter " +
+                                    str(booking.scooter_id) +
+                                    " unavailable to extend till " +
+                                    str(booking.final_date_time + timedelta(hours = hours)))
+                    return render_template('extend_booking.html',
+                                            title='Extend Booking',
+                                            booking=booking,
+                                            form=form,
+                                            collection_points=collection_points)
 
             #check if user has saved card details
             exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
