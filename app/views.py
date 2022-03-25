@@ -1443,16 +1443,17 @@ def configure_costs():
         #assign corresponding db value based on the SelectForm value.
 
         if form.duration.data == "1":
-            durationToCheck = "1 Hour"
+            durationToCheck = "1 hour"
         if form.duration.data == "2":
-            durationToCheck = "4 Hours"
+            durationToCheck = "4 hours"
         if form.duration.data == "3":
-            durationToCheck = "1 Day"
+            durationToCheck = "1 day"
         if form.duration.data == "4":
-            durationToCheck = "1 Week"
+            durationToCheck = "1 week"
 
         #find record and change price.
         dur = models.pricing.query.filter_by(duration = durationToCheck).first()
+        print("dur is " + str(dur))
         if dur:
             dur.price = form.price.data
             flash("Price updated")
