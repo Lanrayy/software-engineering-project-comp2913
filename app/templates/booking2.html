@@ -1,20 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
+<h4>Booking Successful</h4>
+<div class="row BC-row1">
+  <div class="row BC-row1-column1">
+    <p>Booking Reference: BN000{{booking.id}}</p>
+    <p>{{booking.status}}</p>
+    <p> Cost: £{{booking.cost}}</p>
+    <p>SN{{booking.scooter_id}}</p>
+  </div>
+  <div class="row BC-row1-column2">
+      <img class="booking-confirmation-image img-fluid float-right" src="{{url_for('static', filename='images/young-man-riding-scooter.png')}}" alt="Booking Confirmation image">
+  </div>
+</div>
+<div class="row BC-row2">
+
+</div>
+
+<div>
+
+</div>
+
 <div class="row">
-    <p class="align-middle text-center text-nowrap">{{ booking.initial_date_time }}</p>
-    <p class="align-middle text-center text-nowrap">{{ booking.final_date_time }}</p>
-    <p class="align-middle text-center text-nowrap">{{booking.duration}}</p>
-    <p class="align-middle text-center text-nowrap">SN{{booking.scooter_id}}</p>
-    <p class="align-middle text-center text-nowrap">{{location}}</p>
-    <p class="align-middle text-center text-nowrap">{{booking.status}}</p>
-    <p class="align-middle text-center text-nowrap">BN000{{booking.id}}</p>
-    <p class="align-middle text-center text-nowrap">£{{booking.cost}}</p>
-    <p class="align-middle text-center text-nowrap">Email:{{email}}</p>
+  
 
-    <p>We'll send your booking confirmation to Email:{{email}} </p>
+  <p class="align-middle text-center text-nowrap">{{ booking.initial_date_time }}</p>
+  <p class="align-middle text-center text-nowrap">{{ booking.final_date_time }}</p>
+  <p class="align-middle text-center text-nowrap">{{booking.duration}}</p>
+  <p class="align-middle text-center text-nowrap">SN{{booking.scooter_id}}</p>
+  <p class="align-middle text-center text-nowrap">{{location}}</p>
+  <p class="align-middle text-center text-nowrap">{{booking.status}}</p>
+  <p class="align-middle text-center text-nowrap">BN000{{booking.id}}</p>
+  <p class="align-middle text-center text-nowrap"> Cost: £{{booking.cost}}</p>
+  <p class="align-middle text-center text-nowrap">Email:{{email}}</p>
 
-    <p>View and manage your bookings here: "Go to bookings" </p>
+  <p>We'll send your booking confirmation to Email:{{email}} </p>
 
+  <p>Back to Dashboard</p>
+  <p>View and manage your bookings here: "Go to bookings" </p>
 
 </div>
 
