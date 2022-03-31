@@ -1085,6 +1085,13 @@ def booking2():
 
         location = models.collection_point.query.filter_by(id = booking.collection_id).first().location
 
+        # user is a customer
+        if not current_user.account_type == "employee" and not current_user.account_type == "manager":
+            email = current_user.email
+        else:
+            email = "Customer email here"
+
+
         if session.get('booking_duration', None) == 1:
             session['booking_period'] = "1 Hour"
         elif session.get('booking_duration', None) == 4:
@@ -1096,6 +1103,7 @@ def booking2():
 
         return render_template('booking2.html',
                                 title='Booking Confirmation',
+                                email = email,
                                 booking=booking,
                                 location=location)
     except Exception as e:

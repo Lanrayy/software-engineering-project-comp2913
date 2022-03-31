@@ -1,8 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="row">
+    <p class="align-middle text-center text-nowrap">{{ booking.initial_date_time }}</p>
+    <p class="align-middle text-center text-nowrap">{{ booking.final_date_time }}</p>
+    <p class="align-middle text-center text-nowrap">{{booking.duration}}</p>
+    <p class="align-middle text-center text-nowrap">SN{{booking.scooter_id}}</p>
+    <p class="align-middle text-center text-nowrap">{{location}}</p>
+    <p class="align-middle text-center text-nowrap">{{booking.status}}</p>
+    <p class="align-middle text-center text-nowrap">BN000{{booking.id}}</p>
+    <p class="align-middle text-center text-nowrap">£{{booking.cost}}</p>
+    <p class="align-middle text-center text-nowrap">Email:{{email}}</p>
+
+    <p>We'll send your booking confirmation to Email:{{email}} </p>
+
+    <p>View and manage your bookings here: "Go to bookings" </p>
+
+
+</div>
+
+
+
+
+
 <!-- blank margin space -->
 <br>
-
 <div class="row d-flex justify-content-center">
   <div class="col-md-auto">
     <!-- row for header -->
