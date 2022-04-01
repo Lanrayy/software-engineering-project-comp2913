@@ -1,50 +1,54 @@
 {% extends "base.html" %}
 {% block content %}
 <h4>Booking Successful</h4>
-<div class="booking-details-container">
-  <div class="row BC-row1">
-    <div class="col BC-row1-column1">
-      <p>Booking Reference: BN000{{booking.id}}</p>
-      <p>Pickup Location: {{location}}</p>
-      <p>Booking Status: {{booking.status}}</p>
-      <p>Cost: £{{booking.cost}}</p>
-      <p>Scooter ID: SN{{booking.scooter_id}}</p>
-    </div>
-    <div class="col BC-row1-column2">
-        <img class="booking-confirmation-image img-fluid" src="{{url_for('static', filename='images/young-man-riding-scooter.png')}}" alt="Booking Confirmation image">
-    </div>
+<div class="row">
+  <div class="col-1">
   </div>
-  <div class="row BC-row2">
-    <div class="col BC-row2-column1">
-      <h5>FROM:</h5>
-      <p>{{ booking.initial_date_time }}</p>
+  <div class="booking-details-container">
+      <div class="row BC-row1">
+        <div class="col BC-row1-column1">
+          <p> <b>Booking Reference: </b>BN000{{booking.id}}</p>
+          <p><b>Pickup Location: </b> {{location}}</p>
+          <p><b>Booking Status: </b> {{booking.status}}</p>
+          <p><b>Cost: </b> £{{booking.cost}}</p>
+          <p><b>Scooter ID: </b> SN{{booking.scooter_id}}</p>
+          <p><b>Duration (hours):</b> {{booking.duration}} </p>
+        </div>
+        <div class="col BC-row1-column2">
+            <img class="booking-confirmation-image img-fluid" src="{{url_for('static', filename='images/young-man-riding-scooter.png')}}" alt="Booking Confirmation image">
+        </div>
+      </div>
+      <div class="row BC-row2">
+        <div class="col BC-row2-column1">
+          <h5 style="color: #445a64">FROM:</h5>
+          <p class="time">{{ booking.initial_date_time }}</p>
+        </div>
+        <div class="col BC-row2-column2">
+          <h5 style="color: #445a64">TO:</h5>
+          <p class="time">{{ booking.final_date_time }}</p>
+        </div>
+        
+      </div>
+        
+      <div class="row BC-row3">
+        <div class="email">
+          <p>We'll send your booking confirmation to: <b>{{email}}</b> <br> 
+            Check your inbox for an email confirming your booking. </p>
+        </div>
+        
+        <div class="col BC-row3-column1">
+            <!-- TODO: SEND USER TO THE RIGHT DASHBOARD -->
+            <a href="/user_dashboard"><button type="button" class="btn btn-primary action-button">Back to Dashboard</button></a>
+        </div>
+        <!-- TODO: IF CUSTOMER, SHOW PROFILE BUTTON -->
+        <div class="col BC-row3-column2">
+          <!-- <p>View and manage your boookings in</p> -->
+          <a href="/user_dashboard"><button type="button" class="btn btn-primary action-button">Manage Bookings</button></a>
+        </div>
+      </div>
     </div>
-    <div class="col BC-row2-column2">
-      <h5>TO:</h5>
-      <p>{{ booking.final_date_time }}</p>
+    <div class="col-1">
     </div>
-    <p class="booking-duration">Duration (hours): {{booking.duration}} </p>
-  </div>
-    
-  <div class="row BC-row3">
-    <div class="email">
-      <p>We'll send your booking confirmation to: <b>{{email}}</b> <br> 
-        Check your inbox for an email confirming your booking. </p>
-    </div>
-    
-    <div class="col BC-row3-column1">
-        <!-- TODO: SEND USER TO THE RIGHT DASHBOARD -->
-        <a href="/user_dashboard"><button type="button" class="btn btn-primary action-button">Back to Dashboard</button></a>
-    </div>
-    <!-- TODO: IF CUSTOMER, SHOW PROFILE BUTTON -->
-    <div class="col BC-row3-column2">
-      <!-- <p>View and manage your boookings in</p> -->
-      <a href="/user_dashboard"><button type="button" class="btn btn-primary action-button">Manage Bookings</button></a>
-    </div>
-  </div>
-
-
-
 </div>
 <!-- blank margin space -->
 <br>
