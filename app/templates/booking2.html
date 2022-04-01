@@ -25,11 +25,11 @@
       <div class="row BC-row2">
         <div class="col BC-row2-column1">
           <h5 style="color: #f46c63">FROM:</h5>
-          <p class="time">{{ booking.initial_date_time }}</p>
+          <p class="time">{{ booking.initial_date_time.strftime('%d-%m-%Y %H:%m') }}</p>
         </div>
         <div class="col BC-row2-column2">
           <h5 style="color: #f46c63">TO:</h5>
-          <p class="time">{{ booking.final_date_time }}</p>
+          <p class="time">{{ booking.final_date_time.strftime('%d-%m-%Y %H:%m') }}</p>
         </div>
         
       </div>
