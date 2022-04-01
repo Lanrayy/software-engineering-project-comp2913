@@ -1568,23 +1568,23 @@ def sales_metrics():
     for booking in bookings:
         if booking.status != "cancelled": # only adds booking that were not cancelled to the metrics
             # checks what day the booking was started
-            if booking.initial_date_time.weekday() == 0 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Monday
+            if booking.initial_date_time.weekday() == 0 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Monday
                 monday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Tuesday
+            elif booking.initial_date_time.weekday() == 1 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Tuesday
                 tuesday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 2 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Wednesday
+            elif booking.initial_date_time.weekday() == 2 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Wednesday
                 wednesday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 3 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Thursday
+            elif booking.initial_date_time.weekday() == 3 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Thursday
                 thursday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Friday
+            elif booking.initial_date_time.weekday() == 4 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Friday
                 friday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 5 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Saturday
+            elif booking.initial_date_time.weekday() == 5 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Saturday
                 saturday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 6 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Sunday
+            elif booking.initial_date_time.weekday() == 6 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Sunday
                 sunday_metrics += booking.cost
 
     # Graph the daily metrics
-    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Mon', 'Tues', 'Weds', 'Thurs', 'Fri', 'Sat', 'Sun'])
     plt.xlabel('Day of Week')
     plt.ylabel('Revenue (£)')
     plt.savefig('app/static/graphs/daily.jpg')
