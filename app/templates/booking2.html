@@ -1,74 +1,51 @@
 {% extends "base.html" %}
 {% block content %}
 <h4>Booking Successful</h4>
-<div class="row BC-row1">
-  <div class="col BC-row1-column1">
-    <p>Booking Reference: BN000{{booking.id}}</p>
-    <p>Booking Status: {{booking.status}}</p>
-    <p>Cost: £{{booking.cost}}</p>
-    <p>Scooter ID: SN{{booking.scooter_id}}</p>
-  </div>
-  <div class="col BC-row1-column2">
-      <img class="booking-confirmation-image img-fluid float-right" src="{{url_for('static', filename='images/young-man-riding-scooter.png')}}" alt="Booking Confirmation image">
-  </div>
-</div>
-<div class="row BC-row2">
-  <div class="col BC-row2-column1">
-    <h5>FROM:</h5>
-    <p>{{ booking.initial_date_time }}</p>
-  </div>
-  <div class="col BC-row2-column2">
-    <h5>TO:</h5>
-    <p>{{ booking.final_date_time }}</p>
-  </div>
-  <p class="booking-duration">Duration (hours): {{booking.duration}} </p>
-</div>
-
-<div class="row BC-row3">
-  <div class="email">
-    <p>We'll send your booking confirmation to: {{email}} </p>
-    <p>Check your inbox for an email conforming your booking.</p>
-  </div>
-  
-  <div class="col BC-row3-column1">
-      <!-- TODO: SEND USER TO THE RIGHT DASHBOARD -->
-      <a href="/user_dashboard"><button type="button" class="btn btn-success action-button">Dashboard</button></a>
-  
+<div class="booking-details-container">
+  <div class="row BC-row1">
+    <div class="col BC-row1-column1">
+      <p>Booking Reference: BN000{{booking.id}}</p>
+      <p>Pickup Location: {{location}}</p>
+      <p>Booking Status: {{booking.status}}</p>
+      <p>Cost: £{{booking.cost}}</p>
+      <p>Scooter ID: SN{{booking.scooter_id}}</p>
     </div>
-  <!-- TODO: IF CUSTOMER, SHOW PROFILE BUTTON -->
-  <div class="col BC-row3-column2">
-    <p>View and manage your boookings in</p>
-    <a href="/user_dashboard"><button type="button" class="btn btn-success action-button">Profile</button></a>
+    <div class="col BC-row1-column2">
+        <img class="booking-confirmation-image img-fluid" src="{{url_for('static', filename='images/young-man-riding-scooter.png')}}" alt="Booking Confirmation image">
+    </div>
+  </div>
+  <div class="row BC-row2">
+    <div class="col BC-row2-column1">
+      <h5>FROM:</h5>
+      <p>{{ booking.initial_date_time }}</p>
+    </div>
+    <div class="col BC-row2-column2">
+      <h5>TO:</h5>
+      <p>{{ booking.final_date_time }}</p>
+    </div>
+    <p class="booking-duration">Duration (hours): {{booking.duration}} </p>
+  </div>
+    
+  <div class="row BC-row3">
+    <div class="email">
+      <p>We'll send your booking confirmation to: <b>{{email}}</b> <br> 
+        Check your inbox for an email confirming your booking. </p>
+    </div>
+    
+    <div class="col BC-row3-column1">
+        <!-- TODO: SEND USER TO THE RIGHT DASHBOARD -->
+        <a href="/user_dashboard"><button type="button" class="btn btn-primary action-button">Back to Dashboard</button></a>
+    </div>
+    <!-- TODO: IF CUSTOMER, SHOW PROFILE BUTTON -->
+    <div class="col BC-row3-column2">
+      <!-- <p>View and manage your boookings in</p> -->
+      <a href="/user_dashboard"><button type="button" class="btn btn-primary action-button">Manage Bookings</button></a>
+    </div>
   </div>
 
 
 
 </div>
-
-<div class="row">
-  
-
-  <p class="align-middle text-center text-nowrap">{{ booking.initial_date_time }}</p>
-  <p class="align-middle text-center text-nowrap">{{ booking.final_date_time }}</p>
-  <p class="align-middle text-center text-nowrap">{{booking.duration}}</p>
-  <p class="align-middle text-center text-nowrap">SN{{booking.scooter_id}}</p>
-  <p class="align-middle text-center text-nowrap">{{location}}</p>
-  <p class="align-middle text-center text-nowrap">{{booking.status}}</p>
-  <p class="align-middle text-center text-nowrap">BN000{{booking.id}}</p>
-  <p class="align-middle text-center text-nowrap"> Cost: £{{booking.cost}}</p>
-  <p class="align-middle text-center text-nowrap">Email:{{email}}</p>
-
- 
-
-  <p>Back to Dashboard</p>
-  <p>View and manage your bookings here: "Go to bookings" </p>
-
-</div>
-
-
-
-
-
 <!-- blank margin space -->
 <br>
 <div class="row d-flex justify-content-center">

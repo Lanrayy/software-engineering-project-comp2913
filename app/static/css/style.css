@@ -417,40 +417,68 @@ Admin Dashboard Page
 /***************************
 Booking Confirmation Page
 ****************************/
+.booking-details-container{
+  border-radius: 20px;
+  border: 1px solid lightgray;
+  padding: 30px;
+}
+
 .BC-row1,
-.BC-row2,
 .BC-row3{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  /* border-radius: 20px;
+  border: 1px solid lightgray; */
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  
+}
+
+.BC-row2{
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   border-radius: 20px;
   border: 1px solid lightgray;
-  padding: 0px;
-  margin: 0px;
-  width: 100%;
+  padding: 10px;
+  margin: 20px;
 }
+
+
+
 
 .BC-row1-column1,
 .BC-row1-column2,
 .BC-row2-column1,
-.BC-row2-column2,
-.BC-row3-column1,
-.BC-row3-column2
-
- {
-  border: 1px solid red;
-  /* width: 50%; */
+.BC-row2-column2{
   padding: 0px;
   margin: 0px;
 }
 
-.booking-confirmation-image{
-  /* width: 100px; */
+.BC-row1-column1{
+  /* border: 1px solid red; */
 }
 
-.BC-row2{
+.BC-row1-column2{
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: center;
+}
 
+.booking-confirmation-image{
+  height: 200px;
+}
+
+.BC-row3-column1,
+.BC-row3-column2{
+  display: flex;
+  justify-content: center;
+  padding: 0px;
+  margin: 0px;
 }
 
 .booking-duration,
