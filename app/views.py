@@ -499,7 +499,7 @@ def booking1():
         #clean up bookings table
         organise_bookings()
         #pass the prices to the webpage
-        hire_periods = models.pricing.query.all();
+        hire_periods = models.pricing.query.all()
         #current user is a customer
         if not current_user.account_type == "employee" and not current_user.account_type == "manager":
 
@@ -612,7 +612,7 @@ def booking1():
                 else:
                     cost = 10.00
                     hours = 1
-
+                
                 #if the user is a student or a senior apply the discount
                 if current_user.user_type == "senior" or current_user.user_type == "student":
                     flash("you are eligible for a student/senior discount")
@@ -770,7 +770,7 @@ def booking1():
                                                     form = form,
                                                     hire_periods = hire_periods,
                                                     card_found=False)
-
+                    
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
