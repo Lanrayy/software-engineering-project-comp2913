@@ -1,18 +1,18 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 {% block content %}
-<h4>Booking Successful</h4>
 <div class="row">
-  <div class="col-1">
+  <div class="col-2">
   </div>
-  <div class="booking-details-container">
+  <div class="col-8 booking-details-container">
+      <h1 class="booking-successful-title">Booking Successful</h4>
       <div class="row BC-row1">
         <div class="col BC-row1-column1">
-          <p> <b>Booking Reference: </b>BN000{{booking.id}}</p>
-          <p><b>Pickup Location: </b> {{location}}</p>
-          <p><b>Booking Status: </b> {{booking.status}}</p>
-          <p><b>Cost: </b> £{{booking.cost}}</p>
-          <p><b>Scooter ID: </b> SN{{booking.scooter_id}}</p>
-          <p><b>Duration (hours):</b> {{booking.duration}} </p>
+          <p class="booking-details"><b>Booking Reference: </b>BN000{{booking.id}}</p>
+          <p class="booking-details"><b>Pickup Location: </b> {{location}}</p>
+          <p class="booking-details"><b>Booking Status: </b> {{booking.status}}</p>
+          <p class="booking-details"><b>Cost: </b> £{{booking.cost}}</p>
+          <p class="booking-details"><b>Scooter ID: </b> SN{{booking.scooter_id}}</p>
+          <p class="booking-details"><b>Duration:</b> {{booking.duration}} hour(s)</p>
         </div>
         <div class="col BC-row1-column2">
             <img class="booking-confirmation-image img-fluid" src="{{url_for('static', filename='images/young-man-riding-scooter.png')}}" alt="Booking Confirmation image">
@@ -38,16 +38,16 @@
         
         <div class="col BC-row3-column1">
             <!-- TODO: SEND USER TO THE RIGHT DASHBOARD -->
-            <a href="/user_dashboard"><button type="button" class="btn btn-primary action-button">Back to Dashboard</button></a>
+            <a href="/user_dashboard"><button type="button" class="btn btn-primary custom-button2">Back to Dashboard</button></a>
         </div>
         <!-- TODO: IF CUSTOMER, SHOW PROFILE BUTTON -->
         <div class="col BC-row3-column2">
           <!-- <p>View and manage your boookings in</p> -->
-          <a href="/user_dashboard"><button type="button" class="btn btn-primary action-button">Manage Bookings</button></a>
+          <a href="/user_dashboard"><button type="button" class="btn btn-primary custom-button2">Manage Bookings</button></a>
         </div>
       </div>
     </div>
-    <div class="col-1">
+    <div class="col-2">
     </div>
 </div>
 <!-- blank margin space -->
