@@ -1,0 +1,12 @@
+landing-page-splash.jpg: https://pixabay.com/photos/wall-moped-scooter-motorcycle-6958508/
+booking app: https://www.flaticon.com/free-icon/booking-app_2038035
+booking: https://www.flaticon.com/free-icon/booking_2907150
+scooter: https://www.flaticon.com/premium-icon/electric-scooter_3696508?term=scooter&page=1&position=13&page=1&position=13&related_id=3696508&origin=search
+range: https://www.flaticon.com/free-icon/range_3696394?related_id=3696394
+lady-scooter: https://www.vecteezy.com/vector-art/5174128-vector-illustration-of-classic-motorbikes-use-rechargeable-battery-technology-to-support-campaign-for-use-of-renewable-energy-program-can-use-for-web-website-mobile-apps-poster-banner-flyer-homepage
+young-man-riding-scooter: https://www.freepik.com/free-vector/young-man-riding-electric-scooter-isolated-flat-vector-illustration-cartoon-hipster-riding-along-sidewalk-city-park_10174081.htm#query=scooter&position=6&from_view=searchs
+happy-smiling-man: https://www.freepik.com/free-vector/happy-smiling-man-riding-kick-scooter-sidewalk-flat-illustration-cartoon-hipster-using-electric-scooter_12291098.htm?query=scooter
+
+font
+Raleway: https://fonts.google.com/specimen/Raleway?query=ralewa
+Alfa Slab One: https://fonts.google.com/specimen/Alfa+Slab+One?query=alfa+
