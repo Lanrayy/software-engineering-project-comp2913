@@ -6,7 +6,10 @@ range: https://www.flaticon.com/free-icon/range_3696394?related_id=3696394
 lady-scooter: https://www.vecteezy.com/vector-art/5174128-vector-illustration-of-classic-motorbikes-use-rechargeable-battery-technology-to-support-campaign-for-use-of-renewable-energy-program-can-use-for-web-website-mobile-apps-poster-banner-flyer-homepage
 young-man-riding-scooter: https://www.freepik.com/free-vector/young-man-riding-electric-scooter-isolated-flat-vector-illustration-cartoon-hipster-riding-along-sidewalk-city-park_10174081.htm#query=scooter&position=6&from_view=searchs
 happy-smiling-man: https://www.freepik.com/free-vector/happy-smiling-man-riding-kick-scooter-sidewalk-flat-illustration-cartoon-hipster-using-electric-scooter_12291098.htm?query=scooter
+lady-student: https://www.freepik.com/free-vector/student-with-laptop-studying-online-course_7732666.htm#query=student&position=1&from_view=search
+elderly: https://www.freepik.com/free-vector/happy-senior-people-dancing-party_8271033.htm#query=elderly&position=2&from_view=search
+frequent-user: https://www.freepik.com/free-vector/social-media-blogging-online-promotion-network-popularity-sharing-photo-content-filling-blogger-followers-cartoon-characters_10783835.htm#query=popular%20user&position=37&from_view=search
 
-font
+fonts
 Raleway: https://fonts.google.com/specimen/Raleway?query=ralewa
 Alfa Slab One: https://fonts.google.com/specimen/Alfa+Slab+One?query=alfa+
