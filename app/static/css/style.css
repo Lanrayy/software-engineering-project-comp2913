@@ -415,7 +415,7 @@ Booking Confirmation Page
   /* border: 1px solid #f46c63; */
   border: 1px solid green;
   padding: 30px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .booking-successful-title{
@@ -454,6 +454,25 @@ Booking Confirmation Page
   justify-content: center;
 }
 
+.normal-status-icon{
+  /* border: 1px solid red; */
+  border-radius: 20px;
+  padding: 3px 10px 3px 10px;
+  color: white;
+  background-color: #f46c63;
+}
+
+.active-status-icon{
+  /* border: 1px solid red; */
+  border-radius: 20px;
+  padding: 3px 10px 3px 10px;
+  color: white;
+  background-color: #198754;
+}
+
+
+
+
 .booking-confirmation-image{
   height: 250px;
 }
@@ -486,8 +505,8 @@ Booking Confirmation Page
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 30px;
   font-weight: 900;
-  color: #f46c63;
-  /* color: green; */
+  /* color: #f46c63; */
+  color: green;
   text-align: center;
 }
 
@@ -507,8 +526,4 @@ Booking Confirmation Page
 
 .booking-details{
   margin-bottom: 10px;
-}
-
-input[type="date"] {
-  position: relative;
 }

@@ -9,8 +9,12 @@
         <div class="col BC-row1-column1">
           <p class="booking-details"><b>Booking Reference: </b>BN000{{booking.id}}</p>
           <p class="booking-details"><b>Pickup Location: </b> {{location}}</p>
-          <p class="booking-details"><b>Booking Status: </b> {{booking.status}}</p>
-          <p class="booking-details"><b>Cost: </b> £{{booking.cost}}</p>
+          {% if booking.status == 'active' %}
+          <p class="booking-details"><b>Booking Status:</b> <span class="active-status-icon">{{booking.status}}</span> </p>
+          {% else %}
+          <p class="booking-details"><b>Booking Status:</b> <span class="normal-status-icon">{{booking.status}}</span> </p>
+          {% endif %}
+          <p class="booking-details"><b>Booking Cost: </b> £{{booking.cost}}</p>
           <p class="booking-details"><b>Scooter ID: </b> SN{{booking.scooter_id}}</p>
           <p class="booking-details"><b>Duration:</b> {{booking.duration}} hour(s)</p>
         </div>
@@ -20,11 +24,11 @@
       </div>
       <div class="row BC-row2">
         <div class="col BC-row2-column1">
-          <h5 style="color: #445a64">FROM:</h5>
+          <h5 style="color: #f46c63">FROM:</h5>
           <p class="time">{{ booking.initial_date_time }}</p>
         </div>
         <div class="col BC-row2-column2">
-          <h5 style="color: #445a64">TO:</h5>
+          <h5 style="color: #f46c63">TO:</h5>
           <p class="time">{{ booking.final_date_time }}</p>
         </div>
         
@@ -32,19 +36,30 @@
         
       <div class="row BC-row3">
         <div class="email">
-          <p>We'll send your booking confirmation to: <b>{{email}}</b> <br> 
-            Check your inbox for an email confirming your booking. </p>
+          <p>We'll send booking confirmation to: <b style="color: #f46c63">{{email}}</b> 
+            <br> 
+            {% if isCustomer %} <!-- Show this message to customers only-->
+            Check your inbox for an email confirming your booking. 
+            {% endif %}
+           </p>
         </div>
         
         <div class="col BC-row3-column1">
-            <!-- TODO: SEND USER TO THE RIGHT DASHBOARD -->
+            <!-- Send user back to the correct dashboard-->
+            {% if isCustomer %} 
             <a href="/user_dashboard"><button type="button" class="btn btn-success custom-button">Back to Dashboard</button></a>
+            {% else %}
+            <a href="/admin_dashboard"><button type="button" class="btn btn-success custom-button">Back to Dashboard</button></a>
+            {% endif %}
+
         </div>
-        <!-- TODO: IF CUSTOMER, SHOW PROFILE BUTTON -->
+        <!-- Onlt show manage bookings button to customers-->
+        {% if isCustomer %} 
         <div class="col BC-row3-column2">
-          <!-- <p>View and manage your boookings in</p> -->
-          <a href="/user_dashboard"><button type="button" class="btn btn-success custom-button">Manage Bookings</button></a>
+          <a href="/profile"><button type="button" class="btn btn-success custom-button">Manage Your Bookings</button></a>
         </div>
+        {% endif %}
+
       </div>
     </div>
     <div class="col-2">
