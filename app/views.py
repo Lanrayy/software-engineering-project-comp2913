@@ -1088,8 +1088,10 @@ def booking2():
         # user is a customer
         if not current_user.account_type == "employee" and not current_user.account_type == "manager":
             email = current_user.email
+            isCustomer = True
         else:
-            email = "Customer email here"
+            email = session.get('booking_email', None)
+            isCustomer = False
 
 
         if session.get('booking_duration', None) == 1:
@@ -1104,6 +1106,7 @@ def booking2():
         return render_template('booking2.html',
                                 title='Booking Confirmation',
                                 email = email,
+                                isCustomer = isCustomer,
                                 booking=booking,
                                 location=location)
     except Exception as e:
