@@ -205,6 +205,7 @@ tr:nth-child(even) {
 .row2{
   /* border: 1px solid red; */
   margin-top: 40px;
+  height: 500px;
 }
 
 .row-2-content{
@@ -247,11 +248,11 @@ tr:nth-child(even) {
 }
 
 
-/* ROW 3 */
+/* ROW 3*/
 .row3{
   /* border: 1px solid red; */
   margin-top: 40px;
-  height: 580px;
+  height: 600px;
   border-top: 1px solid lightgray; 
   border-bottom: 1px solid lightgray; 
   padding: 40px 0px 40px 0px;
@@ -274,12 +275,16 @@ tr:nth-child(even) {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border: 1px solid green;
-  border: 1px solid lightgray;
-  border-radius: 20px;
+  /* border: 1px solid green; */
+  /* border-right: 1px solid lightgray; */
+  /* border-radius: 20px; */
   height: 100%;
   width: 50%;
   margin: 0px 10px 0px 10px;
+}
+
+.row-3-column:first-of-type {
+  border-right: 1px solid lightgray;
 }
 
 .row-3-image {
