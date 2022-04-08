@@ -1525,13 +1525,11 @@ def configure_costs():
 @app.route('/sales_metrics')
 def sales_metrics():
     logPage()
-
-    one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     # calculate the date range needed
     date = datetime.utcnow()
-    week_start = date + timedelta(-date.weekday(), weeks=0)
-    week_end = date + timedelta(-date.weekday() + 6, weeks=0)
+    week_start = date + timedelta(-date.weekday(), weeks=-1)
+    week_end = date + timedelta(-date.weekday() + 6, weeks=-1)
 
     # get all the transations
     transactions = models.transactions.query.all()
@@ -1550,7 +1548,6 @@ def sales_metrics():
 
     # Calculate the metrics
     # Graph the hire period metrics
-
     plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
     plt.xlabel('Hire Period')
     plt.ylabel('Revenue (£)')
@@ -1560,7 +1557,7 @@ def sales_metrics():
     plt.cla()
     plt.clf()
 
-    # Weekly income metrics
+    # Combined daily income metrics
     monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics = 0, 0,0,0,0,0,0
 
     # Get all the bookings and calculate booking metric for each day
@@ -1593,14 +1590,15 @@ def sales_metrics():
     plt.cla()
     plt.clf()
 
-    # discounted vs undiscounted transactions
+    # discounted vs undiscounted transactions made last week
     discounted_transactions, normal_transactions = 0, 0
     for transaction in transactions:
-        if(transaction.user != None):
-            if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
-                discounted_transactions += 1
-        else:
-            normal_transactions += 1
+        if transaction.booking_time > week_start:
+            if(transaction.user != None):
+                if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
+                    discounted_transactions += 1
+            else:
+                normal_transactions += 1
 
     # Graph the discounted vs undiscounted transactions
     plt.bar([0,1], [discounted_transactions, normal_transactions], tick_label=['Discounted transactions', 'Normal transactions'])
