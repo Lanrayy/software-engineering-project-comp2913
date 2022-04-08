@@ -486,6 +486,7 @@ Admin Dashboard Page
 
 .AD_row2 {
   margin-top: 30px;
+  /* border: 1px solid red; */
 }
 
 .AD_row-2-column {
@@ -499,6 +500,7 @@ Admin Dashboard Page
   min-width: 200px;
   margin: 10px 10px 10px 10px;
 }
+
 
 /***************************
 Booking Confirmation Page
@@ -622,3 +624,6 @@ Booking Confirmation Page
 .booking-details{
   margin-bottom: 10px;
 }
+
+
+
