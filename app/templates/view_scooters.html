@@ -29,7 +29,7 @@
           </thead>
           {% for rec in rec %}
 
-          <tr>
+          <tr >
             <th scope="row" class="align-middle">
               {{rec.id}}
             </th>
@@ -66,12 +66,21 @@
               {% endif%}
             </td>
 
-            <td>
-              <!-- <p type="hidden"> </p> -->
-              <button type="button submit"  class="btn btn-success" name="edit_button"  value="{{ rec.id }}">Edit</button>
-              <!-- <button type="button submit" class="btn btn-success">Submit</button> -->
+            <!--if the user is a manager than only they can edit the scooter details-->
+            {% if current_user.account_type == "manager" %}
+              <td>
+                <!-- <p type="hidden"> </p> -->
+                <button type="button submit"  class="btn btn-success" name="edit_button"  value="{{ rec.id }}">Edit</button>
+                <!-- <button type="button submit" class="btn btn-success">Submit</button> -->
 
-            </td>
+              </td>
+            <!-- If account is employee hide disable and hide the button-->
+            {% else %}
+              <td >
+                <button type="button submit"  class="btn btn-success" name="edit_button"  value="{{ rec.id }}" style = "visibility:hidden" disabled>ffff</button>
+              </td>
+            {% endif%}
+
 
           </tr>
           {% endfor %}
