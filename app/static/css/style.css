@@ -92,8 +92,18 @@ td{
   font-size: 20px;
   margin-right: 20px;
   cursor: pointer;
-
 }
+
+.action-button2{
+  height: 55px;
+  width: 100%;
+  border-radius: 50px;
+  font-size: 20px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+
 
 .nav-link {
   color: white !important;
@@ -480,6 +490,7 @@ Admin Dashboard Page
 
 .AD_row2 {
   margin-top: 30px;
+  /* border: 1px solid red; */
 }
 
 .AD_row-2-column {
@@ -494,13 +505,18 @@ Admin Dashboard Page
   margin: 10px 10px 10px 10px;
 }
 
+
 /***************************
 Booking Confirmation Page
 ****************************/
 .booking-details-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   border-radius: 20px;
   /* border: 1px solid #f46c63; */
-  border: 1px solid green;
+  /* border: 1px solid green; */
   padding: 30px;
   margin-top: 20px;
 }
@@ -557,9 +573,6 @@ Booking Confirmation Page
   background-color: #198754;
 }
 
-
-
-
 .booking-confirmation-image{
   height: 250px;
 }
@@ -574,12 +587,19 @@ Booking Confirmation Page
   border: 1px solid lightgrey;
   padding: 0px;
   margin: 20px;
+  width: max-content;
 }
 
 .BC-row2:hover{
   box-shadow: 0px 0px 15px 1px lightgray;
-  height: 150px;
+  height: 190px;
   margin: 12px 16px 16px 16px;
+}
+
+.duration{
+  text-align: center;
+  /* border: 1px solid red; */
+
 }
 
 
@@ -587,6 +607,7 @@ Booking Confirmation Page
 .BC-row2-column2{
   padding: 20px 0px 0px 20px;
   margin: 0px;
+  width: 270px;
   /* border: 1px solid red; */
 }
 
@@ -616,3 +637,6 @@ Booking Confirmation Page
 .booking-details{
   margin-bottom: 10px;
 }
+
+
+

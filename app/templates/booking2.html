@@ -14,7 +14,7 @@
           {% else %}
           <p class="booking-details"><b>Booking Status:</b> <span class="normal-status-icon">{{booking.status}}</span> </p>
           {% endif %}
-          <p class="booking-details"><b>Booking Cost: </b> £{{booking.cost}}</p>
+          <p class="booking-details"><b>Booking Cost: </b> £{{"%0.2f"|format(booking.cost|float) }}</p>
           <p class="booking-details"><b>Scooter ID: </b> SN{{booking.scooter_id}}</p>
           <p class="booking-details"><b>Duration:</b> {{booking.duration}} hour(s)</p>
         </div>
@@ -23,23 +23,28 @@
         </div>
       </div>
       <div class="row BC-row2">
-        <div class="col BC-row2-column1">
-          <h5 style="color: #f46c63">FROM:</h5>
-          <p class="time">{{ booking.initial_date_time.strftime('%d-%m-%Y %H:%m') }}</p>
+        <div class="row" style="display: flex; justify-content: center">
+          <div class="col-4 BC-row2-column1">
+              <h5 style="color: #f46c63">FROM:</h5>
+              <p class="time">{{ booking.initial_date_time.strftime('%d-%m-%Y %H:%M')}}</p>
+            </div>
+            <div class="col-4 BC-row2-column2">
+              <h5 style="color: #f46c63">TO:</h5>
+              <p class="time">{{ booking.final_date_time.strftime('%d-%m-%Y %H:%M') }}</p>
+            </div>
         </div>
-        <div class="col BC-row2-column2">
-          <h5 style="color: #f46c63">TO:</h5>
-          <p class="time">{{ booking.final_date_time.strftime('%d-%m-%Y %H:%m') }}</p>
+        <div class="duration">
+          <h5 style="color: #f46c63">FOR: <span class="time">{{booking.duration}} hour(s)</span></h5>
         </div>
-        
+
       </div>
         
       <div class="row BC-row3">
         <div class="email">
-          <p>We'll send booking confirmation to: <b style="color: #f46c63">{{email}}</b> 
+          <p>We'll send the booking confirmation to: <b style="color: #f46c63">{{email}}</b> 
             <br> 
             {% if isCustomer %} <!-- Show this message to customers only-->
-            Check your inbox for an email confirming your booking. 
+            Check your inbox for an email confirming your booking.
             {% endif %}
            </p>
         </div>
@@ -47,11 +52,10 @@
         <div class="col BC-row3-column1">
             <!-- Send user back to the correct dashboard-->
             {% if isCustomer %} 
-            <a href="/user_dashboard"><button type="button" class="btn btn-success custom-button">Back to Dashboard</button></a>
+            <a href="/booking1"><button type="button" class="btn btn-success custom-button">Make Another Booking</button></a>
             {% else %}
-            <a href="/admin_dashboard"><button type="button" class="btn btn-success custom-button">Back to Dashboard</button></a>
+            <a href="/booking1"><button type="button" class="btn btn-success custom-button">Make Another Booking</button></a>
             {% endif %}
-
         </div>
         <!-- Onlt show manage bookings button to customers-->
         {% if isCustomer %} 
