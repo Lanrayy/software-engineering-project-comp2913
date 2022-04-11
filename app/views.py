@@ -377,7 +377,10 @@ def logout():
 @app.route('/user_dashboard')
 @login_required
 def user_dashboard():
-    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+    if current_user.account_type != 'customer': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+        print("current_user is: ")
+        print(current_user.account_type)
+        print("redirecting to admin dashboard")
         return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
 
     try:
@@ -1379,6 +1382,7 @@ def extend_booking():
 @login_required
 def admin_dashboard():
     if current_user.account_type not in ['employee', 'manager']: # Check if the logged in user is an admin-type or a customer
+        print("not an admin user, redirect to user dashboard")
         return redirect('/user_dashboard') # Redirect and non-admin users to the user dashboard
 
     try:
