@@ -199,9 +199,7 @@ def card():
 
         if request.method == 'POST':
             #if the card details check out
-            print("Card form posted")
             if form.validate_on_submit():
-                print("Card form submitted")
                 logger.info("Card form successfully submitted")
                 if form.save_card_details.data: # if the user want to save the card details,  save information into database
                     hashed_card_num = bcrypt.generate_password_hash(form.card_number.data) # hash the card number
@@ -1239,9 +1237,6 @@ def extend_booking():
             else:
                 cost = 10.00
                 hours = 1
-            print(form.hire_period.data)
-            print(cost)
-            print(hours)
 
             #check every booking made with this scooter
             #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
@@ -1566,7 +1561,6 @@ def configure_costs():
 
         #find record and change price.
         dur = models.pricing.query.filter_by(duration = durationToCheck).first()
-        print("dur is " + str(dur))
         if dur:
             dur.price = form.price.data
             flash("Price updated")
