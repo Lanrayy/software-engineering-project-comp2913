@@ -198,7 +198,9 @@ def card():
 
         if request.method == 'POST':
             #if the card details check out
+            print("Card form posted")
             if form.validate_on_submit():
+                print("Card form submitted")
                 logger.info("Card form successfully submitted")
                 if form.save_card_details.data: # if the user want to save the card details,  save information into database
                     hashed_card_num = bcrypt.generate_password_hash(form.card_number.data) # hash the card number
@@ -1519,8 +1521,8 @@ def sales_metrics():
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     # calculate the date range needed
     date = datetime.utcnow()
-    week_start = date + timedelta(-date.weekday(), weeks=0)
-    week_end = date + timedelta(-date.weekday() + 6, weeks=0)
+    week_start = date + timedelta(-date.weekday(), weeks=-1)
+    week_end = date + timedelta(-date.weekday() + 6, weeks=-1)
 
     # get all the transations
     transactions = models.transactions.query.all()
@@ -1588,8 +1590,8 @@ def sales_metrics():
         if(transaction.user != None):
             if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
                 discounted_transactions += 1
-        else:
-            normal_transactions += 1
+            else:
+                normal_transactions += 1
 
     # Graph the discounted vs undiscounted transactions
     plt.bar([0,1], [discounted_transactions, normal_transactions], tick_label=['Discounted transactions', 'Normal transactions'])
