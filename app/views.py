@@ -623,7 +623,7 @@ def booking1():
                 else:
                     cost = 10.00
                     hours = 1
-                
+
                 #if the user is a student or a senior apply the discount
                 if current_user.user_type == "senior" or current_user.user_type == "student":
                     flash("you are eligible for a student/senior discount")
@@ -781,7 +781,7 @@ def booking1():
                                                     form = form,
                                                     hire_periods = hire_periods,
                                                     card_found=False)
-                    
+
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
@@ -1237,9 +1237,6 @@ def extend_booking():
             else:
                 cost = 10.00
                 hours = 1
-            print(form.hire_period.data)
-            print(cost)
-            print(hours)
 
             #check every booking made with this scooter
             #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
@@ -1564,7 +1561,6 @@ def configure_costs():
 
         #find record and change price.
         dur = models.pricing.query.filter_by(duration = durationToCheck).first()
-        print("dur is " + str(dur))
         if dur:
             dur.price = form.price.data
             flash("Price updated")
