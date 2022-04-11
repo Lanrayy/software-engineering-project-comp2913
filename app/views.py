@@ -199,7 +199,9 @@ def card():
 
         if request.method == 'POST':
             #if the card details check out
+            print("Card form posted")
             if form.validate_on_submit():
+                print("Card form submitted")
                 logger.info("Card form successfully submitted")
                 if form.save_card_details.data: # if the user want to save the card details,  save information into database
                     hashed_card_num = bcrypt.generate_password_hash(form.card_number.data) # hash the card number
@@ -623,7 +625,7 @@ def booking1():
                 else:
                     cost = 10.00
                     hours = 1
-                
+
                 #if the user is a student or a senior apply the discount
                 if current_user.user_type == "senior" or current_user.user_type == "student":
                     flash("you are eligible for a student/senior discount")
@@ -781,7 +783,7 @@ def booking1():
                                                     form = form,
                                                     hire_periods = hire_periods,
                                                     card_found=False)
-                    
+
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
