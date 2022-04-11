@@ -14,7 +14,7 @@ Headings - Gills sans
 Paragraphs - Raleway - 18px
 */
 
-/******************* 
+/*******************
 GLOBAL STYLES
 ********************/
 h1, h2, h3, h4, h5, h6 {
@@ -76,7 +76,7 @@ td{
 
 }
 
-.login-button{ 
+.login-button{
   height: 55px;
   border-radius: 50px;
   font-size: 20px;
@@ -267,8 +267,8 @@ tr:nth-child(even) {
   /* border: 1px solid red; */
   margin-top: 40px;
   height: 600px;
-  border-top: 1px solid lightgray; 
-  border-bottom: 1px solid lightgray; 
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
   padding: 40px 0px 40px 0px;
 }
 
@@ -506,10 +506,10 @@ Admin Dashboard Page
 }
 
 
-/***************************
-Booking Confirmation Page
-****************************/
 .booking-details-container{
+  /***************************
+  Booking Confirmation Page
+  ****************************/
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -637,6 +637,3 @@ Booking Confirmation Page
 .booking-details{
   margin-bottom: 10px;
 }
-
-
-
