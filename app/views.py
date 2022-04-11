@@ -351,6 +351,7 @@ def card():
                             card_found = card_found)
     except Exception as e:
         logger.error(e)
+        flash("An error has occured", "danger")
         if current_user.is_anonymous:
             return redirect('/')
             # str(current_user.id)
@@ -1564,7 +1565,8 @@ def configure_costs():
         #find record and change price.
         dur = models.pricing.query.filter_by(duration = durationToCheck).first()
         if dur:
-            dur.price = form.price.data
+            #need to round the price to 2 dp
+            dur.price = round(form.price.data, 2)
             flash("Price updated", "success")
             logger.info("Scooter costs configured: " + str(dur.id) + " set to " +  str(dur.price))
         else:

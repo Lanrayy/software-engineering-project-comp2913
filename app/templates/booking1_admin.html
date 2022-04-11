@@ -10,7 +10,7 @@
   {% for hire_period in hire_periods %}
   <div >
     <h5 class = "fw-normal ">Hire Period: {{ hire_period.duration }}</h5>
-    <p style="font-family: Raleway; font-size: 18px">£{{ hire_period.price }}</p>
+    <p style="font-family: Raleway; font-size: 18px">£{{ "{:.2f}".format(hire_period.price) }}</p>
   </div>
   {% endfor %}
 

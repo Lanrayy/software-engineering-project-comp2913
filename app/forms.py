@@ -99,40 +99,16 @@ class ConfigureScooterForm(FlaskForm):
         ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()], coerce=int)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class AddScooterForm(FlaskForm):
     availability = SelectField('availability', choices = [(1, 'Available'), (2, 'Unavailable')], validators=[InputRequired()])
     location_id = SelectField('location_id', choices=[(1, 'Trinity Centre'), (2, 'Train Station'), (3, 'Merrion Centre'),
         (4, 'LRI Hospital'), (5, 'UoL Edge Sports Centre')], validators=[InputRequired()])
 
 
-
-
-
-
-
-
-
-
-
-
-
 # feedback form
 class FeedbackForm(FlaskForm):
     feedback = TextAreaField('feedback', validators=[InputRequired()])
+
 
 # edit feedback form
 class EditFeedbackForm(FlaskForm):
@@ -140,7 +116,13 @@ class EditFeedbackForm(FlaskForm):
     priority = BooleanField()
     resolve = BooleanField()
 
+
 # configure prices form
 class PricesForm(FlaskForm):
     duration = SelectField('duration', choices=[('1', '1 hour'), ('2', '4 hour'), ('3', '1 day'), ('4', '1 week')], validators=[InputRequired()])
     price = FloatField('price', validators=[InputRequired()])
+
+    def validate_price(self, price):
+        # if price is negative or 0
+        if price.data <= 0:
+            raise ValidationError('please input a positive value for price')
