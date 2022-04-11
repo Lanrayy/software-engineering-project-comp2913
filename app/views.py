@@ -623,7 +623,7 @@ def booking1():
                 else:
                     cost = 10.00
                     hours = 1
-
+                
                 #if the user is a student or a senior apply the discount
                 if current_user.user_type == "senior" or current_user.user_type == "student":
                     flash("you are eligible for a student/senior discount")
@@ -781,7 +781,7 @@ def booking1():
                                                     form = form,
                                                     hire_periods = hire_periods,
                                                     card_found=False)
-
+                    
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
@@ -1098,6 +1098,15 @@ def booking2():
 
         location = models.collection_point.query.filter_by(id = booking.collection_id).first().location
 
+        # user is a customer
+        if not current_user.account_type == "employee" and not current_user.account_type == "manager":
+            email = current_user.email
+            isCustomer = True
+        else:
+            email = session.get('booking_email', None)
+            isCustomer = False
+
+
         if session.get('booking_duration', None) == 1:
             session['booking_period'] = "1 Hour"
         elif session.get('booking_duration', None) == 4:
@@ -1109,6 +1118,8 @@ def booking2():
 
         return render_template('booking2.html',
                                 title='Booking Confirmation',
+                                email = email,
+                                isCustomer = isCustomer,
                                 booking=booking,
                                 location=location)
     except Exception as e:
@@ -1582,13 +1593,11 @@ def sales_metrics():
         return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
 
     logPage()
-
-    one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     # calculate the date range needed
     date = datetime.utcnow()
-    week_start = date + timedelta(-date.weekday(), weeks=0)
-    week_end = date + timedelta(-date.weekday() + 6, weeks=0)
+    week_start = date + timedelta(-date.weekday(), weeks=-1)
+    week_end = date + timedelta(-date.weekday() + 6, weeks=-1)
 
     # get all the transations
     transactions = models.transactions.query.all()
@@ -1607,7 +1616,6 @@ def sales_metrics():
 
     # Calculate the metrics
     # Graph the hire period metrics
-
     plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
     plt.xlabel('Hire Period')
     plt.ylabel('Revenue (£)')
@@ -1617,7 +1625,7 @@ def sales_metrics():
     plt.cla()
     plt.clf()
 
-    # Weekly income metrics
+    # Combined daily income metrics
     monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics = 0, 0,0,0,0,0,0
 
     # Get all the bookings and calculate booking metric for each day
@@ -1625,23 +1633,23 @@ def sales_metrics():
     for booking in bookings:
         if booking.status != "cancelled": # only adds booking that were not cancelled to the metrics
             # checks what day the booking was started
-            if booking.initial_date_time.weekday() == 0 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Monday
+            if booking.initial_date_time.weekday() == 0 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Monday
                 monday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Tuesday
+            elif booking.initial_date_time.weekday() == 1 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Tuesday
                 tuesday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 2 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Wednesday
+            elif booking.initial_date_time.weekday() == 2 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Wednesday
                 wednesday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 3 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Thursday
+            elif booking.initial_date_time.weekday() == 3 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Thursday
                 thursday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Friday
+            elif booking.initial_date_time.weekday() == 4 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Friday
                 friday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 5 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Saturday
+            elif booking.initial_date_time.weekday() == 5 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Saturday
                 saturday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 6 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Sunday
+            elif booking.initial_date_time.weekday() == 6 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Sunday
                 sunday_metrics += booking.cost
 
     # Graph the daily metrics
-    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Mon', 'Tues', 'Weds', 'Thurs', 'Fri', 'Sat', 'Sun'])
     plt.xlabel('Day of Week')
     plt.ylabel('Revenue (£)')
     plt.savefig('app/static/graphs/daily.jpg')
@@ -1650,14 +1658,15 @@ def sales_metrics():
     plt.cla()
     plt.clf()
 
-    # discounted vs undiscounted transactions
+    # discounted vs undiscounted transactions made last week
     discounted_transactions, normal_transactions = 0, 0
     for transaction in transactions:
-        if(transaction.user != None):
-            if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
-                discounted_transactions += 1
-        else:
-            normal_transactions += 1
+        if transaction.booking_time > week_start:
+            if(transaction.user != None):
+                if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
+                    discounted_transactions += 1
+            else:
+                normal_transactions += 1
 
     # Graph the discounted vs undiscounted transactions
     plt.bar([0,1], [discounted_transactions, normal_transactions], tick_label=['Discounted transactions', 'Normal transactions'])

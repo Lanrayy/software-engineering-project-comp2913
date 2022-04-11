@@ -24,7 +24,7 @@
         {{ form.name(class="form-control form-control-lg") }}
         {% if form.name.errors %}
         {% for error in form.name.errors %}
-          <span>{{ error }}</span>
+          <span style="color: red">{{ error }}</span>
         {% endfor %}
       {% endif %}
       </p>
@@ -33,7 +33,7 @@
         {{ form.card_number(class="form-control form-control-lg") }}
         {% if form.card_number.errors %}
         {% for error in form.card_number.errors %}
-          <span>{{ error }}</span>
+          <span style="color: red">{{ error }}</span>
         {% endfor %}
       {% endif %}
       </p>
@@ -42,7 +42,7 @@
         {{ form.expiry(class="form-control form-control-lg") }}
         {% if form.expiry.errors %}
         {% for error in form.expiry.errors %}
-          <span>{{ error }}</span>
+          <span style="color: red">{{ error }}</span>
         {% endfor %}
       {% endif %}
       </p>
@@ -51,7 +51,7 @@
         {{ form.cvv(class="form-control form-control-lg") }}
         {% if form.cvv.errors %}
         {% for error in form.cvv.errors %}
-          <span>{{ error }}</span>
+          <span style="color: red">{{ error }}</span>
         {% endfor %}
       {% endif %}
       </p>
