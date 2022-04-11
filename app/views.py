@@ -171,11 +171,11 @@ def login():
             else:
                 now = str(datetime.now())
                 app.logger.info(u.email + " unsuccesfull login at "+ now)
-                flash(f'Login unsuccessful. Please check email and password', 'error')
+                flash(f'Login unsuccessful. Please check email and password', 'danger')
         else:
             logger.info("Unsuccesful login")
 
-            flash(f'Login unsuccessful. Please check email and password', 'error')
+            flash(f'Login unsuccessful. Please check email and password', 'danger')
 
     return render_template('login.html',
                            title='Login',
@@ -216,7 +216,7 @@ def card():
                         db.session.commit()
                     except:
                         db.session.rollback()
-                    flash("Card details saved")
+                    flash("Card details saved", "success")
                     logger.info("Card details saved")
 
                 #initialise booking
@@ -262,7 +262,7 @@ def card():
                         mail.send(msg)
                         logger.info("Email sent to user successfully")
 
-                        flash("Booking Extension Successful!")
+                        flash("Booking Extension Successful!", "success")
                         logger.info("Booking extension successful!")
 
                         return redirect("/profile")
@@ -340,7 +340,6 @@ def card():
                     mail.send(msg)
 
                     session['booking_id'] = booking.id
-                    flash("Booking Successful!")
                     logger.info("Booking " + str(booking.id) + " successfully created")
 
                     return redirect("/booking2") #send to booking confirmation
@@ -367,7 +366,7 @@ def logout():
     logPage()
     current_user_id = current_user.id
     logout_user()
-    flash('Logout Successful!', 'info')
+    flash('Logout Successful!', 'success')
     logger.info("(User "+ str(current_user_id) + ") logged out")
     # redirect to home page
     return redirect(url_for('index'))
@@ -554,7 +553,7 @@ def booking1():
             if form.is_submitted():
                 #checks that the user didn't try to book when location is empty of scooters
                 if form.scooter_id.data == "0":
-                    flash("Please choose a location with available scooters")
+                    flash("Please choose a location with available scooters", 'danger')
                     logger.info("Booking not made: no available scooters at " + str(form.location_id.data))
                     exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
                     if(exists):
@@ -574,7 +573,7 @@ def booking1():
 
                 #check that they actually put a start date
                 if form.start_date.data == None:
-                    flash("Please enter a valid date")
+                    flash("Please enter a valid date", 'danger')
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
                     if(exists):
@@ -593,7 +592,7 @@ def booking1():
 
                 #check if the start date further in the past than now, with a grace period of 5 minutes
                 if form.start_date.data < datetime.utcnow() + timedelta(minutes = -5):
-                    flash("The start date can't be in the past")
+                    flash("The start date can't be in the past", 'danger')
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
                     if(exists):
@@ -629,7 +628,7 @@ def booking1():
 
                 #if the user is a student or a senior apply the discount
                 if current_user.user_type == "senior" or current_user.user_type == "student":
-                    flash("you are eligible for a student/senior discount")
+                    flash("you are eligible for a student/senior discount", "info")
                     logger.info("(User " + str(current_user.id) + ") eligible for discount")
                     cost = cost * (0.8)
 
@@ -650,7 +649,7 @@ def booking1():
                                 break
 
                     if (total_hours >= 8) :
-                        flash("you are eligible for a frequent user discount")
+                        flash("you are eligible for a frequent user discount", "info")
                         logger.info("(User " + str(current_user.id) + ") eligible for discount")
                         cost = cost * (0.8)
 
@@ -664,7 +663,7 @@ def booking1():
                 for booking in current_active_bookings:
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
-                        flash("The scooter is unavailable for that start time")
+                        flash("The scooter is unavailable for that start time", 'danger')
                         logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
@@ -687,7 +686,7 @@ def booking1():
 
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
-                        flash("The projected end time falls within a pre-existing booking")
+                        flash("The projected end time falls within a pre-existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -713,7 +712,7 @@ def booking1():
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
-                        flash("The current booking conflicts with an existing booking")
+                        flash("The current booking conflicts with an existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -739,7 +738,7 @@ def booking1():
                 for booking in current_upcoming_bookings:
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
-                        flash("The scooter is unavailable for that start time")
+                        flash("The scooter is unavailable for that start time", 'danger')
                         logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
@@ -762,7 +761,7 @@ def booking1():
 
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
-                        flash("The projected end time falls within a pre-existing booking")
+                        flash("The projected end time falls within a pre-existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -788,7 +787,7 @@ def booking1():
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
-                        flash("The current booking conflicts with an existing booking")
+                        flash("The current booking conflicts with an existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -871,7 +870,6 @@ def booking1():
                     '\nReference Number: ' + str(booking.id))
                     mail.send(msg)
 
-                    flash("Booking Successful!")
                     logger.info("(User " + str(current_user.id) + "): Booking " + str(booking.id) + " created")
 
                     return redirect("/booking2") #send to booking confirmation
@@ -911,7 +909,7 @@ def booking1():
             if form.is_submitted():
                 #checks that the user didn't try to book when location is empty of scooters
                 if form.scooter_id.data == "0":
-                    flash("Please choose a location with available scooters")
+                    flash("Please choose a location with available scooters", 'danger')
                     logger.info("Booking not made: no available scooters at " + str(form.location_id.data))
                     return render_template('booking1_admin.html',
                                             title='Choose a Location',
@@ -920,7 +918,7 @@ def booking1():
 
                 #check that they actually put a start date
                 if form.start_date.data == None:
-                    flash("Please enter a valid date")
+                    flash("Please enter a valid date", 'danger')
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     return render_template('booking1_admin.html',
                                             title='Choose a Location',
@@ -929,7 +927,7 @@ def booking1():
 
                 #check if the start date further in the past than now, with a grace period of 5 minutes
                 if form.start_date.data < datetime.utcnow() + timedelta(minutes = -5):
-                    flash("The start date can't be in the past")
+                    flash("The start date can't be in the past", 'danger')
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     return render_template('booking1_admin.html',
                                             title='Choose a Location',
@@ -962,7 +960,7 @@ def booking1():
                 for booking in current_active_bookings:
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
-                        flash("The scooter is unavailable for that start time")
+                        flash("The scooter is unavailable for that start time", 'danger')
                         logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
@@ -973,7 +971,7 @@ def booking1():
                                                 hire_periods = hire_periods)
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
-                        flash("The projected end time falls within a pre-existing booking")
+                        flash("The projected end time falls within a pre-existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -988,7 +986,7 @@ def booking1():
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
-                        flash("The current booking conflicts with an existing booking")
+                        flash("The current booking conflicts with an existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -1003,7 +1001,7 @@ def booking1():
                 for booking in current_upcoming_bookings:
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
-                        flash("The scooter is unavailable for that start time")
+                        flash("The scooter is unavailable for that start time", 'danger')
                         logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
@@ -1014,7 +1012,7 @@ def booking1():
                                                 hire_periods = hire_periods)
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
-                        flash("The projected end time falls within a pre-existing booking")
+                        flash("The projected end time falls within a pre-existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -1029,7 +1027,7 @@ def booking1():
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
-                        flash("The current booking conflicts with an existing booking")
+                        flash("The current booking conflicts with an existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -1177,7 +1175,7 @@ def cancel_booking():
             except:
                 db.session.rollback()
 
-            flash("Booking successfully cancelled!")
+            flash("Booking successfully cancelled!", "success")
             logger.info("Booking " + str(session.get('booking_id')) + " cancelled")
             return redirect(url_for('profile'))
 
@@ -1250,7 +1248,7 @@ def extend_booking():
             for bookingA in current_active_bookings:
                 #as long as the new final date time after extention has run past any other booking's start time it fails
                 if booking.final_date_time + timedelta(hours = hours) >= bookingA.initial_date_time and booking.id != bookingA.id:
-                    flash("The extention would conflict with and existing booking")
+                    flash("The extention would conflict with and existing booking", 'danger')
                     logger.info("Extention not made: Scooter " +
                                     str(booking.scooter_id) +
                                     " unavailable to extend till " +
@@ -1264,7 +1262,7 @@ def extend_booking():
             for bookingU in current_upcoming_bookings:
                 #as long as the new final date time after extention has run past any other booking's start time it fails
                 if booking.final_date_time + timedelta(hours = hours) >= bookingU.initial_date_time and booking.id != bookingU.id:
-                    flash("The extention would conflict with and existing booking")
+                    flash("The extention would conflict with and existing booking", 'danger')
                     logger.info("Extention not made: Scooter " +
                                     str(booking.scooter_id) +
                                     " unavailable to extend till " +
@@ -1285,7 +1283,7 @@ def extend_booking():
                 #Check if user is a discounted user when the booking is extended
                 #if the user is a student or a senior apply the discount
                 if current_user.user_type == "senior" or current_user.user_type == "student":
-                    flash("you are eligible for a student/senior discount")
+                    flash("you are eligible for a student/senior discount", "info")
                     logger.info("(User " + str(current_user.id) + ") eligible for discount")
                     cost = cost * (0.8)
 
@@ -1336,7 +1334,7 @@ def extend_booking():
                 '\nReference Number: ' + str(booking.id))
                 mail.send(msg)
 
-                flash("Booking Extension Successful!")
+                flash("Booking Extension Successful!", "success")
                 # get correct string for printing to log
                 if str(form.hire_period.data) == "1":
                     log_duration = "1 hour"
@@ -1567,10 +1565,10 @@ def configure_costs():
         dur = models.pricing.query.filter_by(duration = durationToCheck).first()
         if dur:
             dur.price = form.price.data
-            flash("Price updated")
+            flash("Price updated", "success")
             logger.info("Scooter costs configured: " + str(dur.id) + " set to " +  str(dur.price))
         else:
-            flash("Error price not updated")
+            flash("Error price not updated", 'danger')
             logger.info("Scooter costs configuration failed")
 
         try:
@@ -1579,7 +1577,7 @@ def configure_costs():
             db.session.rollback()     # commit scooter to db
     else:
         if form.price.data != None:
-            flash("Invalid form data")
+            flash("Invalid form data", 'danger')
             logger.info("Scooter costs configuration failed")
     return render_template('configure_costs.html',
                             rec=rec, form=form)

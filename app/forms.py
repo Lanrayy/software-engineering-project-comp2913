@@ -50,7 +50,7 @@ class UserBookingForm(FlaskForm):
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
                                                       ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
-    start_date = DateTimeField('start_date', format = '%Y-%m-%d %H:%M', validators=[InputRequired()])
+    start_date = DateTimeField('start_date', format = '%d-%m-%Y %H:%M', validators=[InputRequired()])
     #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
 
@@ -81,7 +81,7 @@ class AdminBookingForm(FlaskForm):
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
                                                       ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
-    start_date = DateTimeField('start_date', format = '%Y-%m-%d %H:%M', validators=[InputRequired()])
+    start_date = DateTimeField('start_date', format = '%d-%m-%Y %H:%M', validators=[InputRequired()])
     email = StringField('email', validators=[InputRequired(), Email()])
     #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
