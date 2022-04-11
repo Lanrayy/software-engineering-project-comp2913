@@ -25,7 +25,11 @@
         {% endfor %}
       {% endif %}
       </p>
-      <p><input type="submit" class="btn btn-success btn-block col-12" value="Login"></p>
+      <p>
+        Remember details
+        {{ form.remember }}
+      </p>
+      <p><input type="submit" class="btn btn-success btn-block col-12 login-button" value="Login"></p>
   </form>
   <p>Don't have an account? <a href="/register">Sign Up</a></p>
 {% endblock %}

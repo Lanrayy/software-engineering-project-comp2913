@@ -184,6 +184,7 @@ def login():
 
 # card route - to be integrated with the bookings page
 @app.route('/card', methods=['GET', 'POST'])
+@login_required
 def card():
     try:
 
@@ -374,7 +375,11 @@ def logout():
 
 #User exclusive pages
 @app.route('/user_dashboard')
+@login_required
 def user_dashboard():
+    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+        return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
+
     try:
         logPage()
         #clean up bookings table
@@ -406,6 +411,7 @@ def pricing():
                             title='Our Prices')
 
 @app.route('/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete(id):
     #to_complete is a variable to get the id passed by pressing the complete button
     to_delete=models.card_details.query.get_or_404(id)
@@ -425,7 +431,11 @@ def delete(id):
 
 
 @app.route('/profile', methods=['GET', 'POST'])
+@login_required
 def profile():
+    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+        return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
+
     try:
         logPage()
         #clean up bookings table
@@ -493,13 +503,14 @@ def locations():
 
 
 @app.route('/booking1', methods=['GET', 'POST'])
+@login_required
 def booking1():
     try:
         logPage()
         #clean up bookings table
         organise_bookings()
         #pass the prices to the webpage
-        hire_periods = models.pricing.query.all();
+        hire_periods = models.pricing.query.all()
         #current user is a customer
         if not current_user.account_type == "employee" and not current_user.account_type == "manager":
 
@@ -612,7 +623,7 @@ def booking1():
                 else:
                     cost = 10.00
                     hours = 1
-
+                
                 #if the user is a student or a senior apply the discount
                 if current_user.user_type == "senior" or current_user.user_type == "student":
                     flash("you are eligible for a student/senior discount")
@@ -770,7 +781,7 @@ def booking1():
                                                     form = form,
                                                     hire_periods = hire_periods,
                                                     card_found=False)
-
+                    
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
@@ -1064,6 +1075,7 @@ def booking1():
             return redirect("/user_dashboard")
 
 @app.route('/booking1/<location_id>')
+@login_required
 def booking1_location(location_id):
     scooters = models.scooter.query.filter_by(collection_id = location_id, availability = 1).all()
 
@@ -1078,12 +1090,22 @@ def booking1_location(location_id):
 
 
 @app.route('/booking2')
+@login_required
 def booking2():
     try:
         logPage()
         booking = models.booking.query.filter_by(id = session.get('booking_id', None)).first()
 
         location = models.collection_point.query.filter_by(id = booking.collection_id).first().location
+
+        # user is a customer
+        if not current_user.account_type == "employee" and not current_user.account_type == "manager":
+            email = current_user.email
+            isCustomer = True
+        else:
+            email = session.get('booking_email', None)
+            isCustomer = False
+
 
         if session.get('booking_duration', None) == 1:
             session['booking_period'] = "1 Hour"
@@ -1096,6 +1118,8 @@ def booking2():
 
         return render_template('booking2.html',
                                 title='Booking Confirmation',
+                                email = email,
+                                isCustomer = isCustomer,
                                 booking=booking,
                                 location=location)
     except Exception as e:
@@ -1111,14 +1135,22 @@ def booking2():
 
 #intermediary page for cancelling booking
 @app.route('/cancel_this_booking/<booking_id>')
+@login_required
 def cancel_this_booking(booking_id):
+    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+        return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
+
     session['booking_id'] = booking_id
 
     return redirect(url_for('cancel_booking'))
 
 
 @app.route('/cancel_booking', methods=('GET', 'POST'))
+@login_required
 def cancel_booking():
+    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+        return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
+
     try:
         logPage()
 
@@ -1163,7 +1195,11 @@ def cancel_booking():
 
 #intermediary page for extending booking
 @app.route('/extend_this_booking/<booking_id>')
+@login_required
 def extend_this_booking(booking_id):
+    if current_user.account_type != 'user': # Check if the logged in user is a customer or admin (True if employee/manager, False if customer)
+        return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
+
     logPage()
     session['booking_id'] = booking_id
 
@@ -1172,7 +1208,11 @@ def extend_this_booking(booking_id):
 
 #extend booking page that takes info from the page in between profile and extend
 @app.route('/extend_booking', methods=('GET', 'POST'))
+@login_required
 def extend_booking():
+    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+        return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
+
     try:
         logPage()
         form = ExtendBookingForm()
@@ -1339,7 +1379,11 @@ def extend_booking():
 
 #Admin exclusive pages
 @app.route('/admin_dashboard')
+@login_required
 def admin_dashboard():
+    if current_user.account_type not in ['employee', 'manager']: # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard') # Redirect and non-admin users to the user dashboard
+
     try:
         logPage()
         #clean up bookings table
@@ -1360,7 +1404,12 @@ def admin_dashboard():
 
 
 @app.route('/review_feedback', methods=('GET', 'POST'))
+@login_required
 def review_feedback():
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     try:
         logPage()
         employee = (current_user.account_type == 'employee') # True if 'employee', False if 'manager'
@@ -1381,7 +1430,12 @@ def review_feedback():
             return redirect("/user_dashboard")
 
 @app.route('/edit_feedback/<id>', methods=('GET', 'POST'))
+@login_required
 def edit_feedback(id):
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     logPage()
     form = EditFeedbackForm()
     rec = models.feedback.query.filter_by(id=id).first()
@@ -1405,7 +1459,12 @@ def edit_feedback(id):
 
 
 @app.route('/view_scooters', methods=['GET', 'POST'])
+@login_required
 def view_scooters():
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     logPage()
     #synchronise scooters and Locations
     organise_scooters()
@@ -1425,7 +1484,12 @@ def view_scooters():
 
 
 @app.route('/add_scooter', methods=['GET','POST'])
+@login_required
 def add_scooter():
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     logPage()
     form = AddScooterForm()
 
@@ -1443,7 +1507,12 @@ def add_scooter():
 
 
 @app.route('/configure_scooter', methods=['GET', 'POST'])
+@login_required
 def configure_scooter():
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     logPage()
     #retrieve details to display and store in form
     scooter = models.scooter.query.get(session['confg_sctr_id'])
@@ -1471,7 +1540,12 @@ def configure_scooter():
 
 
 @app.route('/configure_costs', methods =['GET', 'POST'])
+@login_required
 def configure_costs():
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     logPage()
     rec = models.pricing.query.all()
     form = PricesForm()
@@ -1512,15 +1586,18 @@ def configure_costs():
 
 
 @app.route('/sales_metrics')
+@login_required
 def sales_metrics():
-    logPage()
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
 
-    one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
+    logPage()
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     # calculate the date range needed
     date = datetime.utcnow()
-    week_start = date + timedelta(-date.weekday(), weeks=0)
-    week_end = date + timedelta(-date.weekday() + 6, weeks=0)
+    week_start = date + timedelta(-date.weekday(), weeks=-1)
+    week_end = date + timedelta(-date.weekday() + 6, weeks=-1)
 
     # get all the transations
     transactions = models.transactions.query.all()
@@ -1539,7 +1616,6 @@ def sales_metrics():
 
     # Calculate the metrics
     # Graph the hire period metrics
-
     plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
     plt.xlabel('Hire Period')
     plt.ylabel('Revenue (£)')
@@ -1549,7 +1625,7 @@ def sales_metrics():
     plt.cla()
     plt.clf()
 
-    # Weekly income metrics
+    # Combined daily income metrics
     monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics = 0, 0,0,0,0,0,0
 
     # Get all the bookings and calculate booking metric for each day
@@ -1557,23 +1633,23 @@ def sales_metrics():
     for booking in bookings:
         if booking.status != "cancelled": # only adds booking that were not cancelled to the metrics
             # checks what day the booking was started
-            if booking.initial_date_time.weekday() == 0 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Monday
+            if booking.initial_date_time.weekday() == 0 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Monday
                 monday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Tuesday
+            elif booking.initial_date_time.weekday() == 1 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Tuesday
                 tuesday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 2 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Wednesday
+            elif booking.initial_date_time.weekday() == 2 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Wednesday
                 wednesday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 3 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Thursday
+            elif booking.initial_date_time.weekday() == 3 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Thursday
                 thursday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Friday
+            elif booking.initial_date_time.weekday() == 4 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Friday
                 friday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 5 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Saturday
+            elif booking.initial_date_time.weekday() == 5 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Saturday
                 saturday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 6 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Sunday
+            elif booking.initial_date_time.weekday() == 6 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Sunday
                 sunday_metrics += booking.cost
 
     # Graph the daily metrics
-    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Mon', 'Tues', 'Weds', 'Thurs', 'Fri', 'Sat', 'Sun'])
     plt.xlabel('Day of Week')
     plt.ylabel('Revenue (£)')
     plt.savefig('app/static/graphs/daily.jpg')
@@ -1582,14 +1658,15 @@ def sales_metrics():
     plt.cla()
     plt.clf()
 
-    # discounted vs undiscounted transactions
+    # discounted vs undiscounted transactions made last week
     discounted_transactions, normal_transactions = 0, 0
     for transaction in transactions:
-        if(transaction.user != None):
-            if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
-                discounted_transactions += 1
-        else:
-            normal_transactions += 1
+        if transaction.booking_time > week_start:
+            if(transaction.user != None):
+                if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
+                    discounted_transactions += 1
+            else:
+                normal_transactions += 1
 
     # Graph the discounted vs undiscounted transactions
     plt.bar([0,1], [discounted_transactions, normal_transactions], tick_label=['Discounted transactions', 'Normal transactions'])
