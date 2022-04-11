@@ -33,6 +33,10 @@ body{
   background-color: #fafafa;
 }
 
+td{
+  word-wrap:break-word;
+}
+
 
 /* Nav Bar */
 .navbar{
