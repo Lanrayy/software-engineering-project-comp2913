@@ -431,6 +431,7 @@ def profile():
         #clean up bookings table
         organise_bookings()
 
+
         #filter the query into the bookings and card
         cards = models.card_details.query.filter_by(user_id = current_user.id).first()  #FOREIGN KEY
         locations = models.collection_point.query.all()
@@ -449,6 +450,7 @@ def profile():
                                 email=current_user.email,
                                 account_type=current_user.account_type,
                                 cards = cards,
+                                test = test,
                                 booking = bookings,
                                 location = locations)
     except Exception as e:
