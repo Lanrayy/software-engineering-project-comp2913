@@ -10,7 +10,7 @@
   {% for hire_period in hire_periods %}
   <div >
     <h5 class = "fw-normal ">Hire Period: {{ hire_period.duration }}</h5>
-    <p style="font-family: Raleway; font-size: 18px">£{{ hire_period.price }}</p>
+    <p style="font-family: Raleway; font-size: 18px">£{{ "{:.2f}".format(hire_period.price) }}</p>
   </div>
   {% endfor %}
 
@@ -45,20 +45,20 @@
             <div class="col pe-4">
               <p class="text-nowrap">
                 Choose a Collection Point<br>
-                {{ form.location_id (style="width:400px; height:50px", class="form-control form-control-lg")}}
+                {{ form.location_id (style="width:100%; height:50px; font-size:18px", class="form-control form-control-lg form-select")}}
               </p>
               <p class="text-nowrap">
                 Choose a Scooter <br>
-                {{ form.scooter_id (style="width:400px; height:50px", class="form-control form-control-lg")}}
+                {{ form.scooter_id (style="width:100%; height:50px; font-size:18px", class="form-control form-control-lg form-select")}}
               </p>
               <p class="text-nowrap">
                 Select a Hire Period <br>
-                {{ form.hire_period (style="width:400px; height:50px", class="form-control form-control-lg") }}
+                {{ form.hire_period (style="width:100%; height:50pxl; font-size:18px", class="form-control form-control-lg form-select") }}
               </p>
 
             <p class="text-nowrap">
-              Select start date and time (yyyy-mm-dd hours:minutes)<br>
-              {{ form.start_date (style="width:400px; height:50px;", class="form-control form-control-lg")}}
+              Select start date and time (dd-mm-yyyy hours:minutes)<br>
+              {{ form.start_date (style="width:100%; height:50px;", class="form-control form-control-lg")}}
             </p>
             {% if card_found %}
               <strong class="fw-normal text-nowrap"><b>Saved Card Details:</b></strong>
@@ -74,12 +74,12 @@
               </p>
 
               <div class="col">
-                <button type="button submit" class="btn btn-success" name="payment_button">Make Payment</button>
+                <button type="button submit" class="btn btn-success action-button2" name="payment_button">Make Payment</button>
               </div>
 
               {% else %}
               <div class="col">
-                <button type="button submit" class="btn btn-success" name="payment_button">Go to Payment</button>
+                <button type="button submit" class="btn btn-success action-button2" name="payment_button">Go to Payment</button>
               </div>
 
             {% endif %}

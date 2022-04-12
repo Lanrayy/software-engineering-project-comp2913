@@ -50,7 +50,7 @@ class UserBookingForm(FlaskForm):
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
                                                       ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
-    start_date = DateTimeField('start_date', format = '%Y-%m-%d %H:%M', validators=[InputRequired()])
+    start_date = DateTimeField('start_date', format = '%d-%m-%Y %H:%M', validators=[InputRequired()])
     #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
 
@@ -64,15 +64,15 @@ class CardForm(FlaskForm):
     cvv = StringField('cvv', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "cvv must be a number"), Length(min=3, max=3, message="cvv must be 3 characters")])
     save_card_details = BooleanField('save_card_details')
 
-    def validate_expiry(self, expiry): # cards expire on the last day of the month
-        today = datetime.utcnow()
-
-        # get the last day of current month and the last day of the expiry month
-        last_day_of_current_month = today.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
-        last_day_of_card_month = expiry.data.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
-
-        if(last_day_of_card_month.date() < last_day_of_current_month.date()):
-            raise ValidationError('Expiry date is invalid! Card is expired!')
+    # def validate_expiry(self, expiry): # cards expire on the last day of the month
+    #     today = datetime.utcnow()
+    #
+    #     # get the last day of current month and the last day of the expiry month
+    #     last_day_of_current_month = today.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
+    #     last_day_of_card_month = expiry.data.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
+    #
+    #     if(last_day_of_card_month.date() < last_day_of_current_month.date()):
+    #         raise ValidationError('Expiry date is invalid! Card is expired!')
 
 
 # admin booking form
@@ -81,7 +81,7 @@ class AdminBookingForm(FlaskForm):
     location_id = SelectField('location_id', choices=[('1', 'Trinity Centre'), ('2', 'Train Station'), ('3', 'Merrion Centre'),
                                                       ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()])
     hire_period = SelectField('hire_period', choices = [('1', '1 Hour'), ('2', '4 Hours'), ('3', '1 Day'), ('4', '1 Week')], validators=[InputRequired()])
-    start_date = DateTimeField('start_date', format = '%Y-%m-%d %H:%M', validators=[InputRequired()])
+    start_date = DateTimeField('start_date', format = '%d-%m-%Y %H:%M', validators=[InputRequired()])
     email = StringField('email', validators=[InputRequired(), Email()])
     #cvv = IntegerField('cvv', validators=[InputRequired(), Length(3)])
 
@@ -99,40 +99,16 @@ class ConfigureScooterForm(FlaskForm):
         ('4', 'LRI Hospital'), ('5', 'UoL Edge Sports Centre')], validators=[InputRequired()], coerce=int)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class AddScooterForm(FlaskForm):
     availability = SelectField('availability', choices = [(1, 'Available'), (2, 'Unavailable')], validators=[InputRequired()])
     location_id = SelectField('location_id', choices=[(1, 'Trinity Centre'), (2, 'Train Station'), (3, 'Merrion Centre'),
         (4, 'LRI Hospital'), (5, 'UoL Edge Sports Centre')], validators=[InputRequired()])
 
 
-
-
-
-
-
-
-
-
-
-
-
 # feedback form
 class FeedbackForm(FlaskForm):
     feedback = TextAreaField('feedback', validators=[InputRequired()])
+
 
 # edit feedback form
 class EditFeedbackForm(FlaskForm):
@@ -140,7 +116,13 @@ class EditFeedbackForm(FlaskForm):
     priority = BooleanField()
     resolve = BooleanField()
 
+
 # configure prices form
 class PricesForm(FlaskForm):
     duration = SelectField('duration', choices=[('1', '1 hour'), ('2', '4 hour'), ('3', '1 day'), ('4', '1 week')], validators=[InputRequired()])
-    price = StringField('price', validators=[InputRequired(), Regexp("^[0-9]*$" ,message="Numerical value only")])
+    price = FloatField('price', validators=[InputRequired()])
+
+    def validate_price(self, price):
+        # if price is negative or 0
+        if price.data <= 0:
+            raise ValidationError('please input a positive value for price')

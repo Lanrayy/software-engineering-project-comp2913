@@ -171,11 +171,11 @@ def login():
             else:
                 now = str(datetime.now())
                 app.logger.info(u.email + " unsuccesfull login at "+ now)
-                flash(f'Login unsuccessful. Please check email and password', 'error')
+                flash(f'Login unsuccessful. Please check email and password', 'danger')
         else:
             logger.info("Unsuccesful login")
 
-            flash(f'Login unsuccessful. Please check email and password', 'error')
+            flash(f'Login unsuccessful. Please check email and password', 'danger')
 
     return render_template('login.html',
                            title='Login',
@@ -216,7 +216,7 @@ def card():
                         db.session.commit()
                     except:
                         db.session.rollback()
-                    flash("Card details saved")
+                    flash("Card details saved", "success")
                     logger.info("Card details saved")
 
                 #initialise booking
@@ -262,7 +262,7 @@ def card():
                         mail.send(msg)
                         logger.info("Email sent to user successfully")
 
-                        flash("Booking Extension Successful!")
+                        flash("Booking Extension Successful!", "success")
                         logger.info("Booking extension successful!")
 
                         return redirect("/profile")
@@ -340,7 +340,6 @@ def card():
                     mail.send(msg)
 
                     session['booking_id'] = booking.id
-                    flash("Booking Successful!")
                     logger.info("Booking " + str(booking.id) + " successfully created")
 
                     return redirect("/booking2") #send to booking confirmation
@@ -352,6 +351,7 @@ def card():
                             card_found = card_found)
     except Exception as e:
         logger.error(e)
+        flash("An error has occured", "danger")
         if current_user.is_anonymous:
             return redirect('/')
             # str(current_user.id)
@@ -367,7 +367,7 @@ def logout():
     logPage()
     current_user_id = current_user.id
     logout_user()
-    flash('Logout Successful!', 'info')
+    flash('Logout Successful!', 'success')
     logger.info("(User "+ str(current_user_id) + ") logged out")
     # redirect to home page
     return redirect(url_for('index'))
@@ -551,7 +551,7 @@ def booking1():
             if form.is_submitted():
                 #checks that the user didn't try to book when location is empty of scooters
                 if form.scooter_id.data == "0":
-                    flash("Please choose a location with available scooters")
+                    flash("Please choose a location with available scooters", 'danger')
                     logger.info("Booking not made: no available scooters at " + str(form.location_id.data))
                     exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
                     if(exists):
@@ -571,7 +571,7 @@ def booking1():
 
                 #check that they actually put a start date
                 if form.start_date.data == None:
-                    flash("Please enter a valid date")
+                    flash("Please enter a valid date", 'danger')
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
                     if(exists):
@@ -590,7 +590,7 @@ def booking1():
 
                 #check if the start date further in the past than now, with a grace period of 5 minutes
                 if form.start_date.data < datetime.utcnow() + timedelta(minutes = -5):
-                    flash("The start date can't be in the past")
+                    flash("The start date can't be in the past", 'danger')
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
                     if(exists):
@@ -626,7 +626,7 @@ def booking1():
 
                 #if the user is a student or a senior apply the discount
                 if current_user.user_type == "senior" or current_user.user_type == "student":
-                    flash("you are eligible for a student/senior discount")
+                    flash("you are eligible for a student/senior discount", "info")
                     logger.info("(User " + str(current_user.id) + ") eligible for discount")
                     cost = cost * (0.8)
 
@@ -647,7 +647,7 @@ def booking1():
                                 break
 
                     if (total_hours >= 8) :
-                        flash("you are eligible for a frequent user discount")
+                        flash("you are eligible for a frequent user discount", "info")
                         logger.info("(User " + str(current_user.id) + ") eligible for discount")
                         cost = cost * (0.8)
 
@@ -661,7 +661,7 @@ def booking1():
                 for booking in current_active_bookings:
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
-                        flash("The scooter is unavailable for that start time")
+                        flash("The scooter is unavailable for that start time", 'danger')
                         logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
@@ -684,7 +684,7 @@ def booking1():
 
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
-                        flash("The projected end time falls within a pre-existing booking")
+                        flash("The projected end time falls within a pre-existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -710,7 +710,7 @@ def booking1():
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
-                        flash("The current booking conflicts with an existing booking")
+                        flash("The current booking conflicts with an existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -736,7 +736,7 @@ def booking1():
                 for booking in current_upcoming_bookings:
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
-                        flash("The scooter is unavailable for that start time")
+                        flash("The scooter is unavailable for that start time", 'danger')
                         logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
@@ -759,7 +759,7 @@ def booking1():
 
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
-                        flash("The projected end time falls within a pre-existing booking")
+                        flash("The projected end time falls within a pre-existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -785,7 +785,7 @@ def booking1():
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
-                        flash("The current booking conflicts with an existing booking")
+                        flash("The current booking conflicts with an existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -868,7 +868,6 @@ def booking1():
                     '\nReference Number: ' + str(booking.id))
                     mail.send(msg)
 
-                    flash("Booking Successful!")
                     logger.info("(User " + str(current_user.id) + "): Booking " + str(booking.id) + " created")
 
                     return redirect("/booking2") #send to booking confirmation
@@ -908,7 +907,7 @@ def booking1():
             if form.is_submitted():
                 #checks that the user didn't try to book when location is empty of scooters
                 if form.scooter_id.data == "0":
-                    flash("Please choose a location with available scooters")
+                    flash("Please choose a location with available scooters", 'danger')
                     logger.info("Booking not made: no available scooters at " + str(form.location_id.data))
                     return render_template('booking1_admin.html',
                                             title='Choose a Location',
@@ -917,7 +916,7 @@ def booking1():
 
                 #check that they actually put a start date
                 if form.start_date.data == None:
-                    flash("Please enter a valid date")
+                    flash("Please enter a valid date", 'danger')
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     return render_template('booking1_admin.html',
                                             title='Choose a Location',
@@ -926,7 +925,7 @@ def booking1():
 
                 #check if the start date further in the past than now, with a grace period of 5 minutes
                 if form.start_date.data < datetime.utcnow() + timedelta(minutes = -5):
-                    flash("The start date can't be in the past")
+                    flash("The start date can't be in the past", 'danger')
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     return render_template('booking1_admin.html',
                                             title='Choose a Location',
@@ -959,7 +958,7 @@ def booking1():
                 for booking in current_active_bookings:
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
-                        flash("The scooter is unavailable for that start time")
+                        flash("The scooter is unavailable for that start time", 'danger')
                         logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
@@ -970,7 +969,7 @@ def booking1():
                                                 hire_periods = hire_periods)
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
-                        flash("The projected end time falls within a pre-existing booking")
+                        flash("The projected end time falls within a pre-existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -985,7 +984,7 @@ def booking1():
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
-                        flash("The current booking conflicts with an existing booking")
+                        flash("The current booking conflicts with an existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -1000,7 +999,7 @@ def booking1():
                 for booking in current_upcoming_bookings:
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
-                        flash("The scooter is unavailable for that start time")
+                        flash("The scooter is unavailable for that start time", 'danger')
                         logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
@@ -1011,7 +1010,7 @@ def booking1():
                                                 hire_periods = hire_periods)
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
-                        flash("The projected end time falls within a pre-existing booking")
+                        flash("The projected end time falls within a pre-existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -1026,7 +1025,7 @@ def booking1():
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
-                        flash("The current booking conflicts with an existing booking")
+                        flash("The current booking conflicts with an existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -1098,6 +1097,15 @@ def booking2():
 
         location = models.collection_point.query.filter_by(id = booking.collection_id).first().location
 
+        # user is a customer
+        if not current_user.account_type == "employee" and not current_user.account_type == "manager":
+            email = current_user.email
+            isCustomer = True
+        else:
+            email = session.get('booking_email', None)
+            isCustomer = False
+
+
         if session.get('booking_duration', None) == 1:
             session['booking_period'] = "1 Hour"
         elif session.get('booking_duration', None) == 4:
@@ -1109,6 +1117,8 @@ def booking2():
 
         return render_template('booking2.html',
                                 title='Booking Confirmation',
+                                email = email,
+                                isCustomer = isCustomer,
                                 booking=booking,
                                 location=location)
     except Exception as e:
@@ -1163,7 +1173,7 @@ def cancel_booking():
             except:
                 db.session.rollback()
 
-            flash("Booking successfully cancelled!")
+            flash("Booking successfully cancelled!", "success")
             logger.info("Booking " + str(session.get('booking_id')) + " cancelled")
             return redirect(url_for('profile'))
 
@@ -1226,9 +1236,6 @@ def extend_booking():
             else:
                 cost = 10.00
                 hours = 1
-            print(form.hire_period.data)
-            print(cost)
-            print(hours)
 
             #check every booking made with this scooter
             #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
@@ -1239,7 +1246,7 @@ def extend_booking():
             for bookingA in current_active_bookings:
                 #as long as the new final date time after extention has run past any other booking's start time it fails
                 if booking.final_date_time + timedelta(hours = hours) >= bookingA.initial_date_time and booking.id != bookingA.id:
-                    flash("The extention would conflict with and existing booking")
+                    flash("The extention would conflict with and existing booking", 'danger')
                     logger.info("Extention not made: Scooter " +
                                     str(booking.scooter_id) +
                                     " unavailable to extend till " +
@@ -1253,7 +1260,7 @@ def extend_booking():
             for bookingU in current_upcoming_bookings:
                 #as long as the new final date time after extention has run past any other booking's start time it fails
                 if booking.final_date_time + timedelta(hours = hours) >= bookingU.initial_date_time and booking.id != bookingU.id:
-                    flash("The extention would conflict with and existing booking")
+                    flash("The extention would conflict with and existing booking", 'danger')
                     logger.info("Extention not made: Scooter " +
                                     str(booking.scooter_id) +
                                     " unavailable to extend till " +
@@ -1274,7 +1281,7 @@ def extend_booking():
                 #Check if user is a discounted user when the booking is extended
                 #if the user is a student or a senior apply the discount
                 if current_user.user_type == "senior" or current_user.user_type == "student":
-                    flash("you are eligible for a student/senior discount")
+                    flash("you are eligible for a student/senior discount", "info")
                     logger.info("(User " + str(current_user.id) + ") eligible for discount")
                     cost = cost * (0.8)
 
@@ -1325,7 +1332,7 @@ def extend_booking():
                 '\nReference Number: ' + str(booking.id))
                 mail.send(msg)
 
-                flash("Booking Extension Successful!")
+                flash("Booking Extension Successful!", "success")
                 # get correct string for printing to log
                 if str(form.hire_period.data) == "1":
                     log_duration = "1 hour"
@@ -1371,6 +1378,7 @@ def extend_booking():
 @login_required
 def admin_dashboard():
     if current_user.account_type not in ['employee', 'manager']: # Check if the logged in user is an admin-type or a customer
+        print("not an admin user, redirect to user dashboard")
         return redirect('/user_dashboard') # Redirect and non-admin users to the user dashboard
 
     try:
@@ -1553,13 +1561,13 @@ def configure_costs():
 
         #find record and change price.
         dur = models.pricing.query.filter_by(duration = durationToCheck).first()
-        print("dur is " + str(dur))
         if dur:
-            dur.price = form.price.data
-            flash("Price updated")
+            #need to round the price to 2 dp
+            dur.price = round(form.price.data, 2)
+            flash("Price updated", "success")
             logger.info("Scooter costs configured: " + str(dur.id) + " set to " +  str(dur.price))
         else:
-            flash("Error price not updated")
+            flash("Error price not updated", 'danger')
             logger.info("Scooter costs configuration failed")
 
         try:
@@ -1568,7 +1576,7 @@ def configure_costs():
             db.session.rollback()     # commit scooter to db
     else:
         if form.price.data != None:
-            flash("Invalid form data")
+            flash("Invalid form data", 'danger')
             logger.info("Scooter costs configuration failed")
     return render_template('configure_costs.html',
                             rec=rec, form=form)
@@ -1582,13 +1590,11 @@ def sales_metrics():
         return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
 
     logPage()
-
-    one_hour_price, four_hour_price, one_day_price, one_week_price = 0, 0, 0, 0
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     # calculate the date range needed
     date = datetime.utcnow()
-    week_start = date + timedelta(-date.weekday(), weeks=0)
-    week_end = date + timedelta(-date.weekday() + 6, weeks=0)
+    week_start = date + timedelta(-date.weekday(), weeks=-1)
+    week_end = date + timedelta(-date.weekday() + 6, weeks=-1)
 
     # get all the transations
     transactions = models.transactions.query.all()
@@ -1607,7 +1613,6 @@ def sales_metrics():
 
     # Calculate the metrics
     # Graph the hire period metrics
-
     plt.bar([0,1,2,3], [one_hour_metric, four_hour_metric, one_day_metric, one_week_metric], tick_label=['One Hour', 'Four Hours', 'One Day', 'One Week'])
     plt.xlabel('Hire Period')
     plt.ylabel('Revenue (£)')
@@ -1617,7 +1622,7 @@ def sales_metrics():
     plt.cla()
     plt.clf()
 
-    # Weekly income metrics
+    # Combined daily income metrics
     monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics = 0, 0,0,0,0,0,0
 
     # Get all the bookings and calculate booking metric for each day
@@ -1625,23 +1630,23 @@ def sales_metrics():
     for booking in bookings:
         if booking.status != "cancelled": # only adds booking that were not cancelled to the metrics
             # checks what day the booking was started
-            if booking.initial_date_time.weekday() == 0 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Monday
+            if booking.initial_date_time.weekday() == 0 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Monday
                 monday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 1 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Tuesday
+            elif booking.initial_date_time.weekday() == 1 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Tuesday
                 tuesday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 2 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Wednesday
+            elif booking.initial_date_time.weekday() == 2 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Wednesday
                 wednesday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 3 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Thursday
+            elif booking.initial_date_time.weekday() == 3 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Thursday
                 thursday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 4 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Friday
+            elif booking.initial_date_time.weekday() == 4 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Friday
                 friday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 5 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Saturday
+            elif booking.initial_date_time.weekday() == 5 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Saturday
                 saturday_metrics += booking.cost
-            elif booking.initial_date_time.weekday() == 6 and transaction.booking_time > week_start and transaction.booking_time < week_end: # Sunday
+            elif booking.initial_date_time.weekday() == 6 and booking.initial_date_time > week_start and booking.initial_date_time < week_end and booking.duration < 168: # Sunday
                 sunday_metrics += booking.cost
 
     # Graph the daily metrics
-    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+    plt.bar([0,1,2,3,4,5,6], [monday_metrics, tuesday_metrics, wednesday_metrics, thursday_metrics, friday_metrics, saturday_metrics, sunday_metrics], tick_label=['Mon', 'Tues', 'Weds', 'Thurs', 'Fri', 'Sat', 'Sun'])
     plt.xlabel('Day of Week')
     plt.ylabel('Revenue (£)')
     plt.savefig('app/static/graphs/daily.jpg')
@@ -1650,14 +1655,15 @@ def sales_metrics():
     plt.cla()
     plt.clf()
 
-    # discounted vs undiscounted transactions
+    # discounted vs undiscounted transactions made last week
     discounted_transactions, normal_transactions = 0, 0
     for transaction in transactions:
-        if(transaction.user != None):
-            if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
-                discounted_transactions += 1
-        else:
-            normal_transactions += 1
+        if transaction.booking_time > week_start:
+            if(transaction.user != None):
+                if(transaction.user.user_type == "student" or transaction.user.user_type == "senior"): # if the transaction is a discounted transaction
+                    discounted_transactions += 1
+            else:
+                normal_transactions += 1
 
     # Graph the discounted vs undiscounted transactions
     plt.bar([0,1], [discounted_transactions, normal_transactions], tick_label=['Discounted transactions', 'Normal transactions'])
