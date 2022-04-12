@@ -377,7 +377,7 @@ def logout():
 @app.route('/user_dashboard')
 @login_required
 def user_dashboard():
-    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+    if current_user.account_type != 'customer': # Check if the logged in user is a customer or admin (True if employee/manager, False if customer)
         return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
 
     try:
@@ -433,7 +433,7 @@ def delete(id):
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+    if current_user.account_type != 'customer': # Check if the logged in user is a customer or admin (True if employee/manager, False if customer)
         return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
 
     try:
@@ -1126,7 +1126,7 @@ def booking2():
 @app.route('/cancel_this_booking/<booking_id>')
 @login_required
 def cancel_this_booking(booking_id):
-    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+    if current_user.account_type != 'customer': # Check if the logged in user is a customer or admin (True if employee/manager, False if customer)
         return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
 
     session['booking_id'] = booking_id
@@ -1137,7 +1137,7 @@ def cancel_this_booking(booking_id):
 @app.route('/cancel_booking', methods=('GET', 'POST'))
 @login_required
 def cancel_booking():
-    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+    if current_user.account_type != 'customer': # Check if the logged in user is a customer or admin (True if employee/manager, False if customer)
         return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
 
     try:
@@ -1186,7 +1186,7 @@ def cancel_booking():
 @app.route('/extend_this_booking/<booking_id>')
 @login_required
 def extend_this_booking(booking_id):
-    if current_user.account_type != 'user': # Check if the logged in user is a customer or admin (True if employee/manager, False if customer)
+    if current_user.account_type != 'customer': # Check if the logged in user is a customer or admin (True if employee/manager, False if customer)
         return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
 
     logPage()
@@ -1199,7 +1199,7 @@ def extend_this_booking(booking_id):
 @app.route('/extend_booking', methods=('GET', 'POST'))
 @login_required
 def extend_booking():
-    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+    if current_user.account_type != 'customer': # Check if the logged in user is a customer or admin (True if employee/manager, False if customer)
         return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
 
     try:
