@@ -171,11 +171,11 @@ def login():
             else:
                 now = str(datetime.now())
                 app.logger.info(u.email + " unsuccesfull login at "+ now)
-                flash(f'Login unsuccessful. Please check email and password', 'error')
+                flash(f'Login unsuccessful. Please check email and password', 'danger')
         else:
             logger.info("Unsuccesful login")
 
-            flash(f'Login unsuccessful. Please check email and password', 'error')
+            flash(f'Login unsuccessful. Please check email and password', 'danger')
 
     return render_template('login.html',
                            title='Login',
@@ -184,6 +184,7 @@ def login():
 
 # card route - to be integrated with the bookings page
 @app.route('/card', methods=['GET', 'POST'])
+@login_required
 def card():
     try:
 
@@ -215,7 +216,7 @@ def card():
                         db.session.commit()
                     except:
                         db.session.rollback()
-                    flash("Card details saved")
+                    flash("Card details saved", "success")
                     logger.info("Card details saved")
 
                 #initialise booking
@@ -261,7 +262,7 @@ def card():
                         mail.send(msg)
                         logger.info("Email sent to user successfully")
 
-                        flash("Booking Extension Successful!")
+                        flash("Booking Extension Successful!", "success")
                         logger.info("Booking extension successful!")
 
                         return redirect("/profile")
@@ -339,7 +340,6 @@ def card():
                     mail.send(msg)
 
                     session['booking_id'] = booking.id
-                    flash("Booking Successful!")
                     logger.info("Booking " + str(booking.id) + " successfully created")
 
                     return redirect("/booking2") #send to booking confirmation
@@ -351,6 +351,7 @@ def card():
                             card_found = card_found)
     except Exception as e:
         logger.error(e)
+        flash("An error has occured", "danger")
         if current_user.is_anonymous:
             return redirect('/')
             # str(current_user.id)
@@ -366,7 +367,7 @@ def logout():
     logPage()
     current_user_id = current_user.id
     logout_user()
-    flash('Logout Successful!', 'info')
+    flash('Logout Successful!', 'success')
     logger.info("(User "+ str(current_user_id) + ") logged out")
     # redirect to home page
     return redirect(url_for('index'))
@@ -374,7 +375,14 @@ def logout():
 
 #User exclusive pages
 @app.route('/user_dashboard')
+@login_required
 def user_dashboard():
+    if current_user.account_type != 'customer': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+        print("current_user is: ")
+        print(current_user.account_type)
+        print("redirecting to admin dashboard")
+        return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
+
     try:
         logPage()
         #clean up bookings table
@@ -406,6 +414,7 @@ def pricing():
                             title='Our Prices')
 
 @app.route('/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete(id):
     #to_complete is a variable to get the id passed by pressing the complete button
     to_delete=models.card_details.query.get_or_404(id)
@@ -425,7 +434,11 @@ def delete(id):
 
 
 @app.route('/profile', methods=['GET', 'POST'])
+@login_required
 def profile():
+    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+        return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
+
     try:
         logPage()
         #clean up bookings table
@@ -495,6 +508,7 @@ def locations():
 
 
 @app.route('/booking1', methods=['GET', 'POST'])
+@login_required
 def booking1():
     try:
         logPage()
@@ -542,7 +556,7 @@ def booking1():
             if form.is_submitted():
                 #checks that the user didn't try to book when location is empty of scooters
                 if form.scooter_id.data == "0":
-                    flash("Please choose a location with available scooters")
+                    flash("Please choose a location with available scooters", 'danger')
                     logger.info("Booking not made: no available scooters at " + str(form.location_id.data))
                     exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
                     if(exists):
@@ -562,7 +576,7 @@ def booking1():
 
                 #check that they actually put a start date
                 if form.start_date.data == None:
-                    flash("Please enter a valid date")
+                    flash("Please enter a valid date", 'danger')
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
                     if(exists):
@@ -581,7 +595,7 @@ def booking1():
 
                 #check if the start date further in the past than now, with a grace period of 5 minutes
                 if form.start_date.data < datetime.utcnow() + timedelta(minutes = -5):
-                    flash("The start date can't be in the past")
+                    flash("The start date can't be in the past", 'danger')
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     exists = models.card_details.query.filter_by(user_id = current_user.id).first() is not None
                     if(exists):
@@ -614,10 +628,10 @@ def booking1():
                 else:
                     cost = 10.00
                     hours = 1
-                
+
                 #if the user is a student or a senior apply the discount
                 if current_user.user_type == "senior" or current_user.user_type == "student":
-                    flash("you are eligible for a student/senior discount")
+                    flash("you are eligible for a student/senior discount", "info")
                     logger.info("(User " + str(current_user.id) + ") eligible for discount")
                     cost = cost * (0.8)
 
@@ -638,7 +652,7 @@ def booking1():
                                 break
 
                     if (total_hours >= 8) :
-                        flash("you are eligible for a frequent user discount")
+                        flash("you are eligible for a frequent user discount", "info")
                         logger.info("(User " + str(current_user.id) + ") eligible for discount")
                         cost = cost * (0.8)
 
@@ -652,7 +666,7 @@ def booking1():
                 for booking in current_active_bookings:
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
-                        flash("The scooter is unavailable for that start time")
+                        flash("The scooter is unavailable for that start time", 'danger')
                         logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
@@ -675,7 +689,7 @@ def booking1():
 
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
-                        flash("The projected end time falls within a pre-existing booking")
+                        flash("The projected end time falls within a pre-existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -701,7 +715,7 @@ def booking1():
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
-                        flash("The current booking conflicts with an existing booking")
+                        flash("The current booking conflicts with an existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -727,7 +741,7 @@ def booking1():
                 for booking in current_upcoming_bookings:
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
-                        flash("The scooter is unavailable for that start time")
+                        flash("The scooter is unavailable for that start time", 'danger')
                         logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
@@ -750,7 +764,7 @@ def booking1():
 
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
-                        flash("The projected end time falls within a pre-existing booking")
+                        flash("The projected end time falls within a pre-existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -772,11 +786,11 @@ def booking1():
                                                     form = form,
                                                     hire_periods = hire_periods,
                                                     card_found=False)
-                    
+
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
-                        flash("The current booking conflicts with an existing booking")
+                        flash("The current booking conflicts with an existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -859,7 +873,6 @@ def booking1():
                     '\nReference Number: ' + str(booking.id))
                     mail.send(msg)
 
-                    flash("Booking Successful!")
                     logger.info("(User " + str(current_user.id) + "): Booking " + str(booking.id) + " created")
 
                     return redirect("/booking2") #send to booking confirmation
@@ -899,7 +912,7 @@ def booking1():
             if form.is_submitted():
                 #checks that the user didn't try to book when location is empty of scooters
                 if form.scooter_id.data == "0":
-                    flash("Please choose a location with available scooters")
+                    flash("Please choose a location with available scooters", 'danger')
                     logger.info("Booking not made: no available scooters at " + str(form.location_id.data))
                     return render_template('booking1_admin.html',
                                             title='Choose a Location',
@@ -908,7 +921,7 @@ def booking1():
 
                 #check that they actually put a start date
                 if form.start_date.data == None:
-                    flash("Please enter a valid date")
+                    flash("Please enter a valid date", 'danger')
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     return render_template('booking1_admin.html',
                                             title='Choose a Location',
@@ -917,7 +930,7 @@ def booking1():
 
                 #check if the start date further in the past than now, with a grace period of 5 minutes
                 if form.start_date.data < datetime.utcnow() + timedelta(minutes = -5):
-                    flash("The start date can't be in the past")
+                    flash("The start date can't be in the past", 'danger')
                     logger.info("Booking not made: invalid date " + str(form.start_date.data))
                     return render_template('booking1_admin.html',
                                             title='Choose a Location',
@@ -950,7 +963,7 @@ def booking1():
                 for booking in current_active_bookings:
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
-                        flash("The scooter is unavailable for that start time")
+                        flash("The scooter is unavailable for that start time", 'danger')
                         logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
@@ -961,7 +974,7 @@ def booking1():
                                                 hire_periods = hire_periods)
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
-                        flash("The projected end time falls within a pre-existing booking")
+                        flash("The projected end time falls within a pre-existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -976,7 +989,7 @@ def booking1():
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
-                        flash("The current booking conflicts with an existing booking")
+                        flash("The current booking conflicts with an existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -991,7 +1004,7 @@ def booking1():
                 for booking in current_upcoming_bookings:
                     #check that the selected start date doesn't fall during a booking
                     if form.start_date.data >= booking.initial_date_time and form.start_date.data <= booking.final_date_time:
-                        flash("The scooter is unavailable for that start time")
+                        flash("The scooter is unavailable for that start time", 'danger')
                         logger.info("Booking not made: Scooter " +
                                         str(form.scooter_id.data) +
                                         " unavailable at " +
@@ -1002,7 +1015,7 @@ def booking1():
                                                 hire_periods = hire_periods)
                     #check that the projected end date doesn't fall during a booking
                     if form.start_date.data + timedelta(hours = hours) >= booking.initial_date_time and form.start_date.data + timedelta(hours = hours) <= booking.final_date_time:
-                        flash("The projected end time falls within a pre-existing booking")
+                        flash("The projected end time falls within a pre-existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -1017,7 +1030,7 @@ def booking1():
                     #check that the current booking doesn't completely overlap a booking
                     #if the start time for a booking is during the current booking attempt
                     if form.start_date.data <= booking.initial_date_time and booking.initial_date_time <= form.start_date.data + timedelta(hours = hours):
-                        flash("The current booking conflicts with an existing booking")
+                        flash("The current booking conflicts with an existing booking", 'danger')
                         logger.info("Booking not made: pre-existing booking for Scooter " +
                                         str(form.scooter_id.data) +
                                         " within range " +
@@ -1066,6 +1079,7 @@ def booking1():
             return redirect("/user_dashboard")
 
 @app.route('/booking1/<location_id>')
+@login_required
 def booking1_location(location_id):
     scooters = models.scooter.query.filter_by(collection_id = location_id, availability = 1).all()
 
@@ -1080,6 +1094,7 @@ def booking1_location(location_id):
 
 
 @app.route('/booking2')
+@login_required
 def booking2():
     try:
         logPage()
@@ -1124,14 +1139,22 @@ def booking2():
 
 #intermediary page for cancelling booking
 @app.route('/cancel_this_booking/<booking_id>')
+@login_required
 def cancel_this_booking(booking_id):
+    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+        return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
+
     session['booking_id'] = booking_id
 
     return redirect(url_for('cancel_booking'))
 
 
 @app.route('/cancel_booking', methods=('GET', 'POST'))
+@login_required
 def cancel_booking():
+    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+        return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
+
     try:
         logPage()
 
@@ -1155,7 +1178,7 @@ def cancel_booking():
             except:
                 db.session.rollback()
 
-            flash("Booking successfully cancelled!")
+            flash("Booking successfully cancelled!", "success")
             logger.info("Booking " + str(session.get('booking_id')) + " cancelled")
             return redirect(url_for('profile'))
 
@@ -1176,7 +1199,11 @@ def cancel_booking():
 
 #intermediary page for extending booking
 @app.route('/extend_this_booking/<booking_id>')
+@login_required
 def extend_this_booking(booking_id):
+    if current_user.account_type != 'user': # Check if the logged in user is a customer or admin (True if employee/manager, False if customer)
+        return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
+
     logPage()
     session['booking_id'] = booking_id
 
@@ -1185,7 +1212,11 @@ def extend_this_booking(booking_id):
 
 #extend booking page that takes info from the page in between profile and extend
 @app.route('/extend_booking', methods=('GET', 'POST'))
+@login_required
 def extend_booking():
+    if current_user.account_type != 'user': # Check if the logged in user is a user or admin (True if employee/manager, False if customer)
+        return redirect('/admin_dashboard') # Redirect any non-customer users to the admin dashboard
+
     try:
         logPage()
         form = ExtendBookingForm()
@@ -1210,9 +1241,6 @@ def extend_booking():
             else:
                 cost = 10.00
                 hours = 1
-            print(form.hire_period.data)
-            print(cost)
-            print(hours)
 
             #check every booking made with this scooter
             #make sure that the currently selected start date & end date DO NOT fall within start and end of any the bookings
@@ -1223,7 +1251,7 @@ def extend_booking():
             for bookingA in current_active_bookings:
                 #as long as the new final date time after extention has run past any other booking's start time it fails
                 if booking.final_date_time + timedelta(hours = hours) >= bookingA.initial_date_time and booking.id != bookingA.id:
-                    flash("The extention would conflict with and existing booking")
+                    flash("The extention would conflict with and existing booking", 'danger')
                     logger.info("Extention not made: Scooter " +
                                     str(booking.scooter_id) +
                                     " unavailable to extend till " +
@@ -1237,7 +1265,7 @@ def extend_booking():
             for bookingU in current_upcoming_bookings:
                 #as long as the new final date time after extention has run past any other booking's start time it fails
                 if booking.final_date_time + timedelta(hours = hours) >= bookingU.initial_date_time and booking.id != bookingU.id:
-                    flash("The extention would conflict with and existing booking")
+                    flash("The extention would conflict with and existing booking", 'danger')
                     logger.info("Extention not made: Scooter " +
                                     str(booking.scooter_id) +
                                     " unavailable to extend till " +
@@ -1258,7 +1286,7 @@ def extend_booking():
                 #Check if user is a discounted user when the booking is extended
                 #if the user is a student or a senior apply the discount
                 if current_user.user_type == "senior" or current_user.user_type == "student":
-                    flash("you are eligible for a student/senior discount")
+                    flash("you are eligible for a student/senior discount", "info")
                     logger.info("(User " + str(current_user.id) + ") eligible for discount")
                     cost = cost * (0.8)
 
@@ -1309,7 +1337,7 @@ def extend_booking():
                 '\nReference Number: ' + str(booking.id))
                 mail.send(msg)
 
-                flash("Booking Extension Successful!")
+                flash("Booking Extension Successful!", "success")
                 # get correct string for printing to log
                 if str(form.hire_period.data) == "1":
                     log_duration = "1 hour"
@@ -1352,7 +1380,12 @@ def extend_booking():
 
 #Admin exclusive pages
 @app.route('/admin_dashboard')
+@login_required
 def admin_dashboard():
+    if current_user.account_type not in ['employee', 'manager']: # Check if the logged in user is an admin-type or a customer
+        print("not an admin user, redirect to user dashboard")
+        return redirect('/user_dashboard') # Redirect and non-admin users to the user dashboard
+
     try:
         logPage()
         #clean up bookings table
@@ -1373,7 +1406,12 @@ def admin_dashboard():
 
 
 @app.route('/review_feedback', methods=('GET', 'POST'))
+@login_required
 def review_feedback():
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     try:
         logPage()
         employee = (current_user.account_type == 'employee') # True if 'employee', False if 'manager'
@@ -1394,7 +1432,12 @@ def review_feedback():
             return redirect("/user_dashboard")
 
 @app.route('/edit_feedback/<id>', methods=('GET', 'POST'))
+@login_required
 def edit_feedback(id):
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     logPage()
     form = EditFeedbackForm()
     rec = models.feedback.query.filter_by(id=id).first()
@@ -1418,7 +1461,12 @@ def edit_feedback(id):
 
 
 @app.route('/view_scooters', methods=['GET', 'POST'])
+@login_required
 def view_scooters():
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     logPage()
     #synchronise scooters and Locations
     organise_scooters()
@@ -1438,7 +1486,12 @@ def view_scooters():
 
 
 @app.route('/add_scooter', methods=['GET','POST'])
+@login_required
 def add_scooter():
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     logPage()
     form = AddScooterForm()
 
@@ -1456,7 +1509,12 @@ def add_scooter():
 
 
 @app.route('/configure_scooter', methods=['GET', 'POST'])
+@login_required
 def configure_scooter():
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     logPage()
     #retrieve details to display and store in form
     scooter = models.scooter.query.get(session['confg_sctr_id'])
@@ -1484,7 +1542,12 @@ def configure_scooter():
 
 
 @app.route('/configure_costs', methods =['GET', 'POST'])
+@login_required
 def configure_costs():
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     logPage()
     rec = models.pricing.query.all()
     form = PricesForm()
@@ -1503,13 +1566,13 @@ def configure_costs():
 
         #find record and change price.
         dur = models.pricing.query.filter_by(duration = durationToCheck).first()
-        print("dur is " + str(dur))
         if dur:
-            dur.price = form.price.data
-            flash("Price updated")
+            #need to round the price to 2 dp
+            dur.price = round(form.price.data, 2)
+            flash("Price updated", "success")
             logger.info("Scooter costs configured: " + str(dur.id) + " set to " +  str(dur.price))
         else:
-            flash("Error price not updated")
+            flash("Error price not updated", 'danger')
             logger.info("Scooter costs configuration failed")
 
         try:
@@ -1518,14 +1581,19 @@ def configure_costs():
             db.session.rollback()     # commit scooter to db
     else:
         if form.price.data != None:
-            flash("Invalid form data")
+            flash("Invalid form data", 'danger')
             logger.info("Scooter costs configuration failed")
     return render_template('configure_costs.html',
                             rec=rec, form=form)
 
 
 @app.route('/sales_metrics')
+@login_required
 def sales_metrics():
+    if current_user.account_type not in ['employee',
+                                         'manager']:  # Check if the logged in user is an admin-type or a customer
+        return redirect('/user_dashboard')  # Redirect and non-admin users to the user dashboard
+
     logPage()
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     # calculate the date range needed
