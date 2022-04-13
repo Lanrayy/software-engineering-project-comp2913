@@ -69,6 +69,9 @@ class TestCase(unittest.TestCase):
 
     # Tests
 
+#--------------------------------------------------------------------------------
+#                               Not Signed In Pages
+#--------------------------------------------------------------------------------
     # Ensure landing page loads correctly
     def test_landing_page_loads(self):
         tester = app.test_client(self)
@@ -177,8 +180,42 @@ class TestCase(unittest.TestCase):
         response = tester.get('/profile', content_type='html/text')
         self.assertTrue(b'User Details' in response.data)
 #--------------------------------------------------------------------------------
+#                               Admin Pages
+#--------------------------------------------------------------------------------
+    def test_admin_dashboard_page_loads(self):
+        tester = app.test_client(self)
 
+        # Log in first
+        tester.post('/login',
+                    data=dict(email="employee@gmail.com",
+                    password=("test")),
+                    follow_redirects=True)
+        response = tester.get('/admin_dashboard', content_type='html/text')
+        self.assertTrue(b'Welcome,' in response.data)
 
+    def test_view_scooters_page_loads(self):
+        tester = app.test_client(self)
+        # Log in first
+        tester.post('/login',
+                    data=dict(email="employee@gmail.com",
+                    password=("test")),
+                    follow_redirects=True)
+        response = tester.get('/view_scooters', content_type='html/text')
+        self.assertTrue(b'View Scooter Details and Availability' in response.data)
+    
+    def test_review_feedback_page_loads(self):
+        tester = app.test_client(self)
+        # Log in first
+        tester.post('/login',
+                    data=dict(email="employee@gmail.com",
+                    password=("test")),
+                    follow_redirects=True)
+        response = tester.get('/review_feedback', content_type='html/text')
+        self.assertTrue(b'Feedback Reports' in response.data)
+
+#--------------------------------------------------------------------------------
+#                               Booking
+#--------------------------------------------------------------------------------
     # Ensure correct bookings are made
     def test_booking_is_made(self):
 
@@ -237,6 +274,9 @@ class TestCase(unittest.TestCase):
 
         self.assertIn(b'Card details saved', booking.data)
 
+#--------------------------------------------------------------------------------
+#                               Feedback Pages
+#--------------------------------------------------------------------------------
     def test_feedback_is_submitted(self):
         tester = app.test_client(self)
         response = tester.post('/send_feedback',
