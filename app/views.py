@@ -460,7 +460,6 @@ def profile():
                                 email=current_user.email,
                                 account_type=current_user.account_type,
                                 cards = cards,
-                                test = test,
                                 booking = bookings,
                                 location = locations)
     except Exception as e:
