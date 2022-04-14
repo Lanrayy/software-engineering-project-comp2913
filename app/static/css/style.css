@@ -133,11 +133,18 @@ td, th {
   padding-left: 80px;
 }
 
-/*
-tr:nth-child(even) {
+tr:nth-child(even){background-color: #f2f2f2;}
+tr:hover {background-color: #ddd;}
+
+th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
   background-color: #f46c63;
+  color: white;
 }
-*/
+
+
 
 
 /* **********************************
@@ -368,7 +375,7 @@ User Dashboard Page
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  background-image: linear-gradient(#f46c63,#f524157e );
+  background-image: linear-gradient(#f46c63,#f52415a4 );
 }
 
 .main_image_user_dashboard{

@@ -119,8 +119,9 @@
   <div class="row row3">
     <div class="row-info">
       <h2 class="row-title row-3-title">Upcoming bookings</h2>
-      <p class="UD_no_bookings">You have no upcoming bookings :(</p>
+      <!--<p class="UD_no_bookings">You have no upcoming bookings :(</p> -->
       
+      <br><br>
       <table>
         <tr>
           <th>Date of Booking</th>
@@ -129,6 +130,7 @@
           <th>PickUp location</th>
           <th>Status</th>
           <th>Reference No.</th>
+          <th></th>
         </tr>
   
   
@@ -147,18 +149,27 @@
               <td>{{b.status}}</td>
               <td>BN000{{b.id}}</td>
   
-              {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->
-              <td><a href="/extend_booking"><input type="submit" class="btn btn-primary" value="O"></a></td>
-              {% endif %}
-              
-              {% if b.status == "upcoming" %} <!-- if booking is UPCOMING then show cancel-->
-              <td><a href="/cancel_booking"><input type="submit" class="btn btn-primary" value="x"></a></td>
-              {% endif %}
+              <td>
+                {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->      
+                    <a href="/extend_this_booking/{{ b.id }}">
+                      <button type="button submit"  class="btn btn-success" name="extend_button">Extend</button>
+                    </a>
+                {% endif %}
+  
+                {% if b.status == "upcoming" %} <!-- if booking is UPCOMING then show cancel-->
+                    <a href="/cancel_this_booking/{{ b.id }}">
+                      <button type="button submit"  class="btn btn-danger" name="cancel_button">Cancel</button>
+                    </a>
+                {% endif %}
+              </td>
   
             </tr>
         {% endfor %}
   
     </table>
+
+
+    
 
 
   </div>
