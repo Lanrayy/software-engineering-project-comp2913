@@ -1,7 +1,9 @@
 {% extends "base2.html" %}
 {% block content %}
-    <!-- first row 
+
+   <!-- first row -->
     <div class="row UD_row1">
+      <!-- When user logs in -->
       <div style="padding: 0px">
           {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -14,66 +16,13 @@
           {% endwith %}
       </div>
 
-      <div class="col-5" >
-          <div class="UD_row-1">
-                  <div>
-                      <h1 class="UD_subtitle">Welcome, {{name}}</h1>
-                      <h1 class="UD_title">Want to book a scooter?</h1>
-                  </div>
-                  <div class="call-to-action-buttons">
-                    <a href="/booking1"><button type="button" class="btn btn-primary custom-button">Book</button></a>
-                  </div>
-                  </div>
-      </div>
-      <div class="col-7">
+      <div class="UD_row-1">
           <div>
-              <img class="main_image_user_dashboard1 img-fluid float-right" src="{{url_for('static', filename='images/happy-smiling-man.png')}}" alt="Main-image">
+            <h1 class="UD_subtitle">Welcome, {{name}}</h1>
+            <h1 class="UD_title">.sctr</h1>
           </div>
       </div>
     </div>
-
-    <div class="row UD_row1">
-      <div class="col-7">
-        <div>
-          <img class="main_image_user_dashboard2 img-fluid" src="{{url_for('static', filename='images/booking-app.png')}}" alt="Splash">
-        </div>
-      </div>
-
-      <div class="col-5" >
-          <div class="UD_row2">
-                  <div>
-                      <h1 class="UD_title">View Profile</h1>
-                  </div>
-                  <div class="call-to-action-buttons">
-                    <a href="/profile"><button type="button" class="btn btn-primary custom-button">View Profile</button></a>
-                  </div>
-                  </div>
-      </div>
-    </div>
-  -->
-
-   <!-- first row -->
-  <div class="row UD_row1">
-    <!-- When user logs in -->
-    <div style="padding: 0px">
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% for message in messages %}
-              <div class="alert alert-success">
-                {{ message }}
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
-    </div>
-
-    <div class="UD_row-1">
-        <div>
-          <h1 class="UD_subtitle">Welcome, {{name}}</h1>
-          <h1 class="UD_title">.sctr</h1>
-        </div>
-    </div>
-  </div>
 
     <!-- second row -->
     <div class="row row2">
@@ -115,91 +64,61 @@
 
     </div>
 
-  <!-- third row -->
-  <div class="row row3">
-    <div class="row-info">
-      <h2 class="row-title row-3-title">Upcoming bookings</h2>
-      <!--<p class="UD_no_bookings">You have no upcoming bookings :(</p> -->
-      
-      <br><br>
-      <table>
-        <tr>
-          <th>Date of Booking</th>
-          <th>Duration</th>
-          <th>Scooter ID</th>
-          <th>PickUp location</th>
-          <th>Status</th>
-          <th>Reference No.</th>
-          <th></th>
-        </tr>
-  
-  
-        {% for b in booking %}
-          <tr>
-              <td>{{ b.initial_date_time }}</td>
-              <td>{{b.duration}}</td>
-              <td>SN{{b.scooter_id}}</td>
-  
-              {% for loc in location%}
-                {% if b.collection_id == loc.id%}
-                  <td> {{loc.location}} </td>  
-                {% endif %}
-              {% endfor %}
-  
-              <td>{{b.status}}</td>
-              <td>BN000{{b.id}}</td>
-  
-              <td>
-                {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->      
-                    <a href="/extend_this_booking/{{ b.id }}">
-                      <button type="button submit"  class="btn btn-success" name="extend_button">Extend</button>
-                    </a>
-                {% endif %}
-  
-                {% if b.status == "upcoming" %} <!-- if booking is UPCOMING then show cancel-->
-                    <a href="/cancel_this_booking/{{ b.id }}">
-                      <button type="button submit"  class="btn btn-danger" name="cancel_button">Cancel</button>
-                    </a>
-                {% endif %}
-              </td>
-  
+    <!-- third row  -->
+    <div class="row UD-row3">
+     <div class="row-info">  
+        <h2 class="row-title row-3-title">Upcoming bookings</h2>
+        <br>
+        {% if booking.first() == None %}
+        <p class="UD_no_bookings">You have no upcoming bookings :(</p>
+        {% else %}
+          <table>
+            <tr>
+              <th>Date of Booking</th>
+              <th>Duration</th>
+              <th>Scooter ID</th>
+              <th>PickUp location</th>
+              <th>Status</th>
+              <th>Reference No.</th>
+              <th></th>
             </tr>
-        {% endfor %}
-  
-    </table>
 
+            {% for b in booking %}
+              <tr>
+                  <td>{{ b.initial_date_time }}</td>
+                  <td>{{b.duration}} hour(s)</td>
+                  <td>SN{{b.scooter_id}}</td>
+                  {% for loc in location%}
+                    {% if b.collection_id == loc.id%}
+                      <td> {{loc.location}} </td>  <!-- show booking location-->
+                    {% endif %}
+                  {% endfor %}
 
-    
+                  <td>{{b.status}}</td>
+                  <td>BN000{{b.id}}</td>
 
+                  <td>
+                    {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->      
+                        <a href="/extend_this_booking/{{ b.id }}">
+                          <button type="button submit"  class="btn btn-success" name="extend_button">Extend</button>
+                        </a>
+                    {% endif %}
 
-  </div>
+                    {% if b.status == "upcoming" %} <!-- if booking is UPCOMING then show cancel-->
+                        <a href="/cancel_this_booking/{{ b.id }}">
+                          <button type="button submit"  class="btn btn-danger" name="cancel_button">Cancel</button>
+                        </a>
+                    {% endif %}
+                  </td>
+                </tr>
+            {% endfor %}
+          </table>
+        {% endif %}
+      
+      </div>
+    </div> 
 
-  </div>
-
-  <!-- fourth row -->
-  <div class="row row4">
-    <div class="col-1"></div>
-    <div class="col-10">
-        <div class="row4-content">
-                <div>
-                    <h2 class="row-title">Where are we?</h2>
-                </div>
-                <div>
-                    <p class="row-subtitle">Whether you're running late to lectures or your window shopping in the city center. We've got you covered. 
-                        <br> Use the map below to find our locations. </p>
-                    <p class="row-subtitle"> </p>
-                </div>
-                <div class="map">
-                    <!-- MAP HERE -->
-                    <iframe src="https://www.google.com/maps/d/embed?mid=1KtDebi-rELyFWD2SYbJ_qJXrftcFUD9A&hl=en&ehbc=2E312F"></iframe>
-                </div>
-        </div>
-    </div>
-    <div class="col-1"></div>
-  </div>
- 
-
-  <br><br><br><br>
+    <br><br><br><br>
 
 {% endblock %}
 
