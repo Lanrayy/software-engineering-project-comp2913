@@ -130,7 +130,8 @@ table.center {
 td, th {
   text-align: left;
   padding: 20px;
-  padding-left: 80px;
+  padding-left: 40px;
+  padding-right: 40px;
 }
 
 tr:nth-child(even){background-color: #f2f2f2;}
@@ -143,8 +144,6 @@ th {
   background-color: #f46c63;
   color: white;
 }
-
-
 
 
 /* **********************************
@@ -381,7 +380,7 @@ User Dashboard Page
 .UD-row3{
   /* border: 1px solid red; */
   margin-top: 40px;
-  height: 600px;
+  height: 400px;
   border-top: 1px solid lightgray;
   padding: 40px 0px 40px 0px;
 }
@@ -409,8 +408,9 @@ User Dashboard Page
 .UD_row1 {
   /* border: 1px solid red; */
   height: 300px;
-  background-color: #f46c63;
+  background-color: #f52415a4 ;
 }
+
 
 .UD_row2{
   /* border: 2px solid green; */
@@ -459,7 +459,7 @@ User Dashboard Page
 
 .UD_no_bookings{
   text-align: center;
-  padding-top: 200px;
+  padding-top: 150px;
 }
 
 
