@@ -454,6 +454,8 @@ def profile():
         bookings =  models.booking.query.filter_by(email = current_user.email)
         collection_points = models.collection_point
 
+        flash(bookings)
+
         return render_template('profile.html',
                                 title='Your Profile',
                                 name=current_user.name,

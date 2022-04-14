@@ -55,9 +55,11 @@
               <td>XXX</td> 
               <td><a href="/delete/{{cards.id}}"><input type="button submit"  class="btn btn-danger" method="POST" value="Delete card"></a></td>
             </tr>
-
     </table>
   </div>
+
+  {% else %}
+  <p>no card saved</p>
   {% endif %}
 
   
