@@ -1,15 +1,26 @@
 {% extends "base2.html" %}
 {% block content %}
-
    <!-- first row -->
    <div class="row UD_row1">
 
-
       <div class="UD_row-1">
-          <div>
-            <h1 class="UD_subtitle">Welcome, {{name}}</h1>
-            <h1 class="UD_title">.sctr</h1>
-          </div>
+        <!-- m -->
+        <div style="padding: 0px">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-success">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+        </div>
+
+        <div>
+          <h1 class="UD_subtitle">Welcome, {{name}}</h1>
+          <h1 class="UD_title">.sctr</h1>
+        </div>
       </div>
     </div>
 
@@ -55,7 +66,7 @@
 
     <!-- third row  -->
     <div class="row UD-row3">
-     <div class="row-info">  
+     <div class="row-info">
         <h2 class="row-title row-3-title">Upcoming bookings</h2>
         <br>
         {% if booking.first() == None %}
@@ -87,7 +98,7 @@
                   <td>BN000{{b.id}}</td>
 
                   <td>
-                    {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->      
+                    {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->
                         <a href="/extend_this_booking/{{ b.id }}">
                           <button type="button submit"  class="btn btn-success" name="extend_button">Extend</button>
                         </a>
@@ -103,21 +114,10 @@
             {% endfor %}
           </table>
         {% endif %}
-      
+
       </div>
-    </div> 
+    </div>
 
     <br><br><br><br>
 
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
