@@ -218,7 +218,6 @@ class TestCase(unittest.TestCase):
 #--------------------------------------------------------------------------------
     # Ensure correct bookings are made
     def test_booking_is_made(self):
-
         tester = app.test_client(self)
 
         # Log in first
@@ -237,13 +236,112 @@ class TestCase(unittest.TestCase):
 
         # Fill in card detaisl
         booking = tester.post('/card',
-                    data=dict(card_number="1010101010101010",
+                    data=dict(card_number="1234123412341234",
                     name="test",
-                    expiry="12-3000",
+                    expiry="12-2025",
                     cvv="123"),
                     follow_redirects=True)
 
         self.assertIn(b'Booking Successful', booking.data)
+    
+    # Ensure scooters that are already booked for the time slot do not re-book
+    def test_used_scooter_is_not_booked(self):
+        tester = app.test_client(self)
+
+        # Log in first
+        tester.post('/login',
+                    data=dict(email="test@gmail.com",
+                    password=("test")),
+                    follow_redirects=True)
+
+        # Book scooter
+        tester.post('/booking1',
+                    data=dict(scooter_id= '100',
+                    location_id='1',
+                    hire_period='1',
+                    start_date=datetime.utcnow() + timedelta(minutes=2)),
+                    follow_redirects=True)
+
+        tester.post('/card',
+                    data=dict(card_number="1234123412341234",
+                    name="test",
+                    expiry="12-2025",
+                    cvv="123"),
+                    follow_redirects=True)
+
+        # try to re-book scooter
+        booking = tester.post('/booking1',
+                    data=dict(scooter_id= '100',
+                    location_id='1',
+                    hire_period='1',
+                    start_date=datetime.utcnow() + timedelta(minutes=2)),
+                    follow_redirects=True)
+
+        self.assertIn(b'The scooter is unavailable for that start time', booking.data)
+
+
+# Ensure scooters that are already booked for the time slot do not re-book
+    def test_extend_booking(self):
+        tester = app.test_client(self)
+
+        # Log in first
+        tester.post('/login',
+                    data=dict(email="test@gmail.com",
+                    password=("test")),
+                    follow_redirects=True)
+
+        # Book scooter
+        tester.post('/booking1',
+                    data=dict(scooter_id= '100',
+                    location_id='1',
+                    hire_period='1',
+                    start_date=datetime.utcnow() + timedelta(minutes=2)),
+                    follow_redirects=True)
+                    
+        tester.post('/card',
+                    data=dict(card_number="1234123412341234",
+                    name="test",
+                    expiry="12-2025",
+                    cvv="123"))
+
+        # try to extend booking
+        tester.post('/extend_booking',
+                    data=dict(hire_period='1'))
+
+        extended = tester.get('/profile', content_type='html/text')
+        self.assertIn(b'2 hour(s)', extended.data)
+
+# Ensure scooters that are already booked for the time slot do not re-book
+    def test_cancel_booking(self):
+        tester = app.test_client(self)
+
+        # Log in first
+        tester.post('/login',
+                    data=dict(email="test@gmail.com",
+                    password=("test")),
+                    follow_redirects=True)
+
+        # Book scooter
+        tester.post('/booking1',
+                    data=dict(scooter_id= '100',
+                    location_id='1',
+                    hire_period='1',
+                    start_date=datetime.utcnow() + timedelta(minutes=2)),
+                    follow_redirects=True)
+                    
+        tester.post('/card',
+                    data=dict(card_number="1234123412341234",
+                    name="test",
+                    expiry="12-2025",
+                    cvv="123"),
+                    follow_redirects=True)
+
+        # try to cancel booking
+        cancelled = tester.post('/cancel_booking', data=dict(),follow_redirects=True)
+
+       
+        self.assertIn(b'Booking successfully cancelled!', cancelled.data)
+
 
     # Ensure login does not work with incorrect credentials
     def test_store_card_details(self):
