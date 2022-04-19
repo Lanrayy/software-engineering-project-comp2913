@@ -28,7 +28,7 @@
 
           <div class="col">
             <p>
-              {{ form.availability(class="form-control form-control-lg") }}
+              {{ form.availability(class="form-control form-control-lg form-select") }}
               {% if form.availability.errors %}
                 {% for error in form.availability.error %}
                   <span>{{ error }}</span>
@@ -46,7 +46,7 @@
 
           <div class="col">
             <p>
-              {{ form.location_id(class="form-control form-control-lg") }}
+              {{ form.location_id(class="form-control form-control-lg form-select") }}
               {% if form.location_id.errors %}
                 {% for error in form.location_id.error %}
                   <span>{{ error }}</span>
