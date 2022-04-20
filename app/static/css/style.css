@@ -383,9 +383,9 @@ User Dashboard Page
 .UD-row3{
   /* border: 1px solid red; */
   margin-top: 40px;
-  height: 400px;
   border-top: 1px solid lightgray;
-  padding: 40px 0px 40px 0px;
+  padding: 40px 0px 0px 0px;
+  
 }
 
 .main_image_user_dashboard{
@@ -463,6 +463,10 @@ User Dashboard Page
 .UD_no_bookings{
   text-align: center;
   padding-top: 150px;
+}
+
+.UD-row_info{
+  min-height: 80px;
 }
 
 

@@ -4,7 +4,7 @@
    <div class="row UD_row1">
 
       <div class="UD_row-1">
-        <!-- m -->
+        <!-- falsh message  -->
         <div style="padding: 0px">
             {% with messages = get_flashed_messages() %}
               {% if messages %}
@@ -35,6 +35,7 @@
       </div>
 
       <div class="col-8 row-2-content" >
+         <!-- information for profile and booking -->
               <div class="row-2-column">
                       <div>
                           <img class="row-2-image" src="{{url_for('static', filename='images/booking-app.png')}}" alt="Splash">
@@ -66,7 +67,7 @@
 
     <!-- third row  -->
     <div class="row UD-row3">
-     <div class="row-info">
+     <div class="UD-row_info">
         <h2 class="row-title row-3-title">Upcoming bookings</h2>
         <br>
         {% if booking.first() == None %}
