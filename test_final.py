@@ -145,7 +145,7 @@ class TestCase(unittest.TestCase):
                     password=("test")),
                     follow_redirects=True)
         response = tester.get('/user_dashboard', content_type='html/text')
-        self.assertTrue(b'Want to book a scooter?' in response.data)
+        self.assertTrue(b'.sctr works for your wellbeing' in response.data)
 
     def test_user_booking_page_loads(self):
         tester = app.test_client(self)
@@ -266,7 +266,8 @@ class TestCase(unittest.TestCase):
                     data=dict(card_number="1234123412341234",
                     name="test",
                     expiry="12-2025",
-                    cvv="123"),
+                    cvv="123",
+                    save_card_details=True),
                     follow_redirects=True)
 
         # try to re-book scooter
@@ -277,7 +278,7 @@ class TestCase(unittest.TestCase):
                     start_date=datetime.utcnow() + timedelta(minutes=2)),
                     follow_redirects=True)
 
-        self.assertIn(b'The scooter is unavailable for that start time', booking.data)
+        self.assertIn(b'The projected end time falls within a pre-existing booking', booking.data)
 
 
 # Ensure scooters that are already booked for the time slot do not re-book
@@ -302,7 +303,9 @@ class TestCase(unittest.TestCase):
                     data=dict(card_number="1234123412341234",
                     name="test",
                     expiry="12-2025",
-                    cvv="123"))
+                    cvv="123",
+                    save_card_details=True),
+                    follow_redirects=True)
 
         # try to extend booking
         tester.post('/extend_booking',
@@ -333,7 +336,8 @@ class TestCase(unittest.TestCase):
                     data=dict(card_number="1234123412341234",
                     name="test",
                     expiry="12-2025",
-                    cvv="123"),
+                    cvv="123",
+                    save_card_details=True),
                     follow_redirects=True)
 
         # try to cancel booking
