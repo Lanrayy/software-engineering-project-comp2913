@@ -1,43 +1,54 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 {% block content %}
-  <h2>Configure Scooter Costs</h2>
+<br>
+<h1 class="text-center">Configure Scooter Costs</h1>
+<div class="row pt-3">
+  <div class="col-sm d-none d-sm-block"></div>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Duration</th>
-        <th scope="col">Price</th>
+  <div class="col-sm">
+    
+  
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Duration</th>
+          <th scope="col">Price</th>
+        </tr>
+      </thead>
+      {% for rec in rec %}
+      <tr><th scope="row">{{rec.id}}</th>
+  
+        <td>
+          {{rec.duration}}
+        </td>
+  
+        <td>
+            {{ "{:.2f}".format(rec.price) }}
+        </td>
+  
       </tr>
-    </thead>
-    {% for rec in rec %}
-    <tr><th scope="row">{{rec.id}}</th>
+      {% endfor %}
+    </table>
+    <form action="" method="post" name="configureCosts">
+          {{ form.hidden_tag() }}
+  
+          <p>
+            Select Duration <br>
+            {{ form.duration(class="form-control form-control-lg form-select") }}
+          </p>
+          <p>
+            Enter Price <br>
+            {{ form.price(class="form-control form-control-lg") }}
+          </p>
+          <button type="button submit" class="btn btn-success action-button2">Change price</button>
+      </form>
+  
+  
+  </div>
 
-      <td>
-        {{rec.duration}}
-      </td>
-
-      <td>
-          {{ "{:.2f}".format(rec.price) }}
-      </td>
-
-    </tr>
-    {% endfor %}
-  </table>
-  <form action="" method="post" name="configureCosts">
-        {{ form.hidden_tag() }}
-
-        <p>
-          Select Duration <br>
-          {{ form.duration(class="form-control form-control-lg form-select") }}
-        </p>
-        <p>
-          Enter Price <br>
-          {{ form.price(class="form-control form-control-lg") }}
-        </p>
-        <button type="button submit" class="btn btn-success action-button2">Change price</button>
-    </form>
-
+  <div class="col-sm d-none d-sm-block"></div>
+</div>
 
 
 {% endblock %}
