@@ -212,6 +212,24 @@ class TestCase(unittest.TestCase):
                     follow_redirects=True)
         response = tester.get('/review_feedback', content_type='html/text')
         self.assertTrue(b'Feedback Reports' in response.data)
+    
+    def test_configure_scooter(self):
+        tester = app.test_client(self)
+    # Log in first
+        tester.post('/login',
+                    data=dict(email="manager@gmail.com",
+                    password=("test")),
+                    follow_redirects=True)
+
+        response = tester.post('/configure_scooter',
+                    data=dict(location_id='4'),
+                    follow_redirects=True)
+
+        
+        self.assertTrue(b'Scooter Details Updated' in response.data)
+
+
+
 
 #--------------------------------------------------------------------------------
 #                               Booking
