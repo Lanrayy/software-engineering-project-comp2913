@@ -72,7 +72,7 @@ class CardForm(FlaskForm):
         # get the last day of current month and the last day of the card expiry month
         last_day_of_current_month = today.replace(day = calendar.monthrange(today.year, today.month)[1])
         last_day_of_card_month = expiry.data.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
-        
+
         if(last_day_of_card_month.date() < last_day_of_current_month.date()):
             raise ValidationError('Expiry date is invalid! Card is expired!')
 
