@@ -404,6 +404,15 @@ iframe{
   }
 }
 
+/***************************
+* Card Page
+****************************/
+.card-container{
+  min-width: 500px;
+  /* border: 1px solid red; */
+  padding: 0px 30px;
+}
+
 
 /***************************
 User Dashboard Page
