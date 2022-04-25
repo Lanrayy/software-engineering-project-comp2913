@@ -719,4 +719,27 @@ Admin Dashboard Page
   margin-bottom: 10px;
 }
 
+@media screen and (max-width: 1200px) {
+  .image-hideable {
+    display: none;
+  }
+}
 
+/* For minimum width and height */
+@media screen and (max-width: 800px){
+  html{
+      width: 800px;
+      overflow: auto;
+  }
+  /* Set nav bar min width */
+  .navbar{
+      width: 100%;
+      overflow: auto;
+  }
+}
+@media screen and (max-height: 400px){
+  html{
+      height: 400px;
+      overflow: auto;
+  }
+}
