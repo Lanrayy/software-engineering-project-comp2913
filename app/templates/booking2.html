@@ -55,27 +55,27 @@
         </div>
 
       </div>
-        
+
       <div class="row BC-row3">
         <div class="email">
-          <p>We'll send the booking confirmation to: <b style="color: #f46c63">{{email}}</b> 
-            <br> 
+          <p>We'll send the booking confirmation to: <b style="color: #f46c63">{{email}}</b>
+            <br>
             {% if isCustomer %} <!-- Show this message to customers only-->
             Check your inbox for an email confirming your booking.
             {% endif %}
            </p>
         </div>
-        
+
         <div class="col BC-row3-column1">
             <!-- Send user back to the correct dashboard-->
-            {% if isCustomer %} 
+            {% if isCustomer %}
             <a href="/booking1"><button type="button" class="btn btn-success custom-button">Make Another Booking</button></a>
             {% else %}
             <a href="/booking1"><button type="button" class="btn btn-success custom-button">Make Another Booking</button></a>
             {% endif %}
         </div>
         <!-- Onlt show manage bookings button to customers-->
-        {% if isCustomer %} 
+        {% if isCustomer %}
         <div class="col BC-row3-column2">
           <a href="/profile"><button type="button" class="btn btn-success custom-button">Manage Your Bookings</button></a>
         </div>
