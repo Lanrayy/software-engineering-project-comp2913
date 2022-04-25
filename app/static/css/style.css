@@ -40,7 +40,6 @@ td{
   word-wrap:break-word;
 }
 
-
 /* Nav Bar */
 .navbar{
   background-color: #f46c63;
@@ -76,7 +75,7 @@ td{
   cursor: pointer;
 
 }
-
+/* Login button */
 .login-button{
   height: 55px;
   border-radius: 50px;
@@ -104,8 +103,6 @@ td{
   cursor: pointer;
 }
 
-
-
 .nav-link {
   color: white !important;
 }
@@ -113,6 +110,16 @@ td{
 .nav-logo{
   width: 90px;
   margin-left: 40px;
+}
+
+/* Flashed Messages Styles */
+.container-fluid{
+  padding: 0px;
+}
+
+.alert {
+  margin-bottom: 0px;
+  border-radius: 0rem;
 }
 
 /*********************************
@@ -210,13 +217,26 @@ th {
   background-color: #f46c63;
 }
 
+.row-1-content{
+  border: 1px solid red;
+  display: flex;
+  flex-wrap: wrap;
+  /* justify-content: center; */
+}
+
 .row-1-column-1 {
-  /* border: 2px solid green; */
+  border: 2px solid green;
   height: 100%;
+  width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
+}
+
+.row-1-column-2 {
+  border: 2px solid green;
+  min-width: 500px;
 }
 
 .call-to-action-buttons {
