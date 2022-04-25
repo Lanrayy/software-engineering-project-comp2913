@@ -231,11 +231,13 @@ th {
 .row2{
   /* border: 1px solid red; */
   margin-top: 40px;
-  height: 500px;
+  /* height: 500px; */
 }
 
 .row-2-content{
+  /* border: 1px solid red; */
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
 }
 
@@ -246,7 +248,7 @@ th {
   flex-direction: column;
   /* border: 1px solid green; */
   height: 300px;
-  width: 400px;
+  width: 320px;
   margin: 20px 10px 0px 10px;
 }
 
