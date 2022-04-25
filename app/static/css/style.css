@@ -211,7 +211,7 @@ th {
 
 .row1{
   /* border: 1px solid red; */
-  /* min-height: 500px; */
+  min-height: 550px;
   display: flex;
   flex-direction: row;
   background-color: #f46c63;
@@ -239,7 +239,7 @@ th {
 .row-1-column-2 {
   /* border: 2px solid green; */
   height: 100%;
-  min-width: 550px;
+  min-width: 500px;
 }
 
 .call-to-action-buttons {
@@ -309,6 +309,10 @@ th {
   padding: 40px 0px 40px 0px;
 }
 
+.row-3-info{
+  min-height: 20px;
+}
+
 .row-3-title{
   text-align: center;
 }
@@ -329,7 +333,6 @@ th {
   flex-direction: column;
   /* border: 1px solid green; */
   /* border-right: 1px solid lightgray; */
-  /* border-radius: 20px; */
   height: 400px;
   width: 400px;
   margin: 0px 10px 0px 10px;
