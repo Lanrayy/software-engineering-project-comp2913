@@ -1,8 +1,7 @@
 {% extends "base2.html" %}
 {% block content %}
-  <h1>Enter Card Details</h1>
-
   {% if card_found %}
+  <h1>Enter Card Details</h1>
   <div>
       {% for p in data %}
         <div>
@@ -18,6 +17,7 @@
   {% else %}
   <div class="row d-flex justify-content-center">
       <div class="col-md-auto card-container" >
+          <h1>Enter Card Details</h1>
           <form action="" method="post" name="cardform">
               {{ form.csrf_token }}
               {{ form.hidden_tag() }}
