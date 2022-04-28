@@ -3,17 +3,22 @@
 <!-- For the table of prices -->
 <div class="container d-flex flex-column align-items-left" style = "margin-left: 20%; margin-top: 10%">
 
-  <div class="mt-5" style = "margin-bottom: 4%">
+  <div class="mt-5" style = "margin-bottom: 1%">
     <h1 class = "fw-normal text-nowrap">Our Prices!</h1>
   </div>
-
-  {% for hire_period in hire_periods %}
-  <div >
-    <h5 class = "fw-normal ">Hire Period: {{ hire_period.duration }}</h5>
-    <p style="font-family: Raleway; font-size: 18px">£{{ "{:.2f}".format(hire_period.price) }}</p>
-  </div>
-  {% endfor %}
-
+  <table class="prices_table">
+      <tr>
+          <th>Hire Period</th>
+          <th>Price</th>
+      </tr>
+      {% for hire_period in hire_periods %}
+      <tr>
+        <td>{{ hire_period.duration }}</td>
+        <td>£{{ "{:.2f}".format(hire_period.price) }}</td>
+      </tr>
+        
+      {% endfor %}
+  </table>
 
 </div>
 {% endblock %}
@@ -107,7 +112,7 @@
 {% endblock %}
 
 {% block right_content %}
-<div class="row pt-5 ps-3 image-hideable">
-  <img src="{{ url_for('static', filename='images/booking.png') }}" alt="Make a Booking" style= "position:relative; right:10%; width:200px; height: 200px; min-width:200px"  class="p-2">
+<div class="booking_right_column row pt-5 ps-3 image-hideable">
+    <img src="{{ url_for('static', filename='images/young-man-riding-scooter.png') }}" alt="Make a Booking" class="booking_right_column_image p-2">
 </div>
 {% endblock %}
