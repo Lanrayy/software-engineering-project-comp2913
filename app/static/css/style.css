@@ -615,11 +615,35 @@ Admin Dashboard Page
   margin: 10px 10px 10px 10px;
 }
 
+/***************************
+Booking Page
+****************************/
+.prices_table{
+  width: 60%;
+  margin-right: 20px;
+}
+
+.booking_right_column{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.booking_right_column_image{
+position:relative; 
+right:10%; 
+width:350px; 
+/* height: 200px;  */
+min-width:300px;
+}
+
+/***************************
+Booking Confirmation Page
+****************************/
+
 
 .booking-details-container{
-  /***************************
-  Booking Confirmation Page
-  ****************************/
   display: flex;
   flex-direction: column;
   justify-content: center;
