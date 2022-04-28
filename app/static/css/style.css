@@ -441,6 +441,21 @@ User Dashboard Page
   align-items: center;
 }
 
+.UD_row1_container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;;
+
+}
+
+.UD_logo{
+  width: 90px;
+  margin-left: 40px;
+  justify-self: auto;
+  margin-bottom: 30px;
+}
+
 .UD_title {
   text-align: center;
   font-size: 60px;
