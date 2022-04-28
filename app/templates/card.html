@@ -8,8 +8,7 @@
           <p> <strong>User ID:</strong> {{p.user_id}} | <strong>Card Number:</strong> ({{ p.last_four }} ) | <strong>Expiry Date:</strong>{{ p.expiry_date }} | <strong>CVV:</strong>{{ p.cvv }}</p>
         </div>
         <div>
-            <p>{{p.name}} XXXX XXXX XXXX {{ p.last_four}} | Expiry: {{ p.expiry_date.month }} / {{ p.expiry_date.year }}</p>
-            <p>  </p>
+            <p>{{p.name}} XXXX XXXX XXXX {{ p.last_four}} | Expiry: {{ p.expiry_date.month }} / {{ p.expiry_date.year }}</p>     
         </div>
       {% endfor %}
 
