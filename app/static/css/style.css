@@ -40,7 +40,6 @@ td{
   word-wrap:break-word;
 }
 
-
 /* Nav Bar */
 .navbar{
   background-color: #f46c63;
@@ -76,7 +75,7 @@ td{
   cursor: pointer;
 
 }
-
+/* Login button */
 .login-button{
   height: 55px;
   border-radius: 50px;
@@ -104,8 +103,6 @@ td{
   cursor: pointer;
 }
 
-
-
 .nav-link {
   color: white !important;
 }
@@ -115,7 +112,19 @@ td{
   margin-left: 40px;
 }
 
-/*TABLE STYLES*/
+/* Flashed Messages Styles */
+.container-fluid{
+  padding: 0px;
+}
+
+.alert {
+  margin-bottom: 0px;
+  border-radius: 0rem;
+}
+
+/*********************************
+*TABLE STYLES
+**********************************/
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
@@ -200,21 +209,37 @@ th {
   text-align: center;
 }
 
-.row1 {
+.row1{
   /* border: 1px solid red; */
-  height: 600px;
+  min-height: 550px;
   display: flex;
   flex-direction: row;
   background-color: #f46c63;
 }
 
+.row-1-content{
+  /* border: 1px solid red; */
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 .row-1-column-1 {
   /* border: 2px solid green; */
   height: 100%;
+  min-width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
+}
+
+.row-1-column-2 {
+  /* border: 2px solid green; */
+  height: 100%;
+  min-width: 500px;
 }
 
 .call-to-action-buttons {
@@ -229,11 +254,13 @@ th {
 .row2{
   /* border: 1px solid red; */
   margin-top: 40px;
-  height: 500px;
+  /* height: 500px; */
 }
 
 .row-2-content{
+  /* border: 1px solid red; */
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
 }
 
@@ -244,7 +271,7 @@ th {
   flex-direction: column;
   /* border: 1px solid green; */
   height: 300px;
-  width: 400px;
+  width: 320px;
   margin: 20px 10px 0px 10px;
 }
 
@@ -276,10 +303,14 @@ th {
 .row3{
   /* border: 1px solid red; */
   margin-top: 40px;
-  height: 600px;
+  /* height: 600px; */
   border-top: 1px solid lightgray;
   border-bottom: 1px solid lightgray;
   padding: 40px 0px 40px 0px;
+}
+
+.row-3-info{
+  min-height: 20px;
 }
 
 .row-3-title{
@@ -289,6 +320,7 @@ th {
 .row-3-content{
   /* border: 1px solid red; */
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
@@ -301,14 +333,16 @@ th {
   flex-direction: column;
   /* border: 1px solid green; */
   /* border-right: 1px solid lightgray; */
-  /* border-radius: 20px; */
-  height: 100%;
-  width: 50%;
+  height: 400px;
+  width: 400px;
   margin: 0px 10px 0px 10px;
 }
 
-.row-3-column:first-of-type {
-  border-right: 1px solid lightgray;
+.row-3-line{
+  display: flex;
+  border-right: 2px solid lightgray;
+  height: 300px;
+  margin: 0px 50px 0px 50px;
 }
 
 .row-3-image {
@@ -341,8 +375,6 @@ th {
 }
 
 
-
-
 /* ROW 4 */
 .row4{
   margin-top: 30px;
@@ -364,6 +396,21 @@ th {
 iframe{
   width: 90%;
   height: 400px;
+}
+
+@media only screen and (max-width: 1350px){
+  .row-3-line{
+    display: none;
+  }
+}
+
+/***************************
+* Card Page
+****************************/
+.card-container{
+  min-width: 500px;
+  /* border: 1px solid red; */
+  padding: 0px 30px;
 }
 
 

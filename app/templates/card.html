@@ -1,9 +1,7 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 {% block content %}
-<br>
-  <h1>Enter Card Details</h1>
-
   {% if card_found %}
+  <h1>Enter Card Details</h1>
   <div>
       {% for p in data %}
         <div>
@@ -16,53 +14,62 @@
 
   </div>
   {% else %}
-  <form action="" method="post" name="cardform">
-    {{ form.csrf_token }}
-    {{ form.hidden_tag() }}
-      <p>
-        Name on card <br>
-        {{ form.name(class="form-control form-control-lg") }}
-        {% if form.name.errors %}
-        {% for error in form.name.errors %}
-          <span style="color: red">{{ error }}</span>
-        {% endfor %}
-      {% endif %}
-      </p>
-      <p>
-        Card Number <br>
-        {{ form.card_number(class="form-control form-control-lg") }}
-        {% if form.card_number.errors %}
-        {% for error in form.card_number.errors %}
-          <span style="color: red">{{ error }}</span>
-        {% endfor %}
-      {% endif %}
-      </p>
-      <p>
-        Expiry Date (mm-yyyy) <br>
-        {{ form.expiry(class="form-control form-control-lg") }}
-        {% if form.expiry.errors %}
-        {% for error in form.expiry.errors %}
-          <span style="color: red">{{ error }}</span>
-        {% endfor %}
-      {% endif %}
-      </p>
-      <p>
-        cvv <br>
-        {{ form.cvv(class="form-control form-control-lg") }}
-        {% if form.cvv.errors %}
-        {% for error in form.cvv.errors %}
-          <span style="color: red">{{ error }}</span>
-        {% endfor %}
-      {% endif %}
-      </p>
-      {% if not current_user.account_type == "employee" and not current_user.account_type == "manager" %}
-        <p>
-          Save Card Details
-          {{ form.save_card_details }}
-        </p>
-      {% endif %}
-      <p><input type="submit" class="btn btn-success btn-md btn-block col-12 action-button2" value="Book Scooter"></p>
-  </form>
+  <div class="row d-flex justify-content-center">
+      <div class="col-md-auto card-container" >
+          <h1>Enter Card Details</h1>
+          <form action="" method="post" name="cardform">
+              {{ form.csrf_token }}
+              {{ form.hidden_tag() }}
+                <p>
+                  Name on card <br>
+                  {{ form.name(class="form-control form-control-lg") }}
+                  {% if form.name.errors %}
+                  {% for error in form.name.errors %}
+                    <span style="color: red">{{ error }}</span>
+                  {% endfor %}
+                {% endif %}
+                </p>
+                <p>
+                  Card Number <br>
+                  {{ form.card_number(class="form-control form-control-lg") }}
+                  {% if form.card_number.errors %}
+                  {% for error in form.card_number.errors %}
+                    <span style="color: red">{{ error }}</span>
+                  {% endfor %}
+                {% endif %}
+                </p>
+                <p>
+                  Expiry Date (mm-yyyy) <br>
+                  {{ form.expiry(class="form-control form-control-lg") }}
+                  {% if form.expiry.errors %}
+                  {% for error in form.expiry.errors %}
+                    <span style="color: red">{{ error }}</span>
+                  {% endfor %}
+                {% endif %}
+                </p>
+                <p>
+                  cvv <br>
+                  {{ form.cvv(class="form-control form-control-lg") }}
+                  {% if form.cvv.errors %}
+                  {% for error in form.cvv.errors %}
+                    <span style="color: red">{{ error }}</span>
+                  {% endfor %}
+                {% endif %}
+                </p>
+                {% if not current_user.account_type == "employee" and not current_user.account_type == "manager" %}
+                  <p>
+                    Save Card Details
+                    {{ form.save_card_details }}
+                  </p>
+                {% endif %}
+                <p><input type="submit" class="btn btn-success btn-md btn-block col-12 action-button2" value="Book Scooter"></p>
+            </form>
+    
+      </div>
+
+  </div>
+
+  
   {% endif %}
 
 {% endblock %}

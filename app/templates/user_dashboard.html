@@ -73,6 +73,7 @@
         {% if booking.first() == None %}
         <p class="UD_no_bookings">You have no upcoming bookings :(</p>
         {% else %}
+        <div class="table-responsive">
           <table>
             <tr>
               <th>Date of Booking</th>
@@ -114,6 +115,7 @@
                 </tr>
             {% endfor %}
           </table>
+        </div>
         {% endif %}
 
       </div>

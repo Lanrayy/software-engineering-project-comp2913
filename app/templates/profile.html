@@ -73,6 +73,7 @@
   <p>no booking found :(</p>
 
   {% else %}
+  <div class="table-responsive">
     <table>
       <tr>
         <th>Date of Booking</th>
@@ -115,6 +116,7 @@
           </tr>
       {% endfor %}
     </table>
+  </div>
     <br><br>
     <a href="/send_feedback"><input type="submit" class="btn btn-primary custom-button2" value="Submit Feedback"></a></td>
       
