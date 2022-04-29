@@ -1,23 +1,20 @@
 {% extends "base.html" %}
 {% block left_content %}
 <!-- For the table of prices -->
-<div class="booking_left_column container d-flex flex-column align-items-left">
-    <div class="mt-5" style = "margin-bottom: 1%">
-      <h1 class="fw-normal text-nowrap">Our Prices</h1>
-    </div>
-    <table class="prices_table">
-        <tr>
-            <th>Hire Period</th>
-            <th>Price</th>
-        </tr>
-        {% for hire_period in hire_periods %}
-        <tr>
-          <td>{{ hire_period.duration }}</td>
-          <td>£{{ "{:.2f}".format(hire_period.price) }}</td>
-        </tr>
-          
-        {% endfor %}
-    </table>
+<div class="container d-flex flex-column align-items-left" style = "margin-left: 20%; margin-top: 10%">
+
+  <div class="mt-5" style = "margin-bottom: 4%">
+    <h1 class = "fw-normal text-nowrap">Our Prices!</h1>
+  </div>
+
+  {% for hire_period in hire_periods %}
+  <div >
+    <h5 class = "fw-normal ">Hire Period: {{ hire_period.duration }}</h5>
+    <p style="font-family: Raleway; font-size: 18px">£{{ "{:.2f}".format(hire_period.price) }}</p>
+  </div>
+  {% endfor %}
+
+
 </div>
 {% endblock %}
 
@@ -30,7 +27,7 @@
     <!-- row for header -->
     <div class="row p-3">
       <div class="row">
-        <h1 class="text-nowrap">Make A Booking</h1>
+        <h1 class="fw-normal text-nowrap">Make A Booking</h1>
       </div>
 
       <!-- row for form contents -->
@@ -110,11 +107,7 @@
 {% endblock %}
 
 {% block right_content %}
-<div class="booking_right_column row pt-5 ps-3 image-hideable">
-    <h1 class ="fw-normal text-nowrap">Map</h1>
-    <div class="map">
-        <!-- MAP HERE -->
-        <iframe class="booking_map" src="https://www.google.com/maps/d/embed?mid=1KtDebi-rELyFWD2SYbJ_qJXrftcFUD9A&hl=en&ehbc=2E312F"></iframe>
-    </div>
+<div class="row">
+  <img src="{{ url_for('static', filename='images/booking.png') }}" alt="Make a Booking" style= "position:relative; right:10%; width:200px; height: 200px; min-width:200px"  class="p-2">
 </div>
 {% endblock %}
