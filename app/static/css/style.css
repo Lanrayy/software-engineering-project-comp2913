@@ -668,6 +668,10 @@ min-width:300px;
   margin-right: 20px;
 }
 
+.booking-p{
+  font-size:calc(10px + 0.5vw);
+}
+
 /***************************
 Booking Confirmation Page
 ****************************/
@@ -809,9 +813,9 @@ Booking Confirmation Page
 }
 
 /* For minimum width and height */
-@media screen and (max-width: 1200px){
+@media screen and (max-width: 800px){
   html{
-      width: 1200px;
+      width: 800px;
       overflow: auto;
   }
   /* Set nav bar min width */
