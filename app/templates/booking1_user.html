@@ -70,15 +70,14 @@
                  {% if data.expiry_date.month > 9 %}
                  <pre style="font-family: Raleway; font-size: 18px">Expiry Date     : {{ data.expiry_date.month }} / {{ data.expiry_date.year }} </pre>
                  {% endif %}
-              </p>
 
               <div class="col">
-                <button type="button submit" class="btn btn-success action-button2" name="payment_button">Make Payment</button>
+                <button type="submit" class="btn btn-success action-button2" name="payment_button">Make Payment</button>
               </div>
 
               {% else %}
               <div class="col">
-                <button type="button submit" class="btn btn-success action-button2" name="payment_button">Enter Card Details</button>
+                <button type="submit" class="btn btn-success action-button2" name="payment_button">Go to Payment</button>
               </div>
 
             {% endif %}
