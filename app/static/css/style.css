@@ -67,6 +67,8 @@ td{
   /* border: none; */
   color: #f46c63;
   cursor: pointer;
+  text-align: center;
+  padding: 11px 0px;
 }
 
 /* Peach Button */
@@ -387,7 +389,7 @@ User Dashboard Page
   margin-top: 40px;
   border-top: 1px solid lightgray;
   padding: 40px 0px 0px 0px;
-  
+
 }
 
 .main_image_user_dashboard{
@@ -541,11 +543,45 @@ Admin Dashboard Page
   margin: 10px 10px 10px 10px;
 }
 
+.booking_right_column{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  /* border: 1px solid red; */
+}
 
+.booking_left_column{
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  height: 100%;
+  /* border: 1px solid red; */
+  margin-left: 10%;
+}
+
+.booking_right_column_image{
+position:relative;
+right:10%;
+width:350px;
+/* height: 200px;  */
+min-width:300px;
+}
+
+.booking_map{
+  display: flex;
+  justify-content: center;
+  height: 330px;
+  width: 95%;
+  /* border: 1px solid red; */
+  margin-right: 20px;
+}
+
+/***************************
+Booking Confirmation Page
+****************************/
 .booking-details-container{
-  /***************************
-  Booking Confirmation Page
-  ****************************/
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -673,8 +709,6 @@ Admin Dashboard Page
 .booking-details{
   margin-bottom: 10px;
 }
-<<<<<<< HEAD
-=======
 
 /* hide the booking image if the page is too narrow */
 
@@ -685,9 +719,9 @@ Admin Dashboard Page
 }
 
 /* For minimum width and height */
-@media screen and (max-width: 800px){
+@media screen and (max-width: 1200px){
   html{
-      width: 800px;
+      width: 1200px;
       overflow: auto;
   }
   /* Set nav bar min width */
@@ -702,4 +736,3 @@ Admin Dashboard Page
       overflow: auto;
   }
 }
->>>>>>> abc8c472efb388b23bcc94442e27e7d045d6f448
