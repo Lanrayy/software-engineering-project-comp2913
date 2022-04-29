@@ -3,7 +3,7 @@
   <h1>Add New Scooter</h1>
   <h2>New Scooter Details</h2>
   <!-- Scooters go here -->
-  <form method="post" name="addScooter">
+  <form action="" method="post" name="addScooter">
       {{ form.hidden_tag() }}
 
       <p>
@@ -14,6 +14,6 @@
         Location <br>
         {{ form.location_id(class="form-control form-control-lg") }}
       </p>
-      <button type="submit" class="btn btn-success">Add Scooter</button>
+      <button type="button submit" class="btn btn-success">Add Scooter</button>
   </form>
 {% endblock %}
