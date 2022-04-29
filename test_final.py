@@ -314,9 +314,38 @@ class TestCase(unittest.TestCase):
 
         self.assertIn(b'Booking Extension Successful!', booking.data)
 
+    def test_cancel_booking(self):
+        tester = app.test_client(self)
+
+        # Log in first
+        tester.post('/login',
+                    data=dict(email="test@gmail.com",
+                    password=("test")),
+                    follow_redirects=True)
+
+        # Fill in booking form
+        tester.post('/booking1',
+                    data=dict(scooter_id= '2',
+                    location_id='1',
+                    hire_period='3',
+                    start_date=datetime.utcnow() + timedelta(hours=1)),
+                    follow_redirects=True)
+
+        # Fill in card details
+        tester.post('/card',
+                    data=dict(card_number="1010101010101010",
+                    name="test",
+                    expiry="12-3000",
+                    cvv="123",
+                    save_card_details=True),
+                    follow_redirects=True)
+
+        booking = tester.post('/cancel_booking',
+                    follow_redirects=True)
+
+        self.assertIn(b'Booking successfully cancelled!', booking.data)
+
     
-
-
     # Ensure login does not work with incorrect credentials
     def test_store_card_details(self):
         tester = app.test_client(self)
