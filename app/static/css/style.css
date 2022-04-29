@@ -57,6 +57,7 @@ td{
   font-size: 20px;
   margin-right: 20px;
   cursor: pointer;
+  padding: 11px 0px;
 }
 
 .custom-button:hover, /* Blue Button Hover */
@@ -66,6 +67,9 @@ td{
   /* border: none; */
   color: #f46c63;
   cursor: pointer;
+  text-align: center;
+  padding: 11px 0px;
+  
 }
 
 /* Peach Button */
@@ -82,7 +86,7 @@ td{
   font-size: 20px;
   margin-right: 20px;
   cursor: pointer;
-
+  padding: 11px 0px;
 }
 
 .action-button{
@@ -92,6 +96,7 @@ td{
   font-size: 20px;
   margin-right: 20px;
   cursor: pointer;
+  padding: 11px 0px;
 }
 
 .action-button2{
@@ -101,6 +106,7 @@ td{
   font-size: 20px;
   margin-right: 20px;
   cursor: pointer;
+  padding: 11px 0px;
 }
 
 .nav-link {
@@ -152,6 +158,24 @@ th {
   background-color: #f46c63;
   color: black;
 }
+
+/* **********************************
+* LOGIN PAGE  STYLES
+************************************/
+.login-container{
+  min-width: 500px;
+  border: 1px solid red;
+  padding: 0px 30px;
+}
+
+
+
+
+/* **********************************
+* REGISTER PAGE  STYLES
+************************************/
+
+
 
 
 /* **********************************
@@ -372,7 +396,7 @@ th {
 
 .row4-content {
   display: flex;
-  justify-content: centre;
+  /* justify-content: centre; */
   flex-direction: column;
   width: 100%;
   height: 500px;
@@ -431,6 +455,21 @@ User Dashboard Page
   align-items: center;
 }
 
+.UD_row1_container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;;
+
+}
+
+.UD_logo{
+  width: 90px;
+  margin-left: 40px;
+  justify-self: auto;
+  margin: 30px 0px;
+}
+
 .UD_title {
   text-align: center;
   font-size: 60px;
@@ -459,6 +498,17 @@ User Dashboard Page
   flex-direction: column;
   justify-content: center;
   align-content: center;
+}
+
+.UD_row-2-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* border: 1px solid green; */
+  height: 400px;
+  width: 320px;
+  margin: 20px 10px 0px 10px;
 }
 
 .call-to-action-buttons {
@@ -576,11 +626,53 @@ Admin Dashboard Page
   margin: 10px 10px 10px 10px;
 }
 
+/***************************
+Booking Page
+****************************/
+.prices_table{
+  width: 60%;
+  margin-right: 20px;
+}
 
+.booking_right_column{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  /* border: 1px solid red; */
+}
+
+.booking_left_column{
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  height: 100%;
+  /* border: 1px solid red; */
+  margin-left: 10%;
+}
+
+.booking_right_column_image{
+position:relative; 
+right:10%; 
+width:350px; 
+/* height: 200px;  */
+min-width:300px;
+}
+
+.booking_map{
+  display: flex;
+  justify-content: center;
+  height: 330px;
+  width: 95%;
+  /* border: 1px solid red; */
+  margin-right: 20px;
+}
+
+/***************************
+Booking Confirmation Page
+****************************/
 .booking-details-container{
-  /***************************
-  Booking Confirmation Page
-  ****************************/
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -658,7 +750,7 @@ Admin Dashboard Page
   border: 1px solid lightgrey;
   padding: 0px;
   margin: 20px;
-  width: max-content;
+  max-width: max-content;
 }
 
 .BC-row2:hover{
@@ -696,7 +788,7 @@ Admin Dashboard Page
 .BC-row3-column2{
   display: flex;
   justify-content: center;
-  padding: 0px;
+  padding-top: 10px;
   margin: 0px;
 }
 
