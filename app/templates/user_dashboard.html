@@ -15,19 +15,6 @@
    <!-- first row -->
    <div class="row UD_row1">
       <div class="UD_row-1">
-        <!-- falsh message  -->
-        <div style="padding: 0px">
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for message in messages %}
-                  <div class="alert alert-success">
-                    {{ message }}
-                  </div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
-        </div>
-
         <div>
           <h1 class="UD_subtitle">Welcome, {{name}}</h1>
           <h1 class="UD_title">.sctr</h1>
