@@ -261,7 +261,7 @@ class TestCase(unittest.TestCase):
                     save_card_details=False),
                     follow_redirects=True)
 
-        self.assertIn(b'Booking Successful', booking.data)
+        self.assertIn(b"We'll send the booking confirmation to:", booking.data)
     
     # Ensure scooters that are already booked for the time slot do not re-book
     def test_used_scooter_is_not_booked(self):
