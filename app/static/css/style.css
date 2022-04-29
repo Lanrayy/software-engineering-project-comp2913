@@ -40,6 +40,7 @@ td{
   word-wrap:break-word;
 }
 
+
 /* Nav Bar */
 .navbar{
   background-color: #f46c63;
@@ -57,7 +58,6 @@ td{
   font-size: 20px;
   margin-right: 20px;
   cursor: pointer;
-  padding: 11px 0px;
 }
 
 .custom-button:hover, /* Blue Button Hover */
@@ -67,9 +67,6 @@ td{
   /* border: none; */
   color: #f46c63;
   cursor: pointer;
-  text-align: center;
-  padding: 11px 0px;
-  
 }
 
 /* Peach Button */
@@ -79,14 +76,14 @@ td{
   cursor: pointer;
 
 }
-/* Login button */
+
 .login-button{
   height: 55px;
   border-radius: 50px;
   font-size: 20px;
   margin-right: 20px;
   cursor: pointer;
-  padding: 11px 0px;
+
 }
 
 .action-button{
@@ -96,7 +93,6 @@ td{
   font-size: 20px;
   margin-right: 20px;
   cursor: pointer;
-  padding: 11px 0px;
 }
 
 .action-button2{
@@ -106,8 +102,9 @@ td{
   font-size: 20px;
   margin-right: 20px;
   cursor: pointer;
-  padding: 11px 0px;
 }
+
+
 
 .nav-link {
   color: white !important;
@@ -118,10 +115,6 @@ td{
   margin-left: 40px;
 }
 
-/* Flashed Messages Styles */
-.container-fluid{
-  padding: 0px;
-}
 
 .alert {
   margin-bottom: 0px;
@@ -163,34 +156,10 @@ th {
   color: black;
 }
 
-/* **********************************
-* LOGIN PAGE  STYLES
-************************************/
-.login-container{
-  min-width: 500px;
-  border: 1px solid red;
-  padding: 0px 30px;
-}
-
-
-
-
-/* **********************************
-* REGISTER PAGE  STYLES
-************************************/
-
-
-
 
 /* **********************************
 * LANDING PAGE  STYLES
 ************************************/
-.flashed-message{
-  /* border: 1px solid red; */
-  width: 100%;
-  text-align: center;
-}
-
 .alert{
   text-align: center;
 }
@@ -233,37 +202,21 @@ th {
   text-align: center;
 }
 
-.row1{
+.row1 {
   /* border: 1px solid red; */
-  min-height: 550px;
+  height: 600px;
   display: flex;
   flex-direction: row;
   background-color: #f46c63;
 }
 
-.row-1-content{
-  /* border: 1px solid red; */
-  display: flex;
-  flex-wrap: wrap-reverse;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
 .row-1-column-1 {
   /* border: 2px solid green; */
   height: 100%;
-  min-width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
-}
-
-.row-1-column-2 {
-  /* border: 2px solid green; */
-  height: 100%;
-  min-width: 500px;
 }
 
 .call-to-action-buttons {
@@ -278,13 +231,11 @@ th {
 .row2{
   /* border: 1px solid red; */
   margin-top: 40px;
-  /* height: 500px; */
+  height: 500px;
 }
 
 .row-2-content{
-  /* border: 1px solid red; */
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
 }
 
@@ -295,7 +246,7 @@ th {
   flex-direction: column;
   /* border: 1px solid green; */
   height: 300px;
-  width: 320px;
+  width: 400px;
   margin: 20px 10px 0px 10px;
 }
 
@@ -327,14 +278,10 @@ th {
 .row3{
   /* border: 1px solid red; */
   margin-top: 40px;
-  /* height: 600px; */
+  height: 600px;
   border-top: 1px solid lightgray;
   border-bottom: 1px solid lightgray;
   padding: 40px 0px 40px 0px;
-}
-
-.row-3-info{
-  min-height: 20px;
 }
 
 .row-3-title{
@@ -344,7 +291,6 @@ th {
 .row-3-content{
   /* border: 1px solid red; */
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
@@ -357,16 +303,14 @@ th {
   flex-direction: column;
   /* border: 1px solid green; */
   /* border-right: 1px solid lightgray; */
-  height: 400px;
-  width: 400px;
+  /* border-radius: 20px; */
+  height: 100%;
+  width: 50%;
   margin: 0px 10px 0px 10px;
 }
 
-.row-3-line{
-  display: flex;
-  border-right: 2px solid lightgray;
-  height: 300px;
-  margin: 0px 50px 0px 50px;
+.row-3-column:first-of-type {
+  border-right: 1px solid lightgray;
 }
 
 .row-3-image {
@@ -399,6 +343,8 @@ th {
 }
 
 
+
+
 /* ROW 4 */
 .row4{
   margin-top: 30px;
@@ -406,7 +352,7 @@ th {
 
 .row4-content {
   display: flex;
-  /* justify-content: centre; */
+  justify-content: centre;
   flex-direction: column;
   width: 100%;
   height: 500px;
@@ -420,21 +366,6 @@ th {
 iframe{
   width: 90%;
   height: 400px;
-}
-
-@media only screen and (max-width: 1350px){
-  .row-3-line{
-    display: none;
-  }
-}
-
-/***************************
-* Card Page
-****************************/
-.card-container{
-  min-width: 500px;
-  /* border: 1px solid red; */
-  padding: 0px 30px;
 }
 
 
@@ -456,28 +387,13 @@ User Dashboard Page
   margin-top: 40px;
   border-top: 1px solid lightgray;
   padding: 40px 0px 0px 0px;
-
+  
 }
 
 .main_image_user_dashboard{
   width: 700px;
   height: 800px;
   align-items: center;
-}
-
-.UD_row1_container{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;;
-
-}
-
-.UD_logo{
-  width: 90px;
-  margin-left: 40px;
-  justify-self: auto;
-  margin: 30px 0px;
 }
 
 .UD_title {
@@ -508,17 +424,6 @@ User Dashboard Page
   flex-direction: column;
   justify-content: center;
   align-content: center;
-}
-
-.UD_row-2-column {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  /* border: 1px solid green; */
-  height: 400px;
-  width: 320px;
-  margin: 20px 10px 0px 10px;
 }
 
 .call-to-action-buttons {
@@ -636,53 +541,11 @@ Admin Dashboard Page
   margin: 10px 10px 10px 10px;
 }
 
-/***************************
-Booking Page
-****************************/
-.prices_table{
-  width: 60%;
-  margin-right: 20px;
-}
 
-.booking_right_column{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 100%;
-  /* border: 1px solid red; */
-}
-
-.booking_left_column{
-  display: flex;
-  justify-content: center;
-  /* align-items: center; */
-  height: 100%;
-  /* border: 1px solid red; */
-  margin-left: 10%;
-}
-
-.booking_right_column_image{
-position:relative; 
-right:10%; 
-width:350px; 
-/* height: 200px;  */
-min-width:300px;
-}
-
-.booking_map{
-  display: flex;
-  justify-content: center;
-  height: 330px;
-  width: 95%;
-  /* border: 1px solid red; */
-  margin-right: 20px;
-}
-
-/***************************
-Booking Confirmation Page
-****************************/
 .booking-details-container{
+  /***************************
+  Booking Confirmation Page
+  ****************************/
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -760,7 +623,7 @@ Booking Confirmation Page
   border: 1px solid lightgrey;
   padding: 0px;
   margin: 20px;
-  max-width: max-content;
+  width: max-content;
 }
 
 .BC-row2:hover{
@@ -798,7 +661,7 @@ Booking Confirmation Page
 .BC-row3-column2{
   display: flex;
   justify-content: center;
-  padding-top: 10px;
+  padding: 0px;
   margin: 0px;
 }
 
@@ -810,6 +673,10 @@ Booking Confirmation Page
 .booking-details{
   margin-bottom: 10px;
 }
+<<<<<<< HEAD
+=======
+
+/* hide the booking image if the page is too narrow */
 
 @media screen and (max-width: 1200px) {
   .image-hideable {
@@ -835,3 +702,4 @@ Booking Confirmation Page
       overflow: auto;
   }
 }
+>>>>>>> abc8c472efb388b23bcc94442e27e7d045d6f448

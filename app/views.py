@@ -1594,8 +1594,8 @@ def sales_metrics():
     one_hour_metric, four_hour_metric, one_day_metric, one_week_metric = 0, 0, 0, 0
     # calculate the date range needed
     date = datetime.utcnow()
-    week_start = date + timedelta(-date.weekday(), weeks=0)
-    week_end = date + timedelta(-date.weekday() + 6, weeks=0)
+    week_start = date + timedelta(-date.weekday(), weeks=-1)
+    week_end = date + timedelta(-date.weekday() + 6, weeks=-1)
 
     # get all the transations
     transactions = models.transactions.query.all()

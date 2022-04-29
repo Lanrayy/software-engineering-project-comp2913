@@ -66,8 +66,6 @@ class CardForm(FlaskForm):
 
     def validate_expiry(self, expiry): # cards expire on the last day of the month
         today = datetime.utcnow()
-        if(expiry.data is None):
-            raise ValidationError('Expiry date is invalid!')
 
         # get the last day of current month and the last day of the card expiry month
         last_day_of_current_month = today.replace(day = calendar.monthrange(today.year, today.month)[1])
