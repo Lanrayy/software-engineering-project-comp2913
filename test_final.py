@@ -145,7 +145,7 @@ class TestCase(unittest.TestCase):
                     password=("test")),
                     follow_redirects=True)
         response = tester.get('/user_dashboard', content_type='html/text')
-        self.assertTrue(b'Want to book a scooter?' in response.data)
+        self.assertTrue(b'.sctr works for your wellbeing' in response.data)
 
     def test_user_booking_page_loads(self):
         tester = app.test_client(self)
@@ -239,7 +239,8 @@ class TestCase(unittest.TestCase):
                     data=dict(card_number="1234123412341234",
                     name="test",
                     expiry="12-2025",
-                    cvv="123"),
+                    cvv="123",
+                    save_card_details=False),
                     follow_redirects=True)
 
         self.assertIn(b'Booking Successful', booking.data)
@@ -266,7 +267,8 @@ class TestCase(unittest.TestCase):
                     data=dict(card_number="1234123412341234",
                     name="test",
                     expiry="12-2025",
-                    cvv="123"),
+                    cvv="123",
+                    save_card_details=True),
                     follow_redirects=True)
 
         # try to re-book scooter
