@@ -115,7 +115,15 @@ td{
   margin-left: 40px;
 }
 
-/*TABLE STYLES*/
+
+.alert {
+  margin-bottom: 0px;
+  border-radius: 0rem;
+}
+
+/*********************************
+*TABLE STYLES
+**********************************/
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
@@ -152,12 +160,6 @@ th {
 /* **********************************
 * LANDING PAGE  STYLES
 ************************************/
-.flashed-message{
-  /* border: 1px solid red; */
-  width: 100%;
-  text-align: center;
-}
-
 .alert{
   text-align: center;
 }
@@ -671,3 +673,33 @@ Admin Dashboard Page
 .booking-details{
   margin-bottom: 10px;
 }
+<<<<<<< HEAD
+=======
+
+/* hide the booking image if the page is too narrow */
+
+@media screen and (max-width: 1200px) {
+  .image-hideable {
+    display: none;
+  }
+}
+
+/* For minimum width and height */
+@media screen and (max-width: 800px){
+  html{
+      width: 800px;
+      overflow: auto;
+  }
+  /* Set nav bar min width */
+  .navbar{
+      width: 100%;
+      overflow: auto;
+  }
+}
+@media screen and (max-height: 400px){
+  html{
+      height: 400px;
+      overflow: auto;
+  }
+}
+>>>>>>> abc8c472efb388b23bcc94442e27e7d045d6f448
