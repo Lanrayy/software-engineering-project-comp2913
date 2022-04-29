@@ -69,7 +69,7 @@ td{
   cursor: pointer;
   text-align: center;
   padding: 11px 0px;
-  
+
 }
 
 /* Peach Button */
@@ -653,9 +653,9 @@ Booking Page
 }
 
 .booking_right_column_image{
-position:relative; 
-right:10%; 
-width:350px; 
+position:relative;
+right:10%;
+width:350px;
 /* height: 200px;  */
 min-width:300px;
 }
@@ -810,9 +810,9 @@ Booking Confirmation Page
 }
 
 /* For minimum width and height */
-@media screen and (max-width: 800px){
+@media screen and (max-width: 1200px){
   html{
-      width: 800px;
+      width: 1200px;
       overflow: auto;
   }
   /* Set nav bar min width */
