@@ -1,26 +1,23 @@
 {% extends "base2.html" %}
 {% block content %}
+  <!-- flashed messages -->
+  <div class="row">
+      {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          {% for message in messages %}
+              <div class="container-fluid alert alert-success">
+              {{ message }}
+              </div>
+          {% endfor %}
+          {% endif %}
+      {% endwith %}
+  </div>
    <!-- first row -->
    <div class="row UD_row1">
-
       <div class="UD_row-1">
-        <!-- falsh message  -->
-        <div style="padding: 0px">
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for message in messages %}
-                  <div class="alert alert-success">
-                    {{ message }}
-                  </div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
-        </div>
-
-        <div class="UD_row1_container">
-          <img class="UD_logo" src="{{url_for('static', filename='images/sctr-logo.png')}}" alt="Logo">
-          <h1 class="UD_title">Welcome, {{name}}</h1>
-          <!-- <h1 class="UD_title">.sctr</h1> -->
+        <div>
+          <h1 class="UD_subtitle">Welcome, {{name}}</h1>
+          <h1 class="UD_title">.sctr</h1>
         </div>
       </div>
     </div>
