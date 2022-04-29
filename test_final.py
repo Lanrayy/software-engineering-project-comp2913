@@ -257,7 +257,8 @@ class TestCase(unittest.TestCase):
                     data=dict(card_number="1234123412341234",
                     name="test",
                     expiry="12-2025",
-                    cvv="123"),
+                    cvv="123",
+                    save_card_details=False),
                     follow_redirects=True)
 
         self.assertIn(b'Booking Successful', booking.data)
