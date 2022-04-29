@@ -14,7 +14,10 @@ Headings - Gills sans
 Paragraphs - Raleway - 18px
 */
 
-/* GLOBAL STYLES*/
+
+/*******************
+GLOBAL STYLES
+********************/
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-weight: 700;
@@ -37,7 +40,6 @@ td{
   word-wrap:break-word;
 }
 
-
 /* Nav Bar */
 .navbar{
   background-color: #f46c63;
@@ -47,33 +49,58 @@ td{
   font-weight: bolder;
 }
 
-/* Blue Button */
-.custom-button{
+.custom-button, /* Blue Button */
+.custom-button2{ /* Peach Button */
   width: 250px;
   height: 55px;
   border-radius: 50px;
   font-size: 20px;
   margin-right: 20px;
+  cursor: pointer;
 }
 
-.custom-button:hover{
-  background-color: #eeeeee;
-  /* border: 1px solid #A83C34; */
-  border: none;
+.custom-button:hover, /* Blue Button Hover */
+.custom-button2:hover{ /* Peach Button Hover */
+  background-color: white;
+  border: 1px solid #f46c63;
+  /* border: none; */
   color: #f46c63;
+  cursor: pointer;
 }
 
 /* Peach Button */
 .custom-button2{
   background-color: #f46c63;
-  /* background-color: #0D6Efd; */
   border: none;
+  cursor: pointer;
+
+}
+/* Login button */
+.login-button{
+  height: 55px;
+  border-radius: 50px;
+  font-size: 20px;
+  margin-right: 20px;
+  cursor: pointer;
+
 }
 
-.custom-button2:hover{
-  background-color: white;
-  border: 1px solid #f46c63;
-  color: #f46c63;
+.action-button{
+  height: 55px;
+  width: 250px;
+  border-radius: 50px;
+  font-size: 20px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.action-button2{
+  height: 55px;
+  width: 100%;
+  border-radius: 50px;
+  font-size: 20px;
+  margin-right: 20px;
+  cursor: pointer;
 }
 
 .nav-link {
@@ -85,8 +112,19 @@ td{
   margin-left: 40px;
 }
 
-/*TABLE STYLES*/
+/* Flashed Messages Styles */
+.container-fluid{
+  padding: 0px;
+}
 
+.alert {
+  margin-bottom: 0px;
+  border-radius: 0rem;
+}
+
+/*********************************
+*TABLE STYLES
+**********************************/
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
@@ -98,17 +136,26 @@ table.center {
   margin-right: auto;
 }
 
-td, th {
+td{
   text-align: left;
   padding: 20px;
-  padding-left: 80px;
+  padding-left: 40px;
+  padding-right: 40px;
 }
 
-/*
-tr:nth-child(even) {
+tr:nth-child(even){background-color: #f2f2f2;}
+tr:hover {background-color: #ddd;}
+
+th {
+  padding: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
   background-color: #f46c63;
+  color: black;
 }
-*/
 
 
 /* **********************************
@@ -162,21 +209,37 @@ tr:nth-child(even) {
   text-align: center;
 }
 
-.row1 {
+.row1{
   /* border: 1px solid red; */
-  height: 600px;
+  min-height: 550px;
   display: flex;
   flex-direction: row;
   background-color: #f46c63;
 }
 
+.row-1-content{
+  /* border: 1px solid red; */
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 .row-1-column-1 {
   /* border: 2px solid green; */
   height: 100%;
+  min-width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
+}
+
+.row-1-column-2 {
+  /* border: 2px solid green; */
+  height: 100%;
+  min-width: 500px;
 }
 
 .call-to-action-buttons {
@@ -191,10 +254,13 @@ tr:nth-child(even) {
 .row2{
   /* border: 1px solid red; */
   margin-top: 40px;
+  /* height: 500px; */
 }
 
 .row-2-content{
+  /* border: 1px solid red; */
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
 }
 
@@ -205,8 +271,8 @@ tr:nth-child(even) {
   flex-direction: column;
   /* border: 1px solid green; */
   height: 300px;
-  width: 400px;
-  margin: 0px 10px 0px 10px;
+  width: 320px;
+  margin: 20px 10px 0px 10px;
 }
 
 .row-2-image {
@@ -232,12 +298,89 @@ tr:nth-child(even) {
   margin-bottom: 4px;
 }
 
-/* ROW 3 */
+
+/* ROW 3*/
 .row3{
+  /* border: 1px solid red; */
+  margin-top: 40px;
+  /* height: 600px; */
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+  padding: 40px 0px 40px 0px;
+}
+
+.row-3-info{
+  min-height: 20px;
+}
+
+.row-3-title{
+  text-align: center;
+}
+
+.row-3-content{
+  /* border: 1px solid red; */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.row-3-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* border: 1px solid green; */
+  /* border-right: 1px solid lightgray; */
+  height: 400px;
+  width: 400px;
+  margin: 0px 10px 0px 10px;
+}
+
+.row-3-line{
+  display: flex;
+  border-right: 2px solid lightgray;
+  height: 300px;
+  margin: 0px 50px 0px 50px;
+}
+
+.row-3-image {
+  width: 350px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.row-3-image2 {
+  width: 180px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.row-3-column-description{
+  text-align: center;
+  width: 300px;
+  line-height: 1.4;
+}
+
+.row-3-call-to-action{
+  display: flex;
+  justify-content: center;
+}
+
+.row-3-column-title{
+  /* color: #445a64; */
+  color: #f46c63;
+  margin-bottom: 4px;
+}
+
+
+/* ROW 4 */
+.row4{
   margin-top: 30px;
 }
 
-.row3-content {
+.row4-content {
   display: flex;
   justify-content: centre;
   flex-direction: column;
@@ -255,29 +398,53 @@ iframe{
   height: 400px;
 }
 
+@media only screen and (max-width: 1350px){
+  .row-3-line{
+    display: none;
+  }
+}
+
+/***************************
+* Card Page
+****************************/
+.card-container{
+  min-width: 500px;
+  /* border: 1px solid red; */
+  padding: 0px 30px;
+}
+
 
 /***************************
 User Dashboard Page
 ****************************/
 
 .UD_row-1 {
-  height: 100%;
+  height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
+  background-image: linear-gradient(#f46c63,#f52415a4 );
+}
+
+.UD-row3{
+  /* border: 1px solid red; */
+  margin-top: 40px;
+  border-top: 1px solid lightgray;
+  padding: 40px 0px 0px 0px;
+
 }
 
 .main_image_user_dashboard{
-  width: 600px;
-  height: 500px;
-  padding-left: 100px;
+  width: 700px;
+  height: 800px;
+  align-items: center;
 }
 
 .UD_title {
   text-align: center;
   font-size: 60px;
-  color: white;
+  color: rgb(255, 255, 255);
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
@@ -290,11 +457,10 @@ User Dashboard Page
 
 .UD_row1 {
   /* border: 1px solid red; */
-  height: 600px;
-  display: flex;
-  flex-direction: row;
-  background-color: #f46c63;
+  height: 300px;
+  background-color: #f52415a4 ;
 }
+
 
 .UD_row2{
   /* border: 2px solid green; */
@@ -333,6 +499,23 @@ User Dashboard Page
 .booking_table{
   width: 100%;
 }
+
+
+.UD_row-2-column-description{
+  text-align: center;
+  width: 300px;
+  align-content: center;
+}
+
+.UD_no_bookings{
+  text-align: center;
+  padding-top: 150px;
+}
+
+.UD-row_info{
+  min-height: 80px;
+}
+
 
 /***************************
 How It Works Page
@@ -388,6 +571,7 @@ Admin Dashboard Page
 
 .AD_row2 {
   margin-top: 30px;
+  /* border: 1px solid red; */
 }
 
 .AD_row-2-column {
@@ -400,4 +584,162 @@ Admin Dashboard Page
   width: 25%;
   min-width: 200px;
   margin: 10px 10px 10px 10px;
+}
+
+
+.booking-details-container{
+  /***************************
+  Booking Confirmation Page
+  ****************************/
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  /* border: 1px solid #f46c63; */
+  /* border: 1px solid green; */
+  padding: 30px;
+  margin-top: 20px;
+}
+
+.booking-successful-title{
+  color: green;
+  text-align: center;
+}
+
+.BC-row1,
+.BC-row3{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  /* border-radius: 20px;
+  border: 1px solid lightgray; */
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+}
+
+.BC-row1-column1,
+.BC-row1-column2{
+  padding: 0px;
+  margin: 0px;
+}
+
+.BC-row1-column1{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.BC-row1-column2{
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: center;
+}
+
+.normal-status-icon{
+  /* border: 1px solid red; */
+  border-radius: 20px;
+  padding: 3px 10px 3px 10px;
+  color: white;
+  background-color: #f46c63;
+}
+
+.active-status-icon{
+  /* border: 1px solid red; */
+  border-radius: 20px;
+  padding: 3px 10px 3px 10px;
+  color: white;
+  background-color: #198754;
+}
+
+.booking-confirmation-image{
+  height: 250px;
+}
+
+.BC-row2{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  /* border: 1px solid #f46c63; */
+  border: 1px solid lightgrey;
+  padding: 0px;
+  margin: 20px;
+  width: max-content;
+}
+
+.BC-row2:hover{
+  box-shadow: 0px 0px 15px 1px lightgray;
+  height: 190px;
+  margin: 12px 16px 16px 16px;
+}
+
+.duration{
+  text-align: center;
+  /* border: 1px solid red; */
+
+}
+
+
+.BC-row2-column1,
+.BC-row2-column2{
+  padding: 20px 0px 0px 20px;
+  margin: 0px;
+  width: 270px;
+  /* border: 1px solid red; */
+}
+
+.time{
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 30px;
+  font-weight: 900;
+  /* color: #f46c63; */
+  color: green;
+  text-align: center;
+}
+
+
+.BC-row3-column1,
+.BC-row3-column2{
+  display: flex;
+  justify-content: center;
+  padding: 0px;
+  margin: 0px;
+}
+
+.booking-duration,
+.email{
+  text-align: center;
+}
+
+.booking-details{
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 1200px) {
+  .image-hideable {
+    display: none;
+  }
+}
+
+/* For minimum width and height */
+@media screen and (max-width: 800px){
+  html{
+      width: 800px;
+      overflow: auto;
+  }
+  /* Set nav bar min width */
+  .navbar{
+      width: 100%;
+      overflow: auto;
+  }
+}
+@media screen and (max-height: 400px){
+  html{
+      height: 400px;
+      overflow: auto;
+  }
 }

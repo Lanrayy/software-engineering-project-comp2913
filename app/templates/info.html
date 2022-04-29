@@ -45,7 +45,7 @@
             <h2 class="row-title">Pricing</h2>
         </div>
         {% for price in prices %}
-            <div class="HW_row-2-column">
+            <div class="HW_row-2-column col">
                 <h4 class="row-2-column-title">{{ price.duration }}</h4>
                 <p class="row-2-column-subtitle">{{ "£%0.2f"|format(price.price|float) }}</p>
             </div>
@@ -53,12 +53,12 @@
     </div>
 
     <!-- location row -->
-    <div class="row row3">
+    <div class="row">
         <div class="row-title">
             <h2 class="row-title">Locations</h2>
         </div>
 
-        <div class="HW_row-3-column">
+        <div class="HW_row-3-column col">
             <div>
                 <img class="HW_row-3-image img-fluid" src="{{ url_for('static', filename='images/trinity.jpg') }}" alt="Trinity">
             </div>
@@ -66,7 +66,7 @@
             <p class="row-2-column-description">27 Albion Street, Leeds LS1 5AT</p>
         </div>
 
-        <div class="HW_row-3-column">
+        <div class="HW_row-3-column col">
             <div>
                 <img class="HW_row-3-image img-fluid" src="{{ url_for('static', filename='images/train_station.jpg') }}" alt="Train Station">
             </div>
@@ -74,7 +74,7 @@
             <p class="row-2-column-description">Leeds Train Station, New Station St, Leeds LS1 4DY</p>
         </div>
 
-        <div class="HW_row-3-column">
+        <div class="HW_row-3-column col">
             <div>
                 <img class="HW_row-3-image img-fluid" src="{{ url_for('static', filename='images/merrion.jpg') }}" alt="Merrion Centre">
             </div>
@@ -82,7 +82,7 @@
             <p class="row-2-column-description">Merrion Way, Leeds LS2 8NG</p>
         </div>
 
-        <div class="HW_row-3-column">
+        <div class="HW_row-3-column col">
             <div>
                 <img class="HW_row-3-image img-fluid" src="{{ url_for('static', filename='images/LGI.jpg') }}" alt="Leeds General Infirmary">
             </div>
@@ -90,12 +90,30 @@
             <p class="row-2-column-description">Great George St, Leeds LS1 3EX</p>
         </div>
 
-        <div class="HW_row-3-column">
+        <div class="HW_row-3-column col">
             <div>
                 <img class="HW_row-3-image img-fluid" src="{{ url_for('static', filename='images/edge.jpg') }}" alt="The Edge">
             </div>
             <h4 class="row-2-column-title">The Edge</h4>
             <p class="row-2-column-description">University of Leeds, Willow Terrace Road, Woodhouse, Leeds LS2 9JT</p>
+        </div>
+    </div>
+
+    <!-- discount row -->
+    <div class="row">
+        <div class="row-info">
+            <h2 class="row-title">Discounts</h2>
+            <p class="row-subtitle">We offer some great discounts for students, elderly customers and frequent customers</p>
+        </div>
+
+        <br><br>
+        <br><br>
+
+        <div class="HW_row-2-column col">
+            <p>If you are a student or elderly customer, please declare this when you create your account as this allows us to apply the appropriate discount for you</p>
+            <p>You also become eligible for the discount if you have made booking totaling over 8 hours in the past week</p>
+            <br><br>
+            <p>The discount is 20% off each booking you make</p>
         </div>
     </div>
 

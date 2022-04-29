@@ -1,4 +1,4 @@
-{% extends "base_sales.html" %}
+{% extends "base.html" %}
 {% block content %}
 <!-- blank margin space -->
 <br>
@@ -6,12 +6,12 @@
 <div class="row d-flex justify-content-center">
   <div class="col-md-auto">
     <!-- row for header -->
-    <div class="row p-3">
+    <div class="row">
       <h1>Send Feedback</h1>
     </div>
 
     <!-- row for displaying feedback details -->
-    <div class="row p-3 text-center">
+    <div class="row pt-3 text-center">
       <h5 class="fw-normal">Please provide feedback or describe the issue in the box below</h5>
     </div>
 
@@ -36,7 +36,7 @@
       <!-- submit button -->
       <div class="row">
         <div class="col text-end">
-          <button type="button submit" class="btn btn-success mt-3" value="Submit">Submit Feedback</button>
+          <button type="button submit" class="btn btn-success mt-3 action-button2" value="Submit">Submit Feedback</button>
         </div>
       </div>
     </form>

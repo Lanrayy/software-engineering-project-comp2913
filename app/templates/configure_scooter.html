@@ -8,27 +8,27 @@
     <form action="" method="post" name="configurescootersform">
       {{ form.csrf_token }}
       <!-- row for header -->
-      <div class="row p-3 text-center">
-        <h3 class="fw-normal text-nowrap">Configure Scooter Availability</h3>
+      <div class="row py-3 text-center">
+        <h3 class="text-nowrap">Configure Scooter Availability</h3>
       </div>
 
       <!-- row for displaying scooter ID -->
-      <div class="row p-3 text-center">
+      <div class="row py-3 text-center">
         <h5 class="fw-normal text-nowrap">Change Scooter Details for Scooter ID: <strong>{{ session['confg_sctr_id'] }}</strong></h5>
       </div>
 
       <!-- row for form contents -->
-      <div class="row p-3">
+      <div class="row py-3">
 
         <!-- row for availability -->
-        <div class="row p-2 flex-nowrap">
+        <div class="row py-2 flex-nowrap">
           <div class="col text-end">
             <p>Availability:</p>
           </div>
 
           <div class="col">
             <p>
-              {{ form.availability(class="form-control form-control-lg") }}
+              {{ form.availability(class="form-control form-control-lg form-select") }}
               {% if form.availability.errors %}
                 {% for error in form.availability.error %}
                   <span>{{ error }}</span>
@@ -39,14 +39,14 @@
         </div>
 
         <!-- row for location -->
-        <div class="row p-2 flex-nowrap">
+        <div class="row py-2 flex-nowrap">
           <div class="col text-end">
             <p>Location:</p>
           </div>
 
           <div class="col">
             <p>
-              {{ form.location_id(class="form-control form-control-lg") }}
+              {{ form.location_id(class="form-control form-control-lg form-select") }}
               {% if form.location_id.errors %}
                 {% for error in form.location_id.error %}
                   <span>{{ error }}</span>
@@ -57,12 +57,12 @@
         </div>
 
         <!-- row for buttons -->
-        <div class="row p-2 flex-nowrap">
+        <div class="row py-2 flex-nowrap">
           <div class="col text-end">
-            <a href="/view_scooters"><button type="button" class="btn btn-danger mt-3" name="cancel">Cancel Changes</button></a>
+            <a href="/view_scooters"><button type="button" class="btn btn-danger mt-3 action-button" name="cancel">Cancel Changes</button></a>
           </div>
           <div class="col">
-            <button type="button submit" class="btn btn-primary mt-3">Confirm Changes</button>
+            <button type="button submit" class="btn btn-primary mt-3 action-button">Confirm Changes</button>
           </div>
         </div>
 
