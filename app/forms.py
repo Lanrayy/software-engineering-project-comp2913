@@ -64,16 +64,17 @@ class CardForm(FlaskForm):
     cvv = StringField('cvv', validators=[InputRequired(), Regexp("(^[0-9]*)$", message = "cvv must be a number"), Length(min=3, max=3, message="cvv must be 3 characters")])
     save_card_details = BooleanField('save_card_details')
 
-    # def validate_expiry(self, expiry): # cards expire on the last day of the month
-    #     today = datetime.utcnow()
-    #
-    #     # get the last day of current month and the last day of the expiry month
-    #     last_day_of_current_month = today.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
-    #     last_day_of_card_month = expiry.data.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
-    #
-    #     if(last_day_of_card_month.date() < last_day_of_current_month.date()):
-    #         raise ValidationError('Expiry date is invalid! Card is expired!')
+    def validate_expiry(self, expiry): # cards expire on the last day of the month
+        today = datetime.utcnow()
+        if(expiry.data is None):
+            raise ValidationError('Expiry date is invalid!')
 
+        # get the last day of current month and the last day of the card expiry month
+        last_day_of_current_month = today.replace(day = calendar.monthrange(today.year, today.month)[1])
+        last_day_of_card_month = expiry.data.replace(day = calendar.monthrange(expiry.data.year, expiry.data.month)[1])
+        
+        if(last_day_of_card_month.date() < last_day_of_current_month.date()):
+            raise ValidationError('Expiry date is invalid! Card is expired!')
 
 # admin booking form
 class AdminBookingForm(FlaskForm):

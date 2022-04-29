@@ -1,115 +1,126 @@
 {% extends "base2.html" %}
 {% block content %}
-    <!-- first row -->
-    <div class="row UD_row1">
-      <!-- m -->
-      <div style="padding: 0px">
-          {% with messages = get_flashed_messages() %}
-            {% if messages %}
-              {% for message in messages %}
-                <div class="alert alert-success">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
-      </div>
+   <!-- first row -->
+   <div class="row UD_row1">
 
-      <div class="col-5" >
-          <div class="UD_row-1">
-                  <div>
-                      <h1 class="UD_subtitle">Welcome, {{name}}</h1>
-                      <h1 class="UD_title">Want to book a scooter?</h1>
+      <div class="UD_row-1">
+        <!-- falsh message  -->
+        <div style="padding: 0px">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-success">
+                    {{ message }}
                   </div>
-                  <div class="call-to-action-buttons">
-                    <a href="/booking1"><button type="button" class="btn btn-primary custom-button">Book</button></a>
-                  </div>
-                  </div>
-      </div>
-      <div class="col-7">
-          <div>
-              <img class="main_image_user_dashboard1 img-fluid float-right" src="{{url_for('static', filename='images/happy-smiling-man.png')}}" alt="Main-image">
-          </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+        </div>
+
+        <div>
+          <h1 class="UD_subtitle">Welcome, {{name}}</h1>
+          <h1 class="UD_title">.sctr</h1>
+        </div>
       </div>
     </div>
 
     <!-- second row -->
-    <div class="row UD_row1">
-      <!-- m -->
-      <div class="col-7">
-        <div>
-          <img class="main_image_user_dashboard2 img-fluid" src="{{url_for('static', filename='images/booking-app.png')}}" alt="Splash">
-        </div>
+    <div class="row row2">
+      <div class="row-info">
+          <h2 class="row-title">.sctr works for your wellbeing </h2>
+          <p class="row-subtitle"> </p>
       </div>
 
-      <div class="col-5" >
-          <div class="UD_row2">
+      <div class="col-2">
+      </div>
+
+      <div class="col-8 row-2-content" >
+         <!-- information for profile and booking -->
+              <div class="row-2-column">
+                      <div>
+                          <img class="row-2-image" src="{{url_for('static', filename='images/booking-app.png')}}" alt="Splash">
+                      </div>
+                      <h4 class="row-2-column-title">View Profile</h4>
+                      <p class="row-2-column-description">Want to reschedule or cancel a booking? Just go to profile and we'll get it sorted.</p>
+                      <div class="call-to-action-buttons">
+                        <a href="/profile"><button type="button" class="btn btn-primary custom-button2">View Profile</button></a>
+                      </div>
+              </div>
+
+              <div class="row-2-column">
+
                   <div>
-                      <h1 class="UD_title">View Profile</h1>
+                      <img class="row-2-image img-fluid" src="{{url_for('static', filename='images/range.png')}}" alt="Splash">
                   </div>
+                  <h4 class="row-2-column-title">Book a scooter</h4>
+                  <p class="row-2-column-description">... over 300 of our advanced electric sctr just waiting for you! It's not just a scooter its an experience </h5>
                   <div class="call-to-action-buttons">
-                    <a href="/profile"><button type="button" class="btn btn-primary custom-button">View Profile</button></a>
+                    <a href="/booking1"><button type="button" class="btn btn-primary custom-button2">Book</button></a>
                   </div>
-                  </div>
+              </div>
+      </div>
+
+      <div class="col-2">
+      </div>
+
+    </div>
+
+    <!-- third row  -->
+    <div class="row UD-row3">
+     <div class="UD-row_info">
+        <h2 class="row-title row-3-title">Upcoming bookings</h2>
+        <br>
+        {% if booking.first() == None %}
+        <p class="UD_no_bookings">You have no upcoming bookings :(</p>
+        {% else %}
+        <div class="table-responsive">
+          <table>
+            <tr>
+              <th>Date of Booking</th>
+              <th>Duration</th>
+              <th>Scooter ID</th>
+              <th>PickUp location</th>
+              <th>Status</th>
+              <th>Reference No.</th>
+              <th></th>
+            </tr>
+
+            {% for b in booking %}
+              <tr>
+                  <td>{{ b.initial_date_time }}</td>
+                  <td>{{b.duration}} hour(s)</td>
+                  <td>SN{{b.scooter_id}}</td>
+                  {% for loc in location%}
+                    {% if b.collection_id == loc.id%}
+                      <td> {{loc.location}} </td>  <!-- show booking location-->
+                    {% endif %}
+                  {% endfor %}
+
+                  <td>{{b.status}}</td>
+                  <td>BN000{{b.id}}</td>
+
+                  <td>
+                    {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->
+                        <a href="/extend_this_booking/{{ b.id }}">
+                          <button type="button submit"  class="btn btn-success" name="extend_button">Extend</button>
+                        </a>
+                    {% endif %}
+
+                    {% if b.status == "upcoming" %} <!-- if booking is UPCOMING then show cancel-->
+                        <a href="/cancel_this_booking/{{ b.id }}">
+                          <button type="button submit"  class="btn btn-danger" name="cancel_button">Cancel</button>
+                        </a>
+                    {% endif %}
+                  </td>
+                </tr>
+            {% endfor %}
+          </table>
+        </div>
+        {% endif %}
+
       </div>
     </div>
 
-
-  <br><br>
-
-  <h3>Upcoming Bookings</h3>
-
-  <table>
-
-      <tr>
-        <th>Date of Booking</th>
-        <th>Duration</th>
-        <th>Scooter ID</th>
-        <th>PickUp location</th>
-        <th>Status</th>
-        <th>Reference No.</th>
-      </tr>
-
-
-      {% for b in booking %}
-        <tr>
-            <td>{{ b.initial_date_time }}</td>
-            <td>{{b.duration}}</td>
-            <td>SN{{b.scooter_id}}</td>
-
-            {% for loc in location%}
-              {% if b.collection_id == loc.id%}
-                <td> {{loc.location}} </td>  <!-- show booking location-->
-              {% endif %}
-            {% endfor %}
-
-            <td>{{b.status}}</td>
-            <td>BN000{{b.id}}</td>
-
-            {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->
-            <td><a href="/extend_booking"><input type="submit" class="btn btn-primary" value="O"></a></td>
-            {% endif %}
-            
-            {% if b.status == "upcoming" %} <!-- if booking is UPCOMING then show cancel-->
-            <td><a href="/cancel_booking"><input type="submit" class="btn btn-primary" value="x"></a></td>
-            {% endif %}
-
-          </tr>
-      {% endfor %}
-
-  </table>
-
-  <br><br><br><br>
+    <br><br><br><br>
 
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
