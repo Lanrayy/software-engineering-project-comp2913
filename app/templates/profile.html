@@ -14,6 +14,7 @@
   <br><br>
 
 <!-- USER DETAILS -->
+  <body>
     <h3>
       User Details
     </h3>
@@ -72,6 +73,7 @@
   <p>no booking found :(</p>
 
   {% else %}
+  <div class="table-responsive">
     <table>
       <tr>
         <th>Date of Booking</th>
@@ -100,16 +102,21 @@
 
             <td>
               {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->      
-                  <a href="/extend_this_booking/{{ b.id }}" class="btn btn-success" name="extend_button">Extend</a>
+                  <a href="/extend_this_booking/{{ b.id }}">
+                    <button type="button submit"  class="btn btn-success" name="extend_button">Extend</button>
+                  </a>
               {% endif %}
 
               {% if b.status == "upcoming" %} <!-- if booking is UPCOMING then show cancel-->
-                  <a href="/cancel_this_booking/{{ b.id }}" class="btn btn-danger" name="cancel_button">Cancel</a>
+                  <a href="/cancel_this_booking/{{ b.id }}">
+                    <button type="button submit"  class="btn btn-danger" name="cancel_button">Cancel</button>
+                  </a>
               {% endif %}
             </td>
           </tr>
       {% endfor %}
     </table>
+  </div>
     <br><br>
     <a href="/send_feedback"><input type="submit" class="btn btn-primary custom-button2" value="Submit Feedback"></a>
       
@@ -117,5 +124,7 @@
   {% endif %}
 
   <br><br><br><br>
+
+</body>
 
 {% endblock %}
