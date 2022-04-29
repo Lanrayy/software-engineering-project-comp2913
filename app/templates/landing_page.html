@@ -1,16 +1,16 @@
 {% extends "base2.html" %}
 {% block content %}
     <!-- flashed messages -->
-    <div class="flashed-message" style="padding: 0px; margin: 0px">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-success">
-                    {{ message }}
-                    </div>
-                {% endfor %}
-                {% endif %}
-            {% endwith %}
+    <div class="row">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+                <div class="container-fluid alert alert-success">
+                {{ message }}
+                </div>
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
     </div>
 
     <!-- first row -->
@@ -30,7 +30,7 @@
                     <div>
                         <img class="main-image img-fluid float-right" src="{{url_for('static', filename='images/happy-smiling-man.png')}}" alt="Main-image">
                     </div>
-                </div>   
+                </div>
         </div>
     </div>
 
@@ -58,10 +58,10 @@
                         </div>
                         <h4 class="row-2-column-title">Book a scooter</h4>
                         <p class="row-2-column-description">Book a .sctr any time of the day and we'll make sure its ready for your trip.</p>
-                    
-                </div> 
+
+                </div>
                 <div class="row-2-column">
-    
+
                     <div>
                         <img class="row-2-image img-fluid" src="{{url_for('static', filename='images/range.png')}}" alt="Splash">
                     </div>
@@ -102,7 +102,7 @@
                     <div>
                         <img class="row-3-image2" src="{{url_for('static', filename='images/frequent-user.png')}}" alt="Splash">
                     </div>
-                </div> 
+                </div>
         </div>
         <div class="col">
         </div>
@@ -121,7 +121,7 @@
                         <h2 class="row-title">Where are we?</h2>
                     </div>
                     <div>
-                        <p class="row-subtitle">Whether you're running late to lectures or your window shopping in the city center. We've got you covered. 
+                        <p class="row-subtitle">Whether you're running late to lectures or your window shopping in the city center. We've got you covered.
                             <br> Use the map below to find our locations. </p>
                         <p class="row-subtitle"> </p>
                     </div>
@@ -134,7 +134,7 @@
         <div class="col-1"></div>
     </div>
 
-    
+
 
 
     <br><br>

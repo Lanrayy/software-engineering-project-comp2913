@@ -112,10 +112,6 @@ td{
   margin-left: 40px;
 }
 
-/* Flashed Messages Styles */
-.container-fluid{
-  padding: 0px;
-}
 
 .alert {
   margin-bottom: 0px;
@@ -161,12 +157,6 @@ th {
 /* **********************************
 * LANDING PAGE  STYLES
 ************************************/
-.flashed-message{
-  /* border: 1px solid red; */
-  width: 100%;
-  text-align: center;
-}
-
 .alert{
   text-align: center;
 }
@@ -718,6 +708,8 @@ Admin Dashboard Page
 .booking-details{
   margin-bottom: 10px;
 }
+
+/* hide the booking image if the page is too narrow */
 
 @media screen and (max-width: 1200px) {
   .image-hideable {
