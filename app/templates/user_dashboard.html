@@ -15,12 +15,14 @@
    <!-- first row -->
    <div class="row UD_row1">
       <div class="UD_row-1">
-        <div>
-          <h1 class="UD_subtitle">Welcome, {{name}}</h1>
-          <h1 class="UD_title">.sctr</h1>
+        <div class="UD_row1_container">
+          <img class="UD_logo" src="{{url_for('static', filename='images/sctr-logo.png')}}" alt="Logo">
+          <h1 class="UD_title">Welcome, {{name}}</h1>
+          <!-- <h1 class="UD_title">.sctr</h1> -->
         </div>
       </div>
     </div>
+
 
     <!-- second row -->
     <div class="row row2">
@@ -99,13 +101,13 @@
                   <td>
                     {% if b.status == "active" %} <!-- if booking is ACTIVE then show extend-->
                         <a href="/extend_this_booking/{{ b.id }}">
-                          <button type="button submit"  class="btn btn-success" name="extend_button">Extend</button>
+                          <button type="submit"  class="btn btn-success" name="extend_button">Extend</button>
                         </a>
                     {% endif %}
 
                     {% if b.status == "upcoming" %} <!-- if booking is UPCOMING then show cancel-->
                         <a href="/cancel_this_booking/{{ b.id }}">
-                          <button type="button submit"  class="btn btn-danger" name="cancel_button">Cancel</button>
+                          <button type="submit"  class="btn btn-danger" name="cancel_button">Cancel</button>
                         </a>
                     {% endif %}
                   </td>
