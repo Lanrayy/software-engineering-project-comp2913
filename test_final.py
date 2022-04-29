@@ -212,6 +212,25 @@ class TestCase(unittest.TestCase):
                     follow_redirects=True)
         response = tester.get('/review_feedback', content_type='html/text')
         self.assertTrue(b'Feedback Reports' in response.data)
+
+    # Ensure login does not work with incorrect credentials
+    def test_configure_prices(self):
+        tester = app.test_client(self)
+
+        # Log in first
+        tester.post('/login',
+                    data=dict(email="manager@gmail.com",
+                    password=("test")),
+                    follow_redirects=True)
+
+        # Fill in booking form
+        configure = tester.post('/configure_costs',
+                    data=dict(duration='3',
+                    price=50.0),
+                    follow_redirects=True)
+
+
+        self.assertIn(b'Price updated', configure.data)
     
 
 #--------------------------------------------------------------------------------
