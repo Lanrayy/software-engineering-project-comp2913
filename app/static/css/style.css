@@ -69,7 +69,7 @@ td{
   cursor: pointer;
   text-align: center;
   padding: 11px 0px;
-  
+
 }
 
 /* Peach Button */
@@ -118,10 +118,6 @@ td{
   margin-left: 40px;
 }
 
-/* Flashed Messages Styles */
-.container-fluid{
-  padding: 0px;
-}
 
 .alert {
   margin-bottom: 0px;
@@ -185,12 +181,6 @@ th {
 /* **********************************
 * LANDING PAGE  STYLES
 ************************************/
-.flashed-message{
-  /* border: 1px solid red; */
-  width: 100%;
-  text-align: center;
-}
-
 .alert{
   text-align: center;
 }
@@ -469,8 +459,7 @@ User Dashboard Page
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;;
-
+  flex-direction: column;
 }
 
 .UD_logo{
@@ -663,9 +652,9 @@ Booking Page
 }
 
 .booking_right_column_image{
-position:relative; 
-right:10%; 
-width:350px; 
+position:relative;
+right:10%;
+width:350px;
 /* height: 200px;  */
 min-width:300px;
 }
@@ -677,6 +666,10 @@ min-width:300px;
   width: 95%;
   /* border: 1px solid red; */
   margin-right: 20px;
+}
+
+.booking-p{
+  font-size:calc(10px + 0.5vw);
 }
 
 /***************************
@@ -810,6 +803,8 @@ Booking Confirmation Page
 .booking-details{
   margin-bottom: 10px;
 }
+
+/* hide the booking image if the page is too narrow */
 
 @media screen and (max-width: 1200px) {
   .image-hideable {

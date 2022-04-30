@@ -14,12 +14,12 @@
       <p>One week metric: £{{"%0.2f"|format(one_week_metric|float) }}</p> 
     </div>
     <div class="col-12 col-sm-6"> 
-      <img class="img-fluid border" src="{{url_for('static', filename='graphs/hireperiod.jpg')}}" width="auto" />
+      <img class="img-fluid border" src="{{url_for('static', filename='graphs/hireperiod.jpg')}}" alt="Weekly income graph"/>
     </div>
 
 
     <div class="col-12 col-sm-6 d-none d-sm-block"> 
-      <img class="img-fluid border" src="{{url_for('static', filename='graphs/daily.jpg')}}" />
+      <img class="img-fluid border" src="{{url_for('static', filename='graphs/daily.jpg')}}" alt="Daily income graph"/>
     </div>
     <div class="col-12 col-sm-6 ps-5 pt-5">
       <h2>Combined Daily Income</h2>
@@ -33,7 +33,7 @@
     </div>
 
     <div class="col-12 col-sm-6 d-block d-sm-none"> 
-      <img class="img-fluid border" src="{{url_for('static', filename='graphs/daily.jpg')}}" />
+      <img class="img-fluid border" src="{{url_for('static', filename='graphs/daily.jpg')}}" alt="Daily income graph"/>
     </div>
 
     <div class="col-12 col-sm-6 ps-5 pt-5">
@@ -43,7 +43,7 @@
 
     </div>
     <div class="col-12 col-sm-6 mb-3">
-      <img class="img-fluid border" src="{{url_for('static', filename='graphs/transaction_type.jpg')}}" />
+      <img class="img-fluid border" src="{{url_for('static', filename='graphs/transaction_type.jpg')}}" alt="Popular transactions graph"/>
     </div>
   </div>
 {% endblock %}
