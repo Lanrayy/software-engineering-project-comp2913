@@ -15,7 +15,7 @@
       <h5 class="fw-normal">Please provide feedback or describe the issue in the box below</h5>
     </div>
 
-    <form action="" method="post" name="feedbackform">
+    <form method="post" name="feedbackform">
       {{ form.csrf_token }}
       <!-- row for table contents -->
       <div class="row p-3">
@@ -36,7 +36,7 @@
       <!-- submit button -->
       <div class="row">
         <div class="col text-end">
-          <button type="button submit" class="btn btn-success mt-3 action-button2" value="Submit">Submit Feedback</button>
+          <button type="submit" class="btn btn-success mt-3 action-button2" value="Submit">Submit Feedback</button>
         </div>
       </div>
     </form>
