@@ -1500,6 +1500,7 @@ def add_scooter():
             db.session.rollback()     # commit scooter to db
         now = str(datetime.now())
         logger.info("admin has added a scooter with ID: "+ str(u.id))
+        return redirect('/view_scooters')
     return render_template('add_scooter.html',
                             title='Add New Scooter', form=form)
 
