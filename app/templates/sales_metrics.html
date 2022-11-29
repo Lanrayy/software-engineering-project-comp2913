@@ -11,28 +11,28 @@
       <p>One hour metric: £{{"%0.2f"|format(one_hour_metric|float) }}</p>
       <p>Four hours metric: £{{"%0.2f"|format(four_hour_metric|float)}}</p>
       <p>24 hours metric: £{{"%0.2f"|format(one_day_metric|float) }}</p>
-      <p>One week metric: £{{"%0.2f"|format(one_week_metric|float) }}</p> 
+      <p>One week metric: £{{"%0.2f"|format(one_week_metric|float) }}</p>
     </div>
-    <div class="col-12 col-sm-6"> 
+    <div class="col-12 col-sm-6">
       <img class="img-fluid border" src="{{url_for('static', filename='graphs/hireperiod.jpg')}}" alt="Weekly income graph"/>
     </div>
 
 
-    <div class="col-12 col-sm-6 d-none d-sm-block"> 
+    <div class="col-12 col-sm-6 d-none d-sm-block">
       <img class="img-fluid border" src="{{url_for('static', filename='graphs/daily.jpg')}}" alt="Daily income graph"/>
     </div>
     <div class="col-12 col-sm-6 ps-5 pt-5">
       <h2>Combined Daily Income</h2>
-      <p>Monday Metrics: £{{"%0.2f"|format(monday_metrics|float) }}</p> 
+      <p>Monday Metrics: £{{"%0.2f"|format(monday_metrics|float) }}</p>
       <p>Tuesday Metrics: £{{"%0.2f"|format(tuesday_metrics|float) }}</p>
-      <p>Wednesday metric: £{{"£%0.2f"|format(wednesday_metrics|float) }}</p>
-      <p>Thursday metric: £{{"£%0.2f"|format(thursday_metrics|float) }}</p>
+      <p>Wednesday metric: £{{"%0.2f"|format(wednesday_metrics|float) }}</p>
+      <p>Thursday metric: £{{"%0.2f"|format(thursday_metrics|float) }}</p>
       <p>Friday metric: £{{"%0.2f"|format(friday_metrics|float) }}</p>
       <p>Saturday metric: £{{"%0.2f"|format(saturday_metrics|float) }}</p>
       <p>Sunday metric: £{{"%0.2f"|format(sunday_metrics|float) }}</p>
     </div>
 
-    <div class="col-12 col-sm-6 d-block d-sm-none"> 
+    <div class="col-12 col-sm-6 d-block d-sm-none">
       <img class="img-fluid border" src="{{url_for('static', filename='graphs/daily.jpg')}}" alt="Daily income graph"/>
     </div>
 

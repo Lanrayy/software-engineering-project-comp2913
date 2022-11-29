@@ -1,5 +1,4 @@
-pip install these things:
-flask
+flask=2.2.2
 flask-admin
 flask-login
 flask-mail
