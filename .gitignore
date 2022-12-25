@@ -1,2 +1,7 @@
 __pycache__/
 app/static/graphs/
+app.db
+migrations/
+app.log
+logs.log
+
