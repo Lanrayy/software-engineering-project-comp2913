@@ -14,6 +14,8 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 mail = Mail(app)
 
+app.app_context().push()
+
 # for user authentication
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
