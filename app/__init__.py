@@ -14,6 +14,7 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 mail = Mail(app)
 
+# added to fix: working outside app context error
 app.app_context().push()
 
 # for user authentication
