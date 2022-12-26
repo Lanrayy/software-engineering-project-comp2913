@@ -1,8 +1,15 @@
 # software-engineering-project-comp2913
 Repository for Year 2 Semester 2 COMP2913 Software Engineering Project
 
+# Technologies 
+Front: HTML5, CSS3, Bootstrap
+Backend: Flask, Python
+Deployment: Amazon AWS
 
-# Running my program
+# Live website
+https://ec2-52-56-142-90.eu-west-2.compute.amazonaws.com
+
+# Running my program locally
 
 1. Create a python virtual environment using: 
 `$ python -m venv flask`
